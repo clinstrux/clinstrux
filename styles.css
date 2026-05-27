@@ -19,7 +19,7 @@
   --amber-bg:rgba(184,122,0,0.08);
   --red:#b83229;
   --red-bg:rgba(184,50,41,0.08);
-  --sidebar:252px;
+  --sidebar:260px;
   --topbar:52px;
   --radius:5px;
   --uncertain:#7a6a40;
@@ -190,36 +190,131 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .dp-scenario-status::before{content:'';width:5px;height:5px;border-radius:50%;background:rgba(80,210,145,0.9);flex-shrink:0;}
 
 /* NAV */
-.dp-nav{padding:10px 8px;flex:1;overflow-y:auto;}
+.dp-nav{padding:10px 8px 4px;flex:1;overflow-y:auto;}
+
+/* Phase label — replaces the generic dp-nav-label */
+.dp-nav-phase{padding:12px 10px 3px;}
+.dp-nav-phase-label{
+  font-size:8px;font-weight:700;color:rgba(255,255,255,0.17);
+  text-transform:uppercase;letter-spacing:1.1px;
+  border-left:1px solid rgba(255,255,255,0.08);
+  padding-left:7px;
+}
+/* Keep legacy label class working */
 .dp-nav-label{
   font-size:8.5px;font-weight:700;color:rgba(255,255,255,0.2);
   text-transform:uppercase;letter-spacing:1px;
   padding:8px 10px 4px;
 }
+
 .dp-nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:7.5px 10px;border-radius:5px;
-  font-size:12px;color:rgba(255,255,255,0.45);font-weight:400;
+  display:flex;align-items:center;gap:9px;
+  padding:7px 9px;border-radius:5px;
+  font-size:11.5px;color:rgba(255,255,255,0.42);font-weight:400;
   cursor:pointer;transition:all 0.15s;margin-bottom:1px;
   border:none;background:none;width:100%;text-align:left;
   font-family:inherit;
 }
-.dp-nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.8);}
+.dp-nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.78);}
 .dp-nav-item.active{background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.95);font-weight:500;}
 .dp-nav-num{
   width:18px;height:18px;border-radius:4px;
   font-size:9px;font-weight:700;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.32);
   letter-spacing:0;
 }
 .dp-nav-item.active .dp-nav-num{background:rgba(255,255,255,0.18);color:white;}
 .dp-nav-check{
   margin-left:auto;opacity:0;
-  color:rgba(80,210,145,0.8);
+  color:rgba(80,210,145,0.8);flex-shrink:0;
 }
 .dp-nav-item.done .dp-nav-check{opacity:1;}
-.dp-nav-divider{height:1px;background:rgba(255,255,255,0.06);margin:8px 10px;}
+.dp-nav-divider{height:1px;background:rgba(255,255,255,0.06);margin:6px 10px;}
+
+/* Nav item inner — title + tag layout */
+.dp-nav-item-inner{
+  display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;
+}
+.dp-nav-item-title{
+  font-size:11.5px;line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.dp-nav-item-tag{
+  font-size:8.5px;font-weight:700;letter-spacing:0.3px;
+  text-transform:uppercase;align-self:flex-start;
+  padding:1px 5px;border-radius:3px;
+}
+.tag-red{
+  background:rgba(184,50,41,0.22);
+  color:rgba(230,120,110,0.9);
+}
+.tag-amber{
+  background:rgba(184,122,0,0.20);
+  color:rgba(220,165,60,0.9);
+}
+.tag-green{
+  background:rgba(42,157,110,0.18);
+  color:rgba(80,210,145,0.9);
+}
+
+/* ── Risk summary strip ── */
+.dp-risk-strip{
+  padding:10px 16px;
+  background:rgba(0,0,0,0.18);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;flex-direction:column;gap:5px;
+}
+.dp-risk-strip-row{
+  display:flex;align-items:center;gap:7px;
+}
+.dp-risk-dot{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+}
+.dp-risk-dot-red{background:rgba(220,80,70,0.9);}
+.dp-risk-dot-amber{background:rgba(210,155,40,0.85);}
+.dp-risk-text{
+  font-size:10px;color:rgba(255,255,255,0.38);
+  line-height:1.3;
+}
+
+/* ── Monitoring burden widget ── */
+.dp-monitor-widget{
+  padding:12px 14px 14px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.dp-monitor-head{
+  display:flex;align-items:center;gap:5px;
+  font-size:8.5px;font-weight:700;color:rgba(255,255,255,0.22);
+  text-transform:uppercase;letter-spacing:0.9px;
+  margin-bottom:9px;
+}
+.dp-monitor-bars{display:flex;flex-direction:column;gap:6px;}
+.dp-monitor-row{
+  display:flex;align-items:center;gap:7px;
+}
+.dp-monitor-label{
+  font-size:10px;color:rgba(255,255,255,0.3);
+  width:62px;flex-shrink:0;
+}
+.dp-monitor-track{
+  flex:1;height:3px;background:rgba(255,255,255,0.07);
+  border-radius:2px;overflow:hidden;
+}
+.dp-monitor-fill{height:100%;border-radius:2px;transition:width 0.5s ease;}
+.dp-mf-amber{background:rgba(200,150,40,0.55);}
+.dp-mf-red{background:rgba(210,70,60,0.55);}
+.dp-monitor-val{
+  font-size:9.5px;color:rgba(255,255,255,0.25);
+  width:24px;text-align:right;flex-shrink:0;
+}
+.dp-monitor-next{
+  display:flex;align-items:center;gap:5px;
+  font-size:9.5px;color:rgba(255,255,255,0.22);
+  margin-top:10px;padding-top:8px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
 
 /* USER */
 .dp-sidebar-footer{border-top:1px solid rgba(255,255,255,0.06);}

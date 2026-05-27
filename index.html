@@ -176,36 +176,36 @@
           <div class="ep-step">
             <div class="ep-step-num">1</div>
             <div>
-              <div class="ep-step-title">Scenario Input</div>
+              <div class="ep-step-title">Patient &amp; Scenario Parameters</div>
               <div class="ep-step-desc">Review and modify live patient parameters — age, eGFR, GI risk, CV status, prior failures, adherence, and sedation sensitivity.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">2</div>
             <div>
-              <div class="ep-step-title">Decision Output</div>
-              <div class="ep-step-desc">Primary recommendation with dosing, safety balance, confidence, and clinical rationale. Adapts to patient parameters.</div>
+              <div class="ep-step-title">Pharmacist Recommendation</div>
+              <div class="ep-step-desc">Primary recommendation with dosing, safety balance, confidence, and clinical rationale. Adapts to patient parameters in real time.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">3</div>
             <div>
-              <div class="ep-step-title">Trade-offs &amp; Drivers</div>
+              <div class="ep-step-title">Renal vs Analgesic Risk Balance</div>
               <div class="ep-step-desc">Therapy risk balancing — GI safety vs analgesic efficacy, renal implications, deprescribing considerations, and what drove each decision.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">4–6</div>
             <div>
-              <div class="ep-step-title">Notes · Escalation · Monitoring</div>
-              <div class="ep-step-desc">Clinical documentation, escalation triggers, monitoring schedule, safety thresholds, and follow-up plan — all parameter-responsive.</div>
+              <div class="ep-step-title">Documentation · Progression · Monitoring Escalation</div>
+              <div class="ep-step-desc">Clinical notes, longitudinal deterioration tracking, monitoring schedule, safety thresholds, and follow-up plan — all parameter-responsive.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">7–8</div>
             <div>
-              <div class="ep-step-title">Polypharmacy &amp; Evidence</div>
-              <div class="ep-step-desc">Interaction burden review across the full medication list. Renal dose status, deprescribing considerations, and evidence citations.</div>
+              <div class="ep-step-title">Polypharmacy Risk Drivers · Therapy Evidence</div>
+              <div class="ep-step-desc">Interaction burden review across the full medication list. Renal dose status, deprescribing considerations, and guideline citations.</div>
             </div>
           </div>
         </div>
@@ -308,50 +308,154 @@
       <div class="dp-scenario-status">Active session</div>
     </div>
 
+    <!-- RISK SUMMARY STRIP -->
+    <div class="dp-risk-strip">
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-red"></span>
+        <span class="dp-risk-text">NSAID pathway closed · GI + renal</span>
+      </div>
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-amber"></span>
+        <span class="dp-risk-text">Monitoring burden elevated · 3 active flags</span>
+      </div>
+    </div>
+
     <!-- WORKFLOW NAV -->
     <div class="dp-nav">
-      <div class="dp-nav-label">Clinical Workflow</div>
+
+      <!-- Phase I: Understand the concern -->
+      <div class="dp-nav-phase">
+        <div class="dp-nav-phase-label">I — Clinical Context</div>
+      </div>
+
       <button class="dp-nav-item done" onclick="showSection('scenario',this)">
         <span class="dp-nav-num">1</span>
-        Scenario Input
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Patient &amp; Scenario Parameters</span>
+        </span>
         <svg class="dp-nav-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       </button>
+
+      <!-- Phase II: Assess therapy risk -->
+      <div class="dp-nav-phase">
+        <div class="dp-nav-phase-label">II — Therapy Safety Assessment</div>
+      </div>
+
       <button class="dp-nav-item active" onclick="showSection('summary',this)">
         <span class="dp-nav-num">2</span>
-        Decision Output
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Pharmacist Recommendation</span>
+          <span class="dp-nav-item-tag tag-green">Action ready</span>
+        </span>
       </button>
+
       <button class="dp-nav-item" onclick="showSection('drivers',this)">
         <span class="dp-nav-num">3</span>
-        Trade-offs &amp; Drivers
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Renal vs Analgesic Risk Balance</span>
+          <span class="dp-nav-item-tag tag-red">2 closed pathways</span>
+        </span>
       </button>
+
+      <!-- Phase III: Monitoring burden -->
+      <div class="dp-nav-phase">
+        <div class="dp-nav-phase-label">III — Monitoring &amp; Progression</div>
+      </div>
+
       <button class="dp-nav-item" onclick="showSection('notes',this)">
         <span class="dp-nav-num">4</span>
-        Clinical Notes
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Clinical Documentation</span>
+        </span>
       </button>
+
       <button class="dp-nav-item" onclick="showSection('progression',this)">
         <span class="dp-nav-num">5</span>
-        Treatment Progression
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Longitudinal Deterioration</span>
+          <span class="dp-nav-item-tag tag-amber">Escalating</span>
+        </span>
       </button>
+
       <button class="dp-nav-item" onclick="showSection('monitoring',this)">
         <span class="dp-nav-num">6</span>
-        Monitoring &amp; Safety
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Monitoring Escalation Schedule</span>
+          <span class="dp-nav-item-tag tag-amber">3 active flags</span>
+        </span>
       </button>
+
+      <!-- Phase IV: Intervention evaluation -->
+      <div class="dp-nav-phase">
+        <div class="dp-nav-phase-label">IV — Intervention Review</div>
+      </div>
+
       <button class="dp-nav-item" onclick="showSection('polypharmacy',this)">
         <span class="dp-nav-num">7</span>
-        Polypharmacy &amp; Interactions
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Polypharmacy Risk Drivers</span>
+          <span class="dp-nav-item-tag tag-red">7 agents</span>
+        </span>
       </button>
+
       <button class="dp-nav-item" onclick="showSection('evidence',this)">
         <span class="dp-nav-num">8</span>
-        Evidence Layer
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Therapy Safety Evidence</span>
+        </span>
       </button>
+
       <div class="dp-nav-divider"></div>
-      <div class="dp-nav-label">Communication</div>
+
+      <!-- Phase V: Follow-up -->
+      <div class="dp-nav-phase">
+        <div class="dp-nav-phase-label">V — Follow-up &amp; Handoff</div>
+      </div>
+
       <button class="dp-nav-item" onclick="showSection('handoff',this)">
         <span class="dp-nav-num">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         </span>
-        Clinical Handoff
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Follow-up Priorities &amp; Handoff</span>
+        </span>
       </button>
+
+    </div>
+
+    <!-- MONITORING BURDEN WIDGET -->
+    <div class="dp-monitor-widget">
+      <div class="dp-monitor-head">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Monitoring Burden
+      </div>
+      <div class="dp-monitor-bars">
+        <div class="dp-monitor-row">
+          <span class="dp-monitor-label">Renal</span>
+          <div class="dp-monitor-track">
+            <div class="dp-monitor-fill dp-mf-amber" style="width:72%"></div>
+          </div>
+          <span class="dp-monitor-val">High</span>
+        </div>
+        <div class="dp-monitor-row">
+          <span class="dp-monitor-label">Polypharmacy</span>
+          <div class="dp-monitor-track">
+            <div class="dp-monitor-fill dp-mf-amber" style="width:60%"></div>
+          </div>
+          <span class="dp-monitor-val">Mod</span>
+        </div>
+        <div class="dp-monitor-row">
+          <span class="dp-monitor-label">GI</span>
+          <div class="dp-monitor-track">
+            <div class="dp-monitor-fill dp-mf-red" style="width:88%"></div>
+          </div>
+          <span class="dp-monitor-val">High</span>
+        </div>
+      </div>
+      <div class="dp-monitor-next">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Next contact: Week 2
+      </div>
     </div>
 
     <!-- FOOTER -->
