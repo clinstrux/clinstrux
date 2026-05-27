@@ -2062,3 +2062,19 @@ function updatePathwayStates(activeIdx) {
     }
   }
 }
+
+/* ════════════════════════════════
+   ENTRY PAGE — workflow gate
+════════════════════════════════ */
+function enterWorkflow() {
+  var ep = document.getElementById('entry-page');
+  var wp = document.getElementById('workflow-page');
+  if (!ep || !wp) return;
+  ep.style.transition = 'opacity 0.25s ease';
+  ep.style.opacity = '0';
+  setTimeout(function() {
+    ep.style.display = 'none';
+    wp.style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'auto'});
+  }, 260);
+}

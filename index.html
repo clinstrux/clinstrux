@@ -10,6 +10,230 @@
 </head>
 <body>
 
+<!-- ════════════════ SCENARIO ENTRY PAGE ════════════════ -->
+<div id="entry-page" class="ep-overlay">
+
+  <div class="ep-topbar">
+    <svg width="130" height="26" viewBox="0 0 148 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="15,1.5 22.2,3.8 27.2,9.2 27.2,20.8 22.2,26.2 15,28.5 7.8,26.2 2.8,20.8 2.8,9.2 7.8,3.8" fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.1"/>
+      <polygon points="15,4.5 20.8,6.5 25,11.2 25,18.8 20.8,23.5 15,25.5 9.2,23.5 5,18.8 5,11.2 9.2,6.5" fill="none" stroke="rgba(255,255,255,0.44)" stroke-width="1.1"/>
+      <polygon points="15,7.5 19.4,9.2 22.8,13.2 22.8,16.8 19.4,20.8 15,22.5 10.6,20.8 7.2,16.8 7.2,13.2 10.6,9.2" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="1.1"/>
+      <polygon points="15,11 19,14.5 19,15.5 15,19 11,15.5 11,14.5" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1.1"/>
+      <text x="36" y="21" font-family="'DM Sans', sans-serif" font-size="15.5" font-weight="300" letter-spacing="0.3" fill="rgba(255,255,255,0.80)">Clinstrux</text>
+    </svg>
+    <div class="ep-topbar-right">
+      <span class="ep-topbar-label">Case Intake</span>
+      <span class="ep-topbar-sep"></span>
+      <span class="ep-topbar-id">CS-2026-00841</span>
+    </div>
+  </div>
+
+  <div class="ep-body">
+
+    <!-- LEFT: Patient summary + complexity -->
+    <div class="ep-left">
+
+      <!-- Case header -->
+      <div class="ep-case-header">
+        <div class="ep-case-tag">CLINICAL SCENARIO</div>
+        <h1 class="ep-case-title">Chronic Osteoarthritis — High Analgesic Complexity</h1>
+        <p class="ep-case-subtitle">Bilateral knee OA with intersecting renal, gastrointestinal, cardiovascular, and polypharmacy constraints that collectively restrict the standard analgesic pathway.</p>
+      </div>
+
+      <!-- Patient summary card -->
+      <div class="ep-patient-card">
+        <div class="ep-patient-header">
+          <div class="ep-patient-avatar">F</div>
+          <div>
+            <div class="ep-patient-name">Anonymous · 68 y/o Female</div>
+            <div class="ep-patient-dx">Bilateral knee osteoarthritis &mdash; chronic, moderate-to-severe</div>
+          </div>
+          <div class="ep-patient-id">CS-2026-00841</div>
+        </div>
+        <div class="ep-patient-grid">
+          <div class="ep-param-cell">
+            <div class="ep-param-label">Pain (NRS)</div>
+            <div class="ep-param-val ep-val-amber">6 / 10</div>
+            <div class="ep-param-note">Functional limitation &mdash; bilateral</div>
+          </div>
+          <div class="ep-param-cell">
+            <div class="ep-param-label">eGFR</div>
+            <div class="ep-param-val ep-val-amber">58 mL/min</div>
+            <div class="ep-param-note">CKD Stage 3a &mdash; declining trajectory</div>
+          </div>
+          <div class="ep-param-cell">
+            <div class="ep-param-label">GI Risk</div>
+            <div class="ep-param-val ep-val-red">High</div>
+            <div class="ep-param-note">Prior peptic ulcer &mdash; documented</div>
+          </div>
+          <div class="ep-param-cell">
+            <div class="ep-param-label">CV Risk</div>
+            <div class="ep-param-val ep-val-amber">Moderate</div>
+            <div class="ep-param-note">BP 128 mmHg &mdash; managed</div>
+          </div>
+          <div class="ep-param-cell">
+            <div class="ep-param-label">Active Medications</div>
+            <div class="ep-param-val ep-val-amber">7 agents</div>
+            <div class="ep-param-note">Polypharmacy threshold exceeded</div>
+          </div>
+          <div class="ep-param-cell">
+            <div class="ep-param-label">NSAID Pathway</div>
+            <div class="ep-param-val ep-val-red">CLOSED</div>
+            <div class="ep-param-note">Intolerance &mdash; oral and topical</div>
+          </div>
+        </div>
+        <div class="ep-prior-failure">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Prior treatment failures: physiotherapy (incomplete), ibuprofen (GI adverse event), diclofenac (BP elevation). Two prior NSAIDs contraindicated. Opioid pathway avoided due to fall risk and sedation sensitivity.
+        </div>
+      </div>
+
+      <!-- Complexity indicators -->
+      <div class="ep-complexity-section">
+        <div class="ep-section-label">Complexity Indicators</div>
+        <div class="ep-complexity-grid">
+          <div class="ep-cx-item ep-cx-amber">
+            <div class="ep-cx-dot"></div>
+            <div>
+              <div class="ep-cx-name">CKD Stage 3a</div>
+              <div class="ep-cx-desc">eGFR 58 — limits nephrotoxic agents; trajectory unconfirmed pending recheck. Analgesic choices narrow further as function declines.</div>
+            </div>
+          </div>
+          <div class="ep-cx-item ep-cx-red">
+            <div class="ep-cx-dot"></div>
+            <div>
+              <div class="ep-cx-name">Polypharmacy</div>
+              <div class="ep-cx-desc">7 concurrent agents. Drug–drug interaction screening required. Adherence partially confirmed by self-report only.</div>
+            </div>
+          </div>
+          <div class="ep-cx-item ep-cx-red">
+            <div class="ep-cx-dot"></div>
+            <div>
+              <div class="ep-cx-name">GI Risk — High</div>
+              <div class="ep-cx-desc">Documented peptic ulcer history. NSAIDs and ASA contraindicated. COX-2 selectivity insufficient given renal + GI convergence.</div>
+            </div>
+          </div>
+          <div class="ep-cx-item ep-cx-amber">
+            <div class="ep-cx-dot"></div>
+            <div>
+              <div class="ep-cx-name">Monitoring Burden</div>
+              <div class="ep-cx-desc">Requires renal function tracking (Week 6, then annual), pain reassessment (Week 2), and medication safety review at each contact.</div>
+            </div>
+          </div>
+          <div class="ep-cx-item ep-cx-red">
+            <div class="ep-cx-dot"></div>
+            <div>
+              <div class="ep-cx-name">Prior Treatment Failure</div>
+              <div class="ep-cx-desc">Two NSAID classes failed. Opioid class declined. Remaining pathway: acetaminophen TID → duloxetine escalation → surgical review.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Workflow overview + CTA -->
+    <div class="ep-right">
+
+      <div class="ep-workflow-card">
+        <div class="ep-section-label" style="margin-bottom:14px;">Workflow Overview</div>
+        <p class="ep-workflow-intro">This case demonstrates a constrained analgesic decision pathway under multi-system clinical pressure. All sections are pre-populated from the patient parameter set.</p>
+
+        <div class="ep-workflow-steps">
+          <div class="ep-step">
+            <div class="ep-step-num">1</div>
+            <div>
+              <div class="ep-step-title">Scenario Input</div>
+              <div class="ep-step-desc">Review and modify live patient parameters — age, eGFR, GI risk, CV status, prior failures, adherence, and sedation sensitivity.</div>
+            </div>
+          </div>
+          <div class="ep-step">
+            <div class="ep-step-num">2</div>
+            <div>
+              <div class="ep-step-title">Decision Output</div>
+              <div class="ep-step-desc">Full analgesic recommendation with confidence scoring, pathway rationale, and reasoning chain across all active constraints.</div>
+            </div>
+          </div>
+          <div class="ep-step">
+            <div class="ep-step-num">3</div>
+            <div>
+              <div class="ep-step-title">Trade-offs &amp; Drivers</div>
+              <div class="ep-step-desc">Weighted factor analysis showing what is driving the decision and where clinical uncertainty resides.</div>
+            </div>
+          </div>
+          <div class="ep-step">
+            <div class="ep-step-num">4–6</div>
+            <div>
+              <div class="ep-step-title">Notes · Progression · Monitoring</div>
+              <div class="ep-step-desc">Clinical documentation, escalation pathway, monitoring schedule, and safety thresholds — all parameter-responsive.</div>
+            </div>
+          </div>
+          <div class="ep-step">
+            <div class="ep-step-num">7–8</div>
+            <div>
+              <div class="ep-step-title">Polypharmacy &amp; Evidence</div>
+              <div class="ep-step-desc">Interaction review across the full medication list. Evidence citations from ACR 2023, Beers 2023, and NICE CG177.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ep-modifiable-card">
+        <div class="ep-section-label" style="margin-bottom:12px;">What You Can Modify</div>
+        <div class="ep-mod-list">
+          <div class="ep-mod-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>eGFR — slide between 15 and 90 mL/min to observe renal pathway shifts</span>
+          </div>
+          <div class="ep-mod-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>GI risk category — none, dyspepsia, active ulcer, recent bleed</span>
+          </div>
+          <div class="ep-mod-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Pain score (NRS) and CV risk tier to observe escalation thresholds</span>
+          </div>
+          <div class="ep-mod-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Prior treatment failure history — from none through multi-class</span>
+          </div>
+          <div class="ep-mod-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Adherence profile and sedation sensitivity — affects opioid and adjuvant decisions</span>
+          </div>
+          <div class="ep-mod-row">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Intolerance profile — modifies which drug classes remain available</span>
+          </div>
+        </div>
+        <div class="ep-mod-note">All sections update in real time when parameters are changed. No page reload required.</div>
+      </div>
+
+      <div class="ep-cta-area">
+        <button class="ep-cta-btn" onclick="enterWorkflow()">
+          Enter Clinical Workflow
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <div class="ep-cta-note">Case CS-2026-00841 · Decision active · Reviewed May 17, 2026</div>
+      </div>
+
+      <div class="ep-disclaimer">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        This is a clinical workflow demonstration. Content is parameter-driven and does not constitute patient-specific medical advice. Clinical judgment must be applied before any decision is implemented in patient care.
+      </div>
+
+    </div>
+
+  </div><!-- /ep-body -->
+
+  <div class="ep-footer">
+    <span>© 2026 Clinstrux · Evteev Advisory · Clinical Decision Infrastructure</span>
+    <span>Not a substitute for clinical judgment. Clinstrux supports decisions but does not replace clinician expertise.</span>
+  </div>
+
+</div><!-- /entry-page -->
+
+<div id="workflow-page" style="display:none;">
 <div class="dp-wrap">
 
   <!-- ════════════════ SIDEBAR ════════════════ -->
@@ -3051,6 +3275,7 @@
     </div><!-- /dp-content -->
   </div><!-- /dp-main -->
 </div><!-- /dp-wrap -->
+</div><!-- /workflow-page -->
 
 <!-- FOOTER -->
 <div style="border-top:1px solid var(--border);padding:9px 32px;background:var(--white);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;max-width:1440px;margin:0 auto;">
