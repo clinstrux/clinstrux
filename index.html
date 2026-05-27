@@ -40,6 +40,18 @@
         <p class="ep-case-subtitle">Bilateral knee OA with intersecting renal, gastrointestinal, cardiovascular, and polypharmacy constraints that collectively restrict the standard analgesic pathway.</p>
       </div>
 
+      <!-- Review Objective -->
+      <div class="ep-review-objective">
+        <div class="ep-ro-eyebrow">Medication Review Objective</div>
+        <div class="ep-ro-objective">Evaluating analgesic safety under compound renal and GI constraint — balancing pain control against escalating polypharmacy and nephrotoxic risk</div>
+        <div class="ep-ro-pills">
+          <span class="ep-ro-pill ep-ro-pill-red">Progressive renal decline</span>
+          <span class="ep-ro-pill ep-ro-pill-red">NSAID pathway closed</span>
+          <span class="ep-ro-pill ep-ro-pill-amber">Monitoring burden elevated</span>
+          <span class="ep-ro-pill ep-ro-pill-blue">Initiate acetaminophen TID</span>
+        </div>
+      </div>
+
       <!-- Patient summary card -->
       <div class="ep-patient-card">
         <div class="ep-patient-header">
@@ -137,7 +149,7 @@
 
       <div class="ep-workflow-card">
         <div class="ep-section-label" style="margin-bottom:14px;">Workflow Overview</div>
-        <p class="ep-workflow-intro">This case demonstrates a constrained analgesic pathway under compound GI, renal, and CV pressure. All sections are pre-populated with patient data and update when parameters change.</p>
+        <p class="ep-workflow-intro">Medication review workspace for a constrained analgesic pathway under compound GI, renal, and CV pressure. Parameters are pre-populated and all sections recalculate when values change.</p>
 
         <div class="ep-workflow-steps">
           <div class="ep-step">
@@ -215,11 +227,6 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
         <div class="ep-cta-note">Case CS-2026-00841 · Decision active · Reviewed May 17, 2026</div>
-      </div>
-
-      <div class="ep-disclaimer">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        This is a clinical workflow demonstration. Content is parameter-driven and does not constitute patient-specific medical advice. Clinical judgment must be applied before any decision is implemented in patient care.
       </div>
 
     </div>
@@ -392,6 +399,40 @@
     </div>
 
     <div class="dp-content">
+
+    <!-- ══════════════════════════════════════
+         REVIEW OBJECTIVE BANNER
+    ═══════════════════════════════════════ -->
+    <div class="rob-banner" id="rob-banner">
+      <div class="rob-accent"></div>
+      <div class="rob-inner">
+        <div class="rob-top">
+          <div class="rob-objective-group">
+            <div class="rob-eyebrow">Medication Review Objective</div>
+            <div class="rob-objective" id="rob-objective-text">Evaluating analgesic safety under compound renal and GI constraint — assessing acetaminophen adequacy and escalation threshold</div>
+          </div>
+          <div class="rob-right-cluster">
+            <div class="rob-concern-pill">
+              <div class="rob-concern-dot"></div>
+              <span class="rob-concern-label">Primary Concern</span>
+              <span class="rob-concern-text" id="rob-concern-text">Progressive renal decline · NSAID pathway closed</span>
+            </div>
+          </div>
+        </div>
+        <div class="rob-bottom">
+          <div class="rob-action-block">
+            <span class="rob-action-label">Suggested Action</span>
+            <div class="rob-action-sep"></div>
+            <div class="rob-action-chip" id="rob-action-chip">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="rob-action-text">Initiate acetaminophen TID — obtain baseline eGFR today</span>
+            </div>
+          </div>
+          <div class="rob-divider-dot"></div>
+          <span class="rob-action-alt" id="rob-action-alt">Review at Week 2 before escalation decision</span>
+        </div>
+      </div>
+    </div>
 
     <!-- ══════════════════════════════════════
          CLINICAL REASONING VISIBILITY BLOCK

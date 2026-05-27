@@ -786,6 +786,9 @@ function runReasoningEngine() {
   
   // 12. Update clinical reasoning visibility panel
   updateClinicalReasoningPanel(rec, nsaidR);
+  
+  // 13. Update Review Objective Banner
+  updateReviewObjectiveBanner(rec);
 }
 
 // ── Clinical Reasoning Panel Engine ──
@@ -1128,6 +1131,83 @@ function setCrSignal(signalId, sevClass, valId, valText, subId, subText) {
       else dot.classList.add('dot-blue');
     }
   }
+}
+
+// ── Review Objective Banner update ──
+function updateReviewObjectiveBanner(rec) {
+  var objectiveEl = document.getElementById('rob-objective-text');
+  var concernEl = document.getElementById('rob-concern-text');
+  var actionEl = document.getElementById('rob-action-text');
+  var actionAltEl = document.getElementById('rob-action-alt');
+  if (!objectiveEl) return;
+
+  // Objective: what clinical task is happening
+  var objective;
+  if (apapContraindicated() && nsaidContraindicated()) {
+    objective = 'Identifying safe analgesic pathway when both primary pharmacological options are contraindicated — specialist referral criteria';
+  } else if (apapContraindicated()) {
+    objective = 'Evaluating NSAID-based analgesic initiation under compound renal and GI risk — monitoring burden assessment';
+  } else if (multimodalFailure()) {
+    objective = 'Reviewing analgesic options after multimodal pharmacotherapy failure — assessing opioid pathway candidacy and monitoring requirements';
+  } else if (P.pain >= 8) {
+    objective = 'Managing severe pain under constrained escalation pathway — balancing analgesic adequacy against GI and renal safety';
+  } else if (P.egfr < 45) {
+    objective = 'Assessing analgesic safety under moderate-to-severe renal impairment — renal dose adjustment and pathway restriction review';
+  } else if (egfrRisk() !== 'low' && giRisk() !== 'low') {
+    objective = 'Evaluating analgesic safety under compound renal and GI constraint — assessing acetaminophen adequacy and escalation threshold';
+  } else if (giRisk() !== 'low') {
+    objective = 'Balancing analgesic efficacy against GI safety — reviewing therapy initiation and monitoring frequency in high-risk GI profile';
+  } else {
+    objective = 'Reviewing analgesic initiation in polypharmacy context — assessing drug interactions, monitoring burden, and escalation readiness';
+  }
+  objectiveEl.textContent = objective;
+
+  // Primary concern
+  var concern;
+  if (P.egfr < 30) {
+    concern = 'Severe renal impairment (eGFR ' + P.egfr + ') · Analgesic pathway critically narrowed';
+  } else if (apapContraindicated() && nsaidContraindicated()) {
+    concern = 'Both primary analgesic pathways closed · Specialist review required';
+  } else if (giRisk() === 'very-high') {
+    concern = 'Active GI bleeding risk · All NSAIDs absolutely contraindicated';
+  } else if (P.egfr < 45 && giRisk() !== 'low') {
+    concern = 'Compound renal + GI risk · NSAID pathway closed · Escalation pathway narrowing';
+  } else if (P.egfr < 60 && giRisk() !== 'low') {
+    concern = 'Progressive renal decline · NSAID pathway closed';
+  } else if (P.pain >= 8 && nsaidContraindicated()) {
+    concern = 'Severe pain · Escalation options severely constrained';
+  } else if (egfrRisk() !== 'low') {
+    concern = 'Renal impairment (eGFR ' + P.egfr + ') · Monitoring burden elevated';
+  } else if (giRisk() !== 'low') {
+    concern = 'GI safety risk · NSAID class contraindicated';
+  } else {
+    concern = 'Polypharmacy burden · Adherence and interaction monitoring required';
+  }
+  concernEl.textContent = concern;
+
+  // Suggested pharmacist action
+  var action, actionAlt;
+  if (apapContraindicated() && nsaidContraindicated()) {
+    action = 'Initiate specialist referral — no safe first-line analgesic available';
+    actionAlt = 'Deprescribing review + pain team input';
+  } else if (apapContraindicated()) {
+    action = 'Consider low-dose NSAID + PPI cover — monitor renal and GI closely';
+    actionAlt = 'Review in 2 weeks — eGFR + GI symptoms';
+  } else if (multimodalFailure()) {
+    action = 'Reassess opioid pathway candidacy — specialist oversight recommended';
+    actionAlt = 'Consider deprescribing concurrent agents before opioid initiation';
+  } else if (P.egfr < 45) {
+    action = 'Dose-adjust acetaminophen — max ' + (P.egfr < 30 ? '2' : '2.5') + ' g/day — reassess renal function at 2 weeks';
+    actionAlt = 'Avoid all NSAIDs — renal risk prohibitive';
+  } else if (P.pain >= 8 && !apapContraindicated()) {
+    action = 'Escalate to topical diclofenac gel if acetaminophen inadequate at Week 4';
+    actionAlt = 'Monitor NRS at Week 2 before escalation decision';
+  } else {
+    action = 'Initiate acetaminophen TID — obtain baseline eGFR today';
+    actionAlt = 'Review at Week 2 before escalation decision';
+  }
+  actionEl.textContent = action;
+  if (actionAltEl) actionAltEl.textContent = actionAlt;
 }
 
 var _prevNsaidWasContra = null;

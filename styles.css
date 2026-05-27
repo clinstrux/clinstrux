@@ -2517,3 +2517,199 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   .csl-body{grid-template-columns:1fr;}
   .csl-divider{width:auto;height:1px;margin:0 12px;}
 }
+
+/* ════════════════════════════════
+   REVIEW OBJECTIVE BANNER
+════════════════════════════════ */
+.rob-banner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.rob-accent {
+  width: 3px;
+  background: var(--blue);
+  flex-shrink: 0;
+}
+.rob-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 13px 16px 13px 14px;
+  flex: 1;
+}
+.rob-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.rob-objective-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.rob-eyebrow {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.rob-objective {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.35;
+}
+.rob-right-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.rob-concern-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--red-bg);
+  border: 1px solid rgba(184,50,41,0.15);
+}
+.rob-concern-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.rob-concern-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--red);
+  white-space: nowrap;
+}
+.rob-concern-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--red);
+  white-space: nowrap;
+}
+.rob-bottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.rob-action-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rob-action-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.rob-action-sep {
+  width: 1px;
+  height: 10px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.rob-action-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--green);
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--green-bg);
+  border: 1px solid rgba(42,157,110,0.15);
+  white-space: nowrap;
+}
+.rob-action-chip svg {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+.rob-action-alt {
+  font-size: 11px;
+  color: var(--muted);
+}
+.rob-divider-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════
+   ENTRY PAGE: Review Objective section
+════════════════════════════════ */
+.ep-review-objective {
+  margin-bottom: 18px;
+  padding: 13px 16px;
+  background: rgba(74,111,165,0.05);
+  border: 1px solid rgba(74,111,165,0.18);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius);
+}
+.ep-ro-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 5px;
+}
+.ep-ro-objective {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.ep-ro-pills {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.ep-ro-pill {
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid;
+}
+.ep-ro-pill-red {
+  color: var(--red);
+  background: var(--red-bg);
+  border-color: rgba(184,50,41,0.15);
+}
+.ep-ro-pill-amber {
+  color: var(--amber);
+  background: var(--amber-bg);
+  border-color: rgba(184,122,0,0.15);
+}
+.ep-ro-pill-blue {
+  color: var(--blue);
+  background: var(--blue-light);
+  border-color: rgba(74,111,165,0.2);
+}
