@@ -137,7 +137,7 @@
 
       <div class="ep-workflow-card">
         <div class="ep-section-label" style="margin-bottom:14px;">Workflow Overview</div>
-        <p class="ep-workflow-intro">This case demonstrates a constrained analgesic decision pathway under multi-system clinical pressure. All sections are pre-populated from the patient parameter set.</p>
+        <p class="ep-workflow-intro">This case demonstrates a constrained analgesic pathway under compound GI, renal, and CV pressure. All sections are pre-populated with patient data and update when parameters change.</p>
 
         <div class="ep-workflow-steps">
           <div class="ep-step">
@@ -151,28 +151,28 @@
             <div class="ep-step-num">2</div>
             <div>
               <div class="ep-step-title">Decision Output</div>
-              <div class="ep-step-desc">Full analgesic recommendation with confidence scoring, pathway rationale, and reasoning chain across all active constraints.</div>
+              <div class="ep-step-desc">Primary recommendation with dosing, safety balance, confidence, and clinical rationale. Adapts to patient parameters.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">3</div>
             <div>
               <div class="ep-step-title">Trade-offs &amp; Drivers</div>
-              <div class="ep-step-desc">Weighted factor analysis showing what is driving the decision and where clinical uncertainty resides.</div>
+              <div class="ep-step-desc">Therapy risk balancing — GI safety vs analgesic efficacy, renal implications, deprescribing considerations, and what drove each decision.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">4–6</div>
             <div>
-              <div class="ep-step-title">Notes · Progression · Monitoring</div>
-              <div class="ep-step-desc">Clinical documentation, escalation pathway, monitoring schedule, and safety thresholds — all parameter-responsive.</div>
+              <div class="ep-step-title">Notes · Escalation · Monitoring</div>
+              <div class="ep-step-desc">Clinical documentation, escalation triggers, monitoring schedule, safety thresholds, and follow-up plan — all parameter-responsive.</div>
             </div>
           </div>
           <div class="ep-step">
             <div class="ep-step-num">7–8</div>
             <div>
               <div class="ep-step-title">Polypharmacy &amp; Evidence</div>
-              <div class="ep-step-desc">Interaction review across the full medication list. Evidence citations from ACR 2023, Beers 2023, and NICE CG177.</div>
+              <div class="ep-step-desc">Interaction burden review across the full medication list. Renal dose status, deprescribing considerations, and evidence citations.</div>
             </div>
           </div>
         </div>
@@ -400,7 +400,7 @@
       <div class="cr-block-head">
         <div class="cr-block-title">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          Clinical Reasoning Summary
+          Medication Review — Key Signals
         </div>
         <div class="cr-block-updated" id="cr-updated-indicator">Updated</div>
       </div>
@@ -410,7 +410,7 @@
         <div class="cr-signal sev-red" id="crs-primary-concern">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-red"></span>
-            Primary Clinical Concern
+            Binding Constraint
           </div>
           <div class="cr-signal-val" id="crs-concern-val">Compound GI + renal risk</div>
           <div class="cr-signal-sub" id="crs-concern-sub">Prior peptic ulcer · eGFR 58 · NSAID intolerance ×2</div>
@@ -420,18 +420,18 @@
         <div class="cr-signal sev-amber" id="crs-monitor-priority">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-amber"></span>
-            Highest Monitoring Priority
+            Monitoring Priority
           </div>
-          <div class="cr-signal-val" id="crs-monitor-val">Renal function (eGFR)</div>
-          <div class="cr-signal-sub" id="crs-monitor-sub">Check at 2 and 6 weeks · Flag if eGFR drops &gt;10%</div>
-          <div class="uq-note" style="margin-top:4px;">No historical eGFR available — trajectory direction unknown; borderline G2/G3a requires early recheck to establish trend</div>
+          <div class="cr-signal-val" id="crs-monitor-val">Renal function — eGFR</div>
+          <div class="cr-signal-sub" id="crs-monitor-sub">Baseline today · Recheck Wk 2 + Wk 6 · Flag if drops &gt;10%</div>
+          <div class="uq-note" style="margin-top:4px;">No prior eGFR on file — trajectory unknown. Baseline required before any NSAID escalation decision.</div>
         </div>
 
         <!-- 3. Main Treatment Constraint -->
         <div class="cr-signal sev-red" id="crs-constraint">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-red"></span>
-            Main Treatment Constraint
+            Pathway Status
           </div>
           <div class="cr-signal-val" id="crs-constraint-val">NSAID pathway closed</div>
           <div class="cr-signal-sub" id="crs-constraint-sub">GI risk + BP intolerance + age ≥65 (Beers)</div>
@@ -441,21 +441,21 @@
         <div class="cr-signal sev-amber" id="crs-escalation-trigger">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-amber"></span>
-            Most Significant Escalation Trigger
+            Escalation Trigger
           </div>
-          <div class="cr-signal-val" id="crs-trigger-val">Pain NRS ≥8 or acetaminophen failure</div>
-          <div class="cr-signal-sub" id="crs-trigger-sub">Would open topical NSAID combination pathway</div>
+          <div class="cr-signal-val" id="crs-trigger-val">NRS ≥8 or acetaminophen failure at Wk 4</div>
+          <div class="cr-signal-sub" id="crs-trigger-sub">Opens topical diclofenac gel pathway</div>
         </div>
 
         <!-- 5. Key Longitudinal Concern -->
         <div class="cr-signal sev-amber" id="crs-longitudinal">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-amber"></span>
-            Key Longitudinal Concern
+            Adherence Risk
           </div>
-          <div class="cr-signal-val" id="crs-longitudinal-val">Adherence — inconsistent PRN dosing</div>
-          <div class="cr-signal-sub" id="crs-longitudinal-sub">Subtherapeutic use limits outcome assessment at Week 4</div>
-          <div class="uq-note" style="margin-top:4px;">Adherence quality unverified — self-report only; outcome attribution unreliable until confirmed at Week 2</div>
+          <div class="cr-signal-val" id="crs-longitudinal-val">Inconsistent PRN — prescribe TID fixed</div>
+          <div class="cr-signal-sub" id="crs-longitudinal-sub">First objective check Week 2 · Subtherapeutic use confounds outcome</div>
+          <div class="uq-note" style="margin-top:4px;">Self-reported only — do not interpret partial response as treatment failure until adherence confirmed</div>
         </div>
 
         <!-- 6. Current Risk Balance -->
@@ -495,14 +495,124 @@
       </div>
     </div>
 
-    
+    <!-- ══════════════════════════════════════
+         CLINICAL SUMMARY LAYER
+    ═══════════════════════════════════════ -->
+    <div class="csl-block" id="csl-block">
+      <div class="csl-head">
+        <div class="csl-head-left">
+          <div class="csl-eyebrow">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Pharmacist Clinical Summary
+          </div>
+          <div class="csl-title" id="csl-title">Acetaminophen 500–1000 mg TID — initiate today</div>
+        </div>
+        <div class="csl-head-right">
+          <div class="csl-status-pill csl-status-green">
+            <span class="csl-status-dot"></span>
+            Intervention ready
+          </div>
+          <div class="csl-case-ref">CS-2026-00841</div>
+        </div>
+      </div>
+
+      <div class="csl-body">
+        <!-- Left: Actionable recommendation -->
+        <div class="csl-main">
+          <div class="csl-section-label">Recommended action</div>
+          <div class="csl-rec-block" id="csl-rec-block">
+            <div class="csl-rec-line">
+              <span class="csl-rec-bullet csl-bullet-green"></span>
+              <span id="csl-rec-text-1">Start <strong>acetaminophen 500–1000 mg TID (fixed schedule)</strong>. Not PRN — adherence to regular dosing is critical for outcome assessment.</span>
+            </div>
+            <div class="csl-rec-line">
+              <span class="csl-rec-bullet csl-bullet-red"></span>
+              <span id="csl-rec-text-2">NSAID pathway <strong>closed</strong>. Prior peptic ulcer + diclofenac BP response documented. Do not reopen without specialist review.</span>
+            </div>
+            <div class="csl-rec-line">
+              <span class="csl-rec-bullet csl-bullet-amber"></span>
+              <span id="csl-rec-text-3"><strong>Obtain baseline eGFR today</strong>. No prior result on file. Required before any escalation decision at Week 4.</span>
+            </div>
+            <div class="csl-rec-line">
+              <span class="csl-rec-bullet csl-bullet-blue"></span>
+              <span id="csl-rec-text-4">Review at <strong>Week 2</strong>: confirm TID adherence, NRS, GI tolerability. Do not escalate until adherence verified.</span>
+            </div>
+          </div>
+
+          <div class="csl-escalation-note" id="csl-escalation-note">
+            <div class="csl-esc-label">If uncontrolled at Week 4</div>
+            <div class="csl-esc-steps">
+              <span class="csl-esc-step">Topical diclofenac gel</span>
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span class="csl-esc-step">Duloxetine 30–60 mg (neuropathic)</span>
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span class="csl-esc-step csl-esc-conditional">Celecoxib low-dose (eGFR ≥50 only)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center divider -->
+        <div class="csl-divider"></div>
+
+        <!-- Right: Key flags and monitoring -->
+        <div class="csl-flags">
+          <div class="csl-section-label">Safety &amp; monitoring flags</div>
+
+          <div class="csl-flag csl-flag-red">
+            <div class="csl-flag-head">
+              <span class="csl-flag-dot csl-dot-red"></span>
+              <span class="csl-flag-label">GI risk — High</span>
+            </div>
+            <div class="csl-flag-text">Prior peptic ulcer. NSAIDs contraindicated. Maintain pantoprazole 40 mg — do not deprescribe at this stage.</div>
+          </div>
+
+          <div class="csl-flag csl-flag-amber">
+            <div class="csl-flag-head">
+              <span class="csl-flag-dot csl-dot-amber"></span>
+              <span class="csl-flag-label" id="csl-flag-renal-label">Renal — eGFR 58, trend unknown</span>
+            </div>
+            <div class="csl-flag-text" id="csl-flag-renal-text">CKD Stage 3a. Acetaminophen ceiling: 3 g/day. Baseline eGFR required today. No NSAIDs until trend established at Week 6.</div>
+          </div>
+
+          <div class="csl-flag csl-flag-amber">
+            <div class="csl-flag-head">
+              <span class="csl-flag-dot csl-dot-amber"></span>
+              <span class="csl-flag-label">Adherence — first objective check Week 2</span>
+            </div>
+            <div class="csl-flag-text">PRN use reported inconsistent. Prescribe fixed TID. Do not interpret partial early response as treatment failure before adherence confirmed.</div>
+          </div>
+
+          <div class="csl-flag csl-flag-blue">
+            <div class="csl-flag-head">
+              <span class="csl-flag-dot csl-dot-blue"></span>
+              <span class="csl-flag-label">Next monitoring actions</span>
+            </div>
+            <div class="csl-flag-text">Wk 2: adherence + NRS · Wk 4–6: eGFR + LFT + escalation decision · Month 3: comprehensive review · Annual: metabolic panel + medication safety review</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="csl-footer">
+        <div class="csl-footer-left">
+          <span class="csl-footer-badge csl-badge-green">ACR 2023 aligned</span>
+          <span class="csl-footer-badge csl-badge-green">Beers Criteria compliant</span>
+          <span class="csl-footer-badge csl-badge-blue">NICE CG177</span>
+          <span class="csl-footer-badge csl-badge-muted">Moderate–High evidence</span>
+        </div>
+        <div class="csl-footer-right">
+          <span class="csl-footer-note">Apply clinical judgment before implementation · Clinstrux medication review support</span>
+        </div>
+      </div>
+    </div>
+
     ═══════════════════════════════════════ -->
     <div id="section-scenario" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 1</div>
           <div class="dp-section-title">Scenario Input</div>
-          <div class="dp-section-subtitle">Patient context and clinical parameters for this decision.</div>
+          <div class="dp-section-subtitle">Patient parameters. Edit any value to update the medication review in real time.</div>
         </div>
         <button class="si-edit-btn">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -579,11 +689,11 @@
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Patient Parameters — Live Edit
           </div>
-          <span class="ip-live-badge">Reasoning responds to changes</span>
+          <span class="ip-live-badge">Workflow updates when parameters change</span>
         </div>
         <div id="ip-update-banner" class="ip-update-banner">
           <div class="ip-update-banner-dot"></div>
-          <span id="ip-update-text">Patient parameters updated — workflow reasoning has been recalculated.</span>
+          <span id="ip-update-text">Parameters updated — medication review and recommendations have been recalculated.</span>
           <button class="ip-update-dismiss" onclick="dismissUpdateBanner()">Dismiss</button>
         </div>
         <div class="ip-grid">
@@ -1031,7 +1141,7 @@
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 2</div>
           <div class="dp-section-title">Decision Output</div>
-          <div class="dp-section-subtitle">Evidence-based recommendations structured for this patient scenario.</div>
+          <div class="dp-section-subtitle">Recommended therapy with dosing, alternatives, and decision rationale.</div>
         </div>
       </div>
 
@@ -1043,7 +1153,7 @@
           <div class="ds-primary-state" id="dyn-primary-state">Preferred · First-line</div>
         </div>
         <div class="ds-primary-rationale" id="dyn-primary-rationale">
-          Best safety balance for this patient profile: avoids NSAID-related GI complications while providing adequate pain control for long-term management. Baseline renal impairment (eGFR 58) further strengthens NSAID avoidance. Aligns with ACR/EULAR guidelines and Beers Criteria for adults ≥65. Oral route aligns with documented patient preference and prior topical non-adherence.
+          GI risk is the binding constraint. Prior peptic ulcer + two documented NSAID intolerances close the NSAID pathway entirely. Acetaminophen provides adequate first-line analgesia without GI or renal burden. eGFR 58 (CKD Stage 3a) reinforces NSAID avoidance. Aligns with ACR 2023, Beers Criteria (≥65), and NICE CG177. Oral route preferred per patient history of inconsistent topical use.
         </div>
 
         <!-- Why this changed — shown only when parameter update shifts the recommendation -->
@@ -1356,7 +1466,7 @@
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 3</div>
           <div class="dp-section-title">Trade-offs &amp; Drivers</div>
-          <div class="dp-section-subtitle">Structured analysis of decision drivers and treatment trade-off logic.</div>
+          <div class="dp-section-subtitle">Therapy risk balancing — why each option was selected, modified, or excluded for this patient.</div>
         </div>
       </div>
 
@@ -1674,7 +1784,7 @@
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 5</div>
           <div class="dp-section-title">Treatment Progression</div>
-          <div class="dp-section-subtitle">What happens over time — reassessment checkpoints, escalation pathways, treatment adaptation, and longitudinal management logic.</div>
+          <div class="dp-section-subtitle">Follow-up checkpoints, escalation triggers, and therapy adaptation over time.</div>
         </div>
       </div>
 
@@ -1818,7 +1928,7 @@
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 6</div>
           <div class="dp-section-title">Monitoring &amp; Safety</div>
-          <div class="dp-section-subtitle">Active safety parameters, lab monitoring, contraindication checks, and follow-up schedule.</div>
+          <div class="dp-section-subtitle">Lab schedule, safety thresholds, and follow-up actions by timepoint.</div>
         </div>
         <button class="dp-action-btn">+ Add parameter</button>
       </div>
@@ -2005,7 +2115,7 @@
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 7</div>
           <div class="dp-section-title">Polypharmacy &amp; Interactions</div>
-          <div class="dp-section-subtitle">Medication burden analysis, drug–drug and drug–disease interactions, renal dose adjustment cascade, and deprescribing considerations.</div>
+          <div class="dp-section-subtitle">Interaction burden, renal dose adjustment, and deprescribing considerations for the current regimen.</div>
         </div>
       </div>
 
@@ -2318,7 +2428,7 @@
         <div class="dp-section-title-wrap">
           <div class="dp-section-label">Step 8</div>
           <div class="dp-section-title">Evidence Layer</div>
-          <div class="dp-section-subtitle">Guideline alignment, evidence grading, and rationale support for this recommendation. WHY this recommendation is clinically supported.</div>
+          <div class="dp-section-subtitle">Guideline alignment and evidence grading supporting the recommendation — confidence basis for clinical use.</div>
         </div>
       </div>
 
