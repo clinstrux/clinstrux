@@ -318,6 +318,10 @@
         <span class="dp-risk-dot dp-risk-dot-amber"></span>
         <span class="dp-risk-text">Monitoring burden elevated · 3 active flags</span>
       </div>
+      <div class="dp-risk-strip-row dp-risk-strip-intervention" id="dp-intervention-status-row">
+        <span class="dp-risk-dot dp-risk-dot-amber" id="dp-intervention-status-dot"></span>
+        <span class="dp-risk-text" id="dp-intervention-status-text">Escalating monitoring concern</span>
+      </div>
     </div>
 
     <!-- WORKFLOW NAV -->
@@ -556,6 +560,100 @@
           <span class="rob-action-alt" id="rob-action-alt">Review at Week 2 before escalation decision</span>
         </div>
       </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         PHARMACIST INTERVENTION PANEL
+    ═══════════════════════════════════════ -->
+    <div class="pi-panel" id="pi-panel">
+
+      <!-- Header row -->
+      <div class="pi-header">
+        <div class="pi-header-left">
+          <div class="pi-eyebrow">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+            Pharmacist Intervention
+          </div>
+          <div class="pi-title" id="pi-title">Medication Review — Analgesic Safety Assessment</div>
+        </div>
+        <div class="pi-header-right">
+          <div class="pi-priority-badge" id="pi-priority-badge">
+            <span class="pi-priority-dot" id="pi-priority-dot"></span>
+            <span id="pi-priority-label">Escalating Monitoring Concern</span>
+          </div>
+          <div class="pi-case-ref">CS-2026-00841</div>
+        </div>
+      </div>
+
+      <!-- Three-column intervention body -->
+      <div class="pi-body">
+
+        <!-- COL 1: Suggested Intervention -->
+        <div class="pi-col pi-col-intervention">
+          <div class="pi-col-label">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Suggested Intervention
+          </div>
+          <div class="pi-intervention-main" id="pi-intervention-main">Initiate acetaminophen TID — scheduled dosing, not PRN</div>
+          <div class="pi-intervention-subs" id="pi-intervention-subs">
+            <div class="pi-sub-item">
+              <span class="pi-sub-dot pi-dot-amber"></span>
+              <span id="pi-sub-1">Obtain baseline eGFR before Week 2 contact</span>
+            </div>
+            <div class="pi-sub-item">
+              <span class="pi-sub-dot pi-dot-amber"></span>
+              <span id="pi-sub-2">Confirm adherence at Week 2 — do not escalate on PRN use</span>
+            </div>
+            <div class="pi-sub-item">
+              <span class="pi-sub-dot pi-dot-blue"></span>
+              <span id="pi-sub-3">Maintain pantoprazole 40 mg — do not deprescribe</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vertical divider -->
+        <div class="pi-col-divider"></div>
+
+        <!-- COL 2: Why Urgency Is Increasing -->
+        <div class="pi-col pi-col-urgency">
+          <div class="pi-col-label">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Why Urgency Is Increasing
+          </div>
+          <div class="pi-urgency-items" id="pi-urgency-items">
+            <!-- populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Vertical divider -->
+        <div class="pi-col-divider"></div>
+
+        <!-- COL 3: Follow-up Consequences -->
+        <div class="pi-col pi-col-followup">
+          <div class="pi-col-label">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            If Follow-up Is Delayed
+          </div>
+          <div class="pi-followup-items" id="pi-followup-items">
+            <!-- populated dynamically -->
+          </div>
+          <div class="pi-next-contact">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="pi-next-contact-text">Next contact: Week 2 — adherence + NRS + eGFR status</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom action pathway strip -->
+      <div class="pi-pathway-strip" id="pi-pathway-strip">
+        <div class="pi-pathway-label">Action Pathway</div>
+        <div class="pi-pathway-steps" id="pi-pathway-steps">
+          <!-- populated dynamically -->
+        </div>
+        <div class="pi-pathway-note" id="pi-pathway-note">Reassess pathway at Week 4 — escalation decision pending eGFR and adherence confirmation</div>
+      </div>
+
     </div>
 
     <!-- ══════════════════════════════════════
