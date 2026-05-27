@@ -2214,6 +2214,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   color:var(--amber);
 }
 
+/* Clinical info blocks — Objective / Concern / Action */
+.ep-clinical-blocks{
+  display:flex;flex-direction:column;gap:8px;
+}
+.ep-clinical-block{
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:13px 16px;
+  background:var(--white);
+}
+.ep-clinical-block + .ep-clinical-block{
+  margin-top:0;
+}
+.ep-clinical-block-label{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.85px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.ep-clinical-block-body{
+  font-size:12px;color:var(--text);line-height:1.65;
+}
+.ep-clinical-block--objective{
+  border-left:3px solid var(--blue);
+  background:rgba(74,111,165,0.04);
+}
+.ep-clinical-block--objective .ep-clinical-block-label{
+  color:var(--blue);
+}
+.ep-clinical-block--concern{
+  border-left:3px solid var(--red);
+  background:var(--red-bg);
+}
+.ep-clinical-block--concern .ep-clinical-block-label{
+  color:var(--red);
+}
+.ep-clinical-block--action{
+  border-left:3px solid var(--green);
+  background:var(--green-bg);
+}
+.ep-clinical-block--action .ep-clinical-block-label{
+  color:var(--green);
+}
+
 /* Complexity indicators */
 .ep-complexity-grid{
   display:flex;flex-direction:column;gap:8px;
