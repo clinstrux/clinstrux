@@ -229,7 +229,105 @@
 .text-amber-bold       { color: var(--amber); font-weight: 600; }
 .text-green-bold       { color: var(--green); font-weight: 600; }
 
-/* ─── Phase 15 final cleanup ────────────────────────────────────────────── */
+/* ─── Phase 16: Needs Attention Now widget ──────────────────────────────── */
+.dp-attn-widget {
+  margin: 0 14px 10px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.dp-attn-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+}
+.dp-attn-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 5px 10px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text);
+  border-bottom: 1px solid var(--border-light);
+  line-height: 1.35;
+}
+.dp-attn-item:last-child { border-bottom: none; }
+.dp-attn-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.dp-attn-red  .dp-attn-dot { background: var(--red); }
+.dp-attn-amber .dp-attn-dot { background: var(--amber); }
+.dp-attn-red  { color: var(--red); font-weight: 600; }
+.dp-attn-amber { color: var(--text); }
+
+/* ─── Priority tier label enhancement ───────────────────────────────────── */
+.pi-priority-tier {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
+.pi-tier-urgent  { background: rgba(184,50,41,0.10); color: var(--red); border: 1px solid rgba(184,50,41,0.2); }
+.pi-tier-high    { background: rgba(184,122,0,0.10); color: var(--amber); border: 1px solid rgba(184,122,0,0.2); }
+.pi-tier-monitor { background: rgba(74,111,165,0.09); color: var(--blue); border: 1px solid rgba(74,111,165,0.2); }
+.pi-tier-routine { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+/* ─── Intervention action verb accent ───────────────────────────────────── */
+.pi-action-verb {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+  display: block;
+}
+
+/* ─── Clinical summary flag — tighter action line ────────────────────────── */
+.csl-flag-action {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ─── Intervention priority strip ────────────────────────────────────────── */
+.pi-priority-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px 5px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg);
+}
+.pi-priority-strip-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-right: 2px;
+}
+
 .ev-tag.ev-tag-amber  { background: rgba(184,122,0,0.08); color: var(--amber); border: 1px solid rgba(184,122,0,0.15); }
 .ev-tag.ev-tag-red    { background: rgba(184,50,41,0.07); color: var(--red); border: 1px solid rgba(184,50,41,0.14); }
 .escalation-link      { padding: 10px 16px; font-size: 11.5px; color: var(--blue); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
@@ -639,6 +737,26 @@
 
     </div>
 
+    <!-- NEEDS ATTENTION NOW -->
+    <div class="dp-attn-widget">
+      <div class="dp-attn-head">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        Needs Attention Now
+      </div>
+      <div class="dp-attn-item dp-attn-red">
+        <span class="dp-attn-dot"></span>
+        Baseline eGFR — order today, no prior result
+      </div>
+      <div class="dp-attn-item dp-attn-amber">
+        <span class="dp-attn-dot"></span>
+        Prescribe TID schedule — not PRN
+      </div>
+      <div class="dp-attn-item dp-attn-amber">
+        <span class="dp-attn-dot"></span>
+        Do not deprescribe pantoprazole
+      </div>
+    </div>
+
     <!-- MONITORING BURDEN WIDGET -->
     <div class="dp-monitor-widget">
       <div class="dp-monitor-head">
@@ -769,6 +887,14 @@
 
     <div class="pi-panel" id="pi-panel">
 
+      <div class="pi-priority-strip">
+        <span class="pi-priority-strip-label">Review Priority</span>
+        <span class="pi-priority-tier pi-tier-monitor" id="pi-priority-tier-badge">Monitor</span>
+        <span class="pi-priority-badge" id="pi-priority-badge" style="margin-left:2px;">
+          <span class="pi-priority-dot" id="pi-priority-dot"></span>
+          <span id="pi-priority-label">Escalating Monitoring Concern</span>
+        </span>
+      </div>
       <div class="pi-header">
         <div class="pi-header-left">
           <div class="pi-eyebrow">
@@ -778,10 +904,6 @@
           <div class="pi-title" id="pi-title">Medication Review — Analgesic Safety Assessment</div>
         </div>
         <div class="pi-header-right">
-          <div class="pi-priority-badge" id="pi-priority-badge">
-            <span class="pi-priority-dot" id="pi-priority-dot"></span>
-            <span id="pi-priority-label">Escalating Monitoring Concern</span>
-          </div>
           <div class="pi-case-ref">CS-2026-00841</div>
         </div>
       </div>
@@ -794,6 +916,7 @@
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Suggested Intervention
           </div>
+          <span class="pi-action-verb" id="pi-action-verb">Initiate today</span>
           <div class="pi-intervention-main" id="pi-intervention-main">Initiate acetaminophen TID — scheduled dosing, not PRN</div>
           <div class="pi-intervention-subs" id="pi-intervention-subs">
             <div class="pi-sub-item">
@@ -818,7 +941,7 @@
         <div class="pi-col pi-col-urgency">
           <div class="pi-col-label">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            Why Urgency Is Increasing
+            Risk drivers — why this matters now
           </div>
           <div class="pi-urgency-items" id="pi-urgency-items">
             <!-- populated dynamically -->
@@ -832,7 +955,7 @@
         <div class="pi-col pi-col-followup">
           <div class="pi-col-label">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            If Follow-up Is Delayed
+            If this contact is missed or delayed
           </div>
           <div class="pi-followup-items" id="pi-followup-items">
             <!-- populated dynamically -->
@@ -858,7 +981,7 @@
       <div class="cr-block-head">
         <div class="cr-block-title">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          Medication Review — Key Signals
+          Review Snapshot — Active Risks &amp; Actions
         </div>
         <div class="cr-block-updated" id="cr-updated-indicator">Updated</div>
       </div>
@@ -868,7 +991,7 @@
         <div class="cr-signal sev-red" id="crs-primary-concern">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-red"></span>
-            Binding Constraint
+            Why this patient is high-risk
           </div>
           <div class="cr-signal-val" id="crs-concern-val">Compound GI + renal risk</div>
           <div class="cr-signal-sub" id="crs-concern-sub">Prior peptic ulcer · eGFR 58 · NSAID intolerance ×2</div>
@@ -878,7 +1001,7 @@
         <div class="cr-signal sev-amber" id="crs-monitor-priority">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-amber"></span>
-            Monitoring Priority
+            Monitor first — order today
           </div>
           <div class="cr-signal-val" id="crs-monitor-val">Renal function — eGFR</div>
           <div class="cr-signal-sub" id="crs-monitor-sub">Baseline today · Recheck Wk 2 + Wk 6 · Flag if drops &gt;10%</div>
@@ -889,7 +1012,7 @@
         <div class="cr-signal sev-red" id="crs-constraint">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-red"></span>
-            Pathway Status
+            Do not prescribe
           </div>
           <div class="cr-signal-val" id="crs-constraint-val">NSAID pathway closed</div>
           <div class="cr-signal-sub" id="crs-constraint-sub">GI risk + BP intolerance + age ≥65 (Beers)</div>
@@ -899,7 +1022,7 @@
         <div class="cr-signal sev-amber" id="crs-escalation-trigger">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-amber"></span>
-            Escalation Trigger
+            Escalation trigger — watch for
           </div>
           <div class="cr-signal-val" id="crs-trigger-val">NRS ≥8 or acetaminophen failure at Wk 4</div>
           <div class="cr-signal-sub" id="crs-trigger-sub">Opens topical diclofenac gel pathway</div>
@@ -909,7 +1032,7 @@
         <div class="cr-signal sev-amber" id="crs-longitudinal">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-amber"></span>
-            Adherence Risk
+            Adherence — confirm at Wk 2
           </div>
           <div class="cr-signal-val" id="crs-longitudinal-val">Inconsistent PRN — prescribe TID fixed</div>
           <div class="cr-signal-sub" id="crs-longitudinal-sub">First objective check Week 2 · Subtherapeutic use confounds outcome</div>
@@ -920,7 +1043,7 @@
         <div class="cr-signal sev-none" id="crs-risk-balance">
           <div class="cr-signal-label">
             <span class="cr-signal-label-dot dot-green"></span>
-            Current Risk Balance
+            Current safety status
           </div>
           <div class="cr-signal-val" id="crs-balance-val">Favorable — within safe pathway</div>
           <div id="crs-balance-pill" class="cr-risk-balance rb-favorable">Acetaminophen: low systemic risk</div>
@@ -972,7 +1095,7 @@
       <div class="csl-body">
         <!-- Left: Actionable recommendation -->
         <div class="csl-main">
-          <div class="csl-section-label">Recommended action</div>
+          <div class="csl-section-label">What to do — now</div>
           <div class="csl-rec-block" id="csl-rec-block">
             <div class="csl-rec-line">
               <span class="csl-rec-bullet csl-bullet-green"></span>
@@ -1009,14 +1132,14 @@
 
         <!-- Right: Key flags and monitoring -->
         <div class="csl-flags">
-          <div class="csl-section-label">Safety &amp; monitoring flags</div>
+          <div class="csl-section-label">Active safety constraints</div>
 
           <div class="csl-flag csl-flag-red">
             <div class="csl-flag-head">
               <span class="csl-flag-dot csl-dot-red"></span>
-              <span class="csl-flag-label">GI risk — High</span>
+              <span class="csl-flag-label">GI — Prior peptic ulcer · NSAIDs contraindicated</span>
             </div>
-            <div class="csl-flag-text">Prior peptic ulcer. NSAIDs contraindicated. Maintain pantoprazole 40 mg — do not deprescribe at this stage.</div>
+            <div class="csl-flag-text">Maintain pantoprazole 40 mg — do not deprescribe. Any new GI symptoms (dark stool, epigastric pain): hold analgesic, urgent review.</div>
           </div>
 
           <div class="csl-flag csl-flag-amber">
@@ -1038,9 +1161,9 @@
           <div class="csl-flag csl-flag-blue">
             <div class="csl-flag-head">
               <span class="csl-flag-dot csl-dot-blue"></span>
-              <span class="csl-flag-label">Next monitoring actions</span>
+              <span class="csl-flag-label">Follow-up schedule — confirmed</span>
             </div>
-            <div class="csl-flag-text">Wk 2: adherence + NRS · Wk 4–6: eGFR + LFT + escalation decision · Month 3: comprehensive review · Annual: metabolic panel + medication safety review</div>
+            <div class="csl-flag-text"><strong>Wk 2:</strong> adherence + NRS check · <strong>Wk 4–6:</strong> eGFR + LFT + escalation decision · <strong>Month 3:</strong> full medication review · <strong>Annual:</strong> metabolic panel + safety review</div>
           </div>
 
         </div>

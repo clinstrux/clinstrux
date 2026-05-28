@@ -1443,20 +1443,29 @@ function updateInterventionPanel(rec) {
   var complexity = computeComplexity();
 
   // Priority classification
-  var priorityClass, priorityLabel;
+  var priorityClass, priorityLabel, tierClass, tierLabel;
   if (apapContraindicated() && nsaidContraindicated()) {
-    priorityClass = 'pi-prio-high';     priorityLabel = 'Intervention — Higher Priority';
+    priorityClass = 'pi-prio-high';     priorityLabel = 'Urgent — no safe first-line identified';
+    tierClass = 'pi-tier-urgent'; tierLabel = 'Urgent';
   } else if (P.egfr < 30 || giRisk() === 'very-high') {
-    priorityClass = 'pi-prio-high';     priorityLabel = 'Increased Renal / GI Safety Concern';
+    priorityClass = 'pi-prio-high';     priorityLabel = 'High priority — renal / GI safety concern';
+    tierClass = 'pi-tier-urgent'; tierLabel = 'High';
   } else if (P.egfr < 45 || (nsaidContraindicated() && P.pain >= 7)) {
-    priorityClass = 'pi-prio-elevated'; priorityLabel = 'Intervention Becoming Higher Priority';
+    priorityClass = 'pi-prio-elevated'; priorityLabel = 'Elevated — review before next prescribing';
+    tierClass = 'pi-tier-high'; tierLabel = 'Elevated';
   } else if (nsaidContraindicated() || P.adh === 'poor' || complexity >= 60) {
-    priorityClass = 'pi-prio-monitor';  priorityLabel = 'Escalating Monitoring Concern';
+    priorityClass = 'pi-prio-monitor';  priorityLabel = 'Monitor — Week 2 contact required';
+    tierClass = 'pi-tier-monitor'; tierLabel = 'Monitor';
   } else if (P.pain >= 6 || P.adh === 'partial') {
-    priorityClass = 'pi-prio-monitor';  priorityLabel = 'Follow-up Recommended';
+    priorityClass = 'pi-prio-monitor';  priorityLabel = 'Follow-up at Week 2';
+    tierClass = 'pi-tier-monitor'; tierLabel = 'Follow-up';
   } else {
-    priorityClass = 'pi-prio-routine';  priorityLabel = 'Routine Review';
+    priorityClass = 'pi-prio-routine';  priorityLabel = 'Routine review';
+    tierClass = 'pi-tier-routine'; tierLabel = 'Routine';
   }
+
+  var tierBadge = document.getElementById('pi-priority-tier-badge');
+  if (tierBadge) { tierBadge.className = 'pi-priority-tier ' + tierClass; tierBadge.textContent = tierLabel; }
 
   var badge   = document.getElementById('pi-priority-badge');
   var labelEl = document.getElementById('pi-priority-label');
@@ -1470,17 +1479,28 @@ function updateInterventionPanel(rec) {
     sidebarDot.className = 'dp-risk-dot';
     if (priorityClass === 'pi-prio-high') {
       sidebarDot.classList.add('dp-risk-dot-red');
-      sidebarText.textContent = 'Intervention — higher priority';
+      sidebarText.textContent = 'Act now — safety intervention required';
     } else if (priorityClass === 'pi-prio-elevated') {
       sidebarDot.classList.add('dp-risk-dot-amber');
-      sidebarText.textContent = 'Intervention priority increasing';
+      sidebarText.textContent = 'Review before next prescribing contact';
     } else if (priorityClass === 'pi-prio-monitor') {
       sidebarDot.classList.add('dp-risk-dot-amber');
-      sidebarText.textContent = 'Escalating monitoring concern';
+      sidebarText.textContent = 'Week 2 follow-up — confirm adherence + eGFR';
     } else {
       sidebarDot.classList.add('dp-risk-dot-green');
-      sidebarText.textContent = 'Intervention: routine review';
+      sidebarText.textContent = 'Routine review — no urgent action';
     }
+  }
+
+  // Action verb
+  var actionVerbEl = document.getElementById('pi-action-verb');
+  if (actionVerbEl) {
+    if (apapContraindicated() && nsaidContraindicated()) actionVerbEl.textContent = 'Refer — specialist input needed';
+    else if (P.egfr < 30)                               actionVerbEl.textContent = 'Dose-adjust and escalate monitoring';
+    else if (P.egfr < 45)                               actionVerbEl.textContent = 'Dose-reduce — renal risk active';
+    else if (multimodalFailure())                        actionVerbEl.textContent = 'Review pathway — specialist input';
+    else if (P.pain >= 8 && !apapContraindicated())      actionVerbEl.textContent = 'Escalate if not controlled at Wk 4';
+    else                                                 actionVerbEl.textContent = 'Initiate today';
   }
 
   // Panel title
@@ -1538,26 +1558,26 @@ function updateInterventionPanel(rec) {
   var urgencyContainer = document.getElementById('pi-urgency-items');
   if (urgencyContainer) {
     var urgencyItems = [];
-    if      (P.egfr < 30)      urgencyItems.push({ cls:'urg-red',   text:'<strong>Severe renal decline</strong> — dose adjustments now mandatory; analgesic pathway critically narrowed' });
-    else if (P.egfr < 45)      urgencyItems.push({ cls:'urg-red',   text:'<strong>Moderate CKD (eGFR ' + P.egfr + ')</strong> — NSAID pathway closed; monitoring frequency must increase' });
-    else if (P.egfr < 60)      urgencyItems.push({ cls:'urg-amber', text:'<strong>CKD Stage 3a (eGFR ' + P.egfr + ')</strong> — declining trajectory; renal reassessment required before escalation' });
+    if      (P.egfr < 30)      urgencyItems.push({ cls:'urg-red',   text:'<strong>Severe renal impairment (eGFR ' + P.egfr + ')</strong> — dose-adjust all renally-cleared drugs now; acetaminophen ceiling 2 g/day' });
+    else if (P.egfr < 45)      urgencyItems.push({ cls:'urg-red',   text:'<strong>eGFR ' + P.egfr + ' — moderate CKD</strong> — NSAID pathway closed; check renal function at 2 and 4 weeks' });
+    else if (P.egfr < 60)      urgencyItems.push({ cls:'urg-amber', text:'<strong>eGFR ' + P.egfr + ' — CKD Stage 3a</strong> — no prior trend; order baseline today, recheck at Week 6 before any escalation decision' });
 
-    if      (giRisk()==='very-high') urgencyItems.push({ cls:'urg-red',   text:'<strong>Active or recent GI bleed</strong> — NSAID pathway absolutely closed; GI monitoring at every contact' });
-    else if (giRisk()==='high')      urgencyItems.push({ cls:'urg-amber', text:'<strong>High GI risk (prior peptic ulcer)</strong> — NSAID class contraindicated; benefit-risk balance worsening with duration' });
+    if      (giRisk()==='very-high') urgencyItems.push({ cls:'urg-red',   text:'<strong>Active or recent GI bleed</strong> — NSAIDs absolutely contraindicated; check GI symptoms at every contact' });
+    else if (giRisk()==='high')      urgencyItems.push({ cls:'urg-amber', text:'<strong>Prior peptic ulcer — GI risk high</strong> — NSAIDs contraindicated; maintain PPI cover, do not deprescribe pantoprazole' });
 
     if (nsaidContraindicated() && P.pain >= 7)
-      urgencyItems.push({ cls:'urg-amber', text:'<strong>Pain severity rising (NRS ' + P.pain + '/10)</strong> — NSAID pathway closed; escalation options narrowing' });
+      urgencyItems.push({ cls:'urg-amber', text:'<strong>NRS ' + P.pain + '/10 with NSAID pathway closed</strong> — escalation options are narrow; document pain trajectory at Wk 2 before next decision' });
     else if (P.pain >= 8)
-      urgencyItems.push({ cls:'urg-amber', text:'<strong>Severe pain (NRS ' + P.pain + '/10)</strong> — acetaminophen monotherapy likely insufficient; combination threshold reached' });
+      urgencyItems.push({ cls:'urg-amber', text:'<strong>Severe pain (NRS ' + P.pain + '/10)</strong> — acetaminophen monotherapy likely inadequate; combination threshold reached at Week 4' });
 
-    if      (P.adh === 'poor')    urgencyItems.push({ cls:'urg-amber', text:'<strong>Poor adherence documented</strong> — outcomes unreliable; Week 4 response cannot be interpreted without dosing verification' });
-    else if (P.adh === 'partial') urgencyItems.push({ cls:'urg-blue',  text:'<strong>Inconsistent PRN use</strong> — subtherapeutic exposure probable; fixed TID schedule required before escalation' });
+    if      (P.adh === 'poor')    urgencyItems.push({ cls:'urg-amber', text:'<strong>Poor adherence</strong> — do not escalate until confirmed at Week 2; Week 4 NRS cannot be interpreted without dosing verification' });
+    else if (P.adh === 'partial') urgencyItems.push({ cls:'urg-blue',  text:'<strong>Inconsistent PRN use</strong> — prescribe TID fixed schedule today; subtherapeutic exposure will confound Week 4 review' });
 
-    if (complexity >= 75)  urgencyItems.push({ cls:'urg-amber', text:'<strong>Polypharmacy complexity (7 agents)</strong> — interaction burden elevated; deprescribing review warranted' });
-    if (multimodalFailure()) urgencyItems.push({ cls:'urg-red',  text:'<strong>Multimodal treatment failure</strong> — all non-opioid options exhausted; specialist input required' });
+    if (complexity >= 75)  urgencyItems.push({ cls:'urg-amber', text:'<strong>7-agent regimen — high complexity</strong> — review for interaction burden; deprescribing candidates: identify at Month 3 review' });
+    if (multimodalFailure()) urgencyItems.push({ cls:'urg-red',  text:'<strong>All non-opioid options exhausted</strong> — specialist referral required before any further pharmacotherapy' });
 
     if (urgencyItems.length === 0)
-      urgencyItems.push({ cls:'urg-blue', text:'<strong>Stable clinical profile</strong> — no escalating concern identified; standard monitoring applies' });
+      urgencyItems.push({ cls:'urg-blue', text:'<strong>No escalating concern identified</strong> — standard monitoring schedule applies; review at Week 2 as planned' });
 
     urgencyContainer.innerHTML = urgencyItems.map(function(item) {
       return '<div class="pi-urgency-item ' + item.cls + '">' +
@@ -1570,23 +1590,23 @@ function updateInterventionPanel(rec) {
   var followupContainer = document.getElementById('pi-followup-items');
   if (followupContainer) {
     var followupItems = [];
-    if      (P.egfr < 45) followupItems.push({ strong:'Worsening renal burden',      text:' — delayed reassessment risks undetected eGFR decline and dose accumulation' });
-    else if (P.egfr < 60) followupItems.push({ strong:'Progressive renal decline',   text:' — delayed eGFR recheck leaves dosing threshold unvalidated' });
+    if      (P.egfr < 45) followupItems.push({ strong:'Missed dose-adjustment window',      text:' — eGFR may continue to decline without dose ceiling in place; accumulation risk increases' });
+    else if (P.egfr < 60) followupItems.push({ strong:'Escalation decision without renal data',   text:' — baseline eGFR not available; cannot confirm eGFR ≥50 required for topical NSAID at Wk 4' });
 
     if (giRisk() !== 'low')
-      followupItems.push({ strong:'Rising GI exposure risk', text:' — ongoing analgesic use without GI review increases ulceration probability' });
+      followupItems.push({ strong:'Analgesic use without GI reassessment', text:' — prolonged PPI omission or analgesic substitution may go undetected' });
 
     if (P.adh === 'partial' || P.adh === 'poor')
-      followupItems.push({ strong:'Rising monitoring complexity', text:' — adherence cannot be confirmed; Week 4 escalation decision will be unreliable' });
+      followupItems.push({ strong:'Week 4 escalation decision becomes invalid', text:' — cannot distinguish treatment failure from subtherapeutic dosing without adherence confirmation at Wk 2' });
 
     if (nsaidContraindicated() && P.pain >= 6)
-      followupItems.push({ strong:'Therapy benefit becoming outweighed', text:' — pain burden increases while safe escalation options remain limited' });
+      followupItems.push({ strong:'Pain uncontrolled — no objective reassessment',  text:' — NRS trajectory unknown; escalation timing window may close with further renal decline' });
 
     if (complexity >= 70)
-      followupItems.push({ strong:'Polypharmacy burden compounding', text:' — 7-agent regimen requires regular interaction and safety review' });
+      followupItems.push({ strong:'Interaction risk unreviewed', text:' — 7-agent regimen; any new prescription requires interaction check against current list' });
 
     if (followupItems.length === 0)
-      followupItems.push({ strong:'Delayed NRS review', text:' — pain trajectory cannot be confirmed; escalation timing becomes unclear' });
+      followupItems.push({ strong:'Pain review delayed', text:' — NRS trajectory at Week 2 is the first data point for escalation decision; delay pushes this to Month 3 review' });
 
     followupContainer.innerHTML = followupItems.map(function(item) {
       return '<div class="pi-followup-item">' +
@@ -1599,9 +1619,9 @@ function updateInterventionPanel(rec) {
   // Next contact text
   var nextContactEl = document.getElementById('pi-next-contact-text');
   if (nextContactEl) {
-    if      (P.egfr < 30) nextContactEl.textContent = 'Next contact: 1 week — eGFR + safety review';
-    else if (P.egfr < 45) nextContactEl.textContent = 'Next contact: 2 weeks — eGFR + dose adjustment review';
-    else                  nextContactEl.textContent = 'Next contact: Week 2 — adherence + NRS + eGFR status';
+    if      (P.egfr < 30) nextContactEl.textContent = 'Next contact: 1 week — eGFR + safety review + dose check';
+    else if (P.egfr < 45) nextContactEl.textContent = 'Next contact: 2 weeks — eGFR + dose-adjustment confirmation';
+    else                  nextContactEl.textContent = 'Week 2 — confirm TID adherence, NRS, eGFR status. Do not escalate until adherence verified.';
   }
 
   // Action pathway steps
@@ -1611,34 +1631,34 @@ function updateInterventionPanel(rec) {
     var steps;
     if (apapContraindicated() && nsaidContraindicated()) {
       steps = [
-        { label:'NSAIDs', cls:'pi-step-closed' }, { label:'Acetaminophen', cls:'pi-step-closed' },
+        { label:'NSAIDs — CI', cls:'pi-step-closed' }, { label:'Acetaminophen — CI', cls:'pi-step-closed' },
         { label:'Specialist Referral', cls:'pi-step-active' }, { label:'Deprescribing Review', cls:'pi-step-conditional' }
       ];
-      if (pathwayNoteEl) pathwayNoteEl.textContent = 'No safe standard analgesic pathway — specialist assessment required before initiating further pharmacotherapy';
+      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Refer to pain medicine or rheumatology before initiating further pharmacotherapy';
     } else if (P.egfr < 30) {
       steps = [
-        { label:'NSAIDs: Absolute CI', cls:'pi-step-closed' }, { label:'Acetaminophen 2 g/day max', cls:'pi-step-active' },
-        { label:'Nephrology Review', cls:'pi-step-conditional' }
+        { label:'NSAIDs — absolute CI', cls:'pi-step-closed' }, { label:'Acetaminophen ≤2 g/day', cls:'pi-step-active' },
+        { label:'Nephrology review', cls:'pi-step-conditional' }
       ];
-      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Renal protection is the overriding priority — analgesic ceiling applies at all stages';
+      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Renal protection is the overriding priority; analgesic ceiling applies at all stages';
     } else if (multimodalFailure()) {
       steps = [
-        { label:'NSAIDs', cls:'pi-step-closed' }, { label:'Acetaminophen', cls:'pi-step-closed' },
-        { label:'Deprescribing Review', cls:'pi-step-active' }, { label:'Opioid Assessment', cls:'pi-step-conditional' }
+        { label:'NSAIDs — CI', cls:'pi-step-closed' }, { label:'Acetaminophen — failed', cls:'pi-step-closed' },
+        { label:'Deprescribing review', cls:'pi-step-active' }, { label:'Opioid candidacy assessment', cls:'pi-step-conditional' }
       ];
-      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Reassess opioid candidacy under specialist oversight — all non-opioid pathways exhausted';
+      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Opioid pathway candidacy requires specialist oversight — document all failure rationale first';
     } else if (P.pain >= 8 && !apapContraindicated()) {
       steps = [
-        { label:'Acetaminophen TID', cls:'pi-step-active' }, { label:'Topical Diclofenac Gel', cls:'pi-step-conditional' },
-        { label:'Duloxetine 30–60 mg', cls:'pi-step-conditional' }, { label:'NSAIDs', cls:'pi-step-closed' }
+        { label:'Acetaminophen TID', cls:'pi-step-active' }, { label:'Topical diclofenac gel (Wk 4)', cls:'pi-step-conditional' },
+        { label:'Duloxetine 30–60 mg', cls:'pi-step-conditional' }, { label:'NSAIDs — CI', cls:'pi-step-closed' }
       ];
-      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Combination therapy threshold met — escalation at Week 4 if NRS ≥6 on regular acetaminophen';
+      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Escalate to topical diclofenac at Week 4 if NRS ≥6 on confirmed TID use; eGFR ≥50 required';
     } else {
       steps = [
-        { label:'Acetaminophen TID', cls:'pi-step-active' }, { label:'Topical Diclofenac', cls:'pi-step-conditional' },
-        { label:'Duloxetine 30 mg', cls:'pi-step-conditional' }, { label:'NSAIDs', cls:'pi-step-closed' }
+        { label:'Acetaminophen TID — now', cls:'pi-step-active' }, { label:'Topical diclofenac (Wk 4+)', cls:'pi-step-conditional' },
+        { label:'Duloxetine 30 mg (neuropathic)', cls:'pi-step-conditional' }, { label:'NSAIDs — CI', cls:'pi-step-closed' }
       ];
-      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Reassess pathway at Week 4 — escalation decision pending eGFR and adherence confirmation';
+      if (pathwayNoteEl) pathwayNoteEl.textContent = 'Wk 2: confirm adherence + NRS · Wk 4: escalation decision if NRS ≥6 or inadequate response on TID schedule';
     }
 
     pathwayStepsEl.innerHTML = steps.map(function(step, i) {
