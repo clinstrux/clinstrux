@@ -7,6 +7,267 @@
 <title>Clinstrux — Clinical Decision Infrastructure</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+
+<style>
+/* ─── Clinstrux refactor utility classes ────────────────────────────────────
+   These replace inline styles removed during the HTML cleanup pass.
+   Do not modify styles.css for these — this block owns them.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* Icons */
+.icon-shrink-0        { flex-shrink: 0; }
+.icon-mt1             { margin-top: 1px; }
+
+/* Timepoint dots */
+.lp-tp-dot.lp-dot-future {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Progression overview strip */
+.prog-overview-strip {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px 18px;
+  margin-bottom: 18px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.prog-divider         { width: 1px; background: var(--border-light); flex-shrink: 0; }
+.prog-overview-label  { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 3px; }
+.prog-overview-value  { font-size: 12.5px; font-weight: 600; color: var(--navy); }
+.prog-overview-sub    { font-size: 11px; color: var(--muted); }
+.prog-overview-amber  { color: var(--amber); }
+.prog-overview-green  { color: var(--green); }
+
+/* Evidence section */
+.ev-guideline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(42,157,110,0.08);
+  color: var(--green);
+  border: 1px solid rgba(42,157,110,0.18);
+}
+.ev-amber-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--amber-bg, rgba(184,122,0,0.06));
+  color: var(--amber);
+  border: 1px solid rgba(184,122,0,0.18);
+}
+.ev-blue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(74,111,165,0.08);
+  color: var(--blue);
+  border: 1px solid rgba(74,111,165,0.18);
+}
+.ev-summary-card      { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 18px; }
+.ev-summary-head      { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.ev-summary-badges    { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.ev-confidence-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--border-light); padding-top: 12px; }
+.ev-confidence-col    { padding-right: 18px; border-right: 1px solid var(--border-light); }
+.ev-confidence-head   { font-size: 9.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.ev-confidence-rows   { display: flex; flex-direction: column; gap: 4px; }
+.ev-confidence-row    { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; }
+.ev-confidence-sep    { padding-top: 3px; border-top: 1px solid var(--border-light); margin-top: 2px; }
+.ev-uncertain         { color: var(--uncertain); }
+.ev-limitations-col   { padding-left: 18px; }
+.ev-limitations-text  { font-size: 11.5px; color: var(--text); line-height: 1.65; }
+.ev-confidence.ev-confidence-high   { font-weight: 700; color: var(--green); }
+.ev-confidence.ev-confidence-mod    { font-weight: 700; color: var(--amber); }
+.ev-confidence.ev-confidence-reduced { font-weight: 700; color: var(--uncertain); }
+.ev-level.ev-level-high { font-size: 11.5px; font-weight: 700; color: var(--green); }
+.ev-level.ev-level-mod  { font-size: 11.5px; font-weight: 700; color: var(--amber); }
+.ev-source-tags       { display: flex; gap: 4px; flex-wrap: wrap; }
+.ev-tag               { font-size: 9px; font-weight: 700; padding: 1.5px 6px; border-radius: 3px; }
+.ev-tag.ev-tag-green  { background: rgba(42,157,110,0.08); color: var(--green); border: 1px solid rgba(42,157,110,0.15); }
+.ev-tag.ev-tag-muted  { background: var(--bg); border: 1px solid var(--border); color: var(--muted); font-weight: 600; }
+.ev-stat-card-highlight { border-top: 2px solid var(--green); }
+.ev-stat-num-green    { color: var(--green); }
+.ev-source-authors    { margin-bottom: 5px; }
+
+/* Evidence basis strip (section 2) */
+.evidence-basis-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  padding: 9px 13px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  align-items: center;
+}
+.ev-basis-label       { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-right: 4px; white-space: nowrap; }
+.ev-basis-chip        { font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+.ev-basis-chip.ev-chip-green  { background: rgba(42,157,110,0.08); color: var(--green); border: 1px solid rgba(42,157,110,0.15); }
+.ev-basis-chip.ev-chip-red    { background: rgba(184,50,41,0.06); color: var(--red); border: 1px solid rgba(184,50,41,0.14); }
+.ev-basis-chip.ev-chip-muted  { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+/* Monitoring schedule grid */
+.mon-schedule-grid {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.mon-schedule-head {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 1fr;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.mon-schedule-head > div {
+  padding: 9px 13px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-left: 1px solid var(--border-light);
+}
+.mon-schedule-head > div:first-child { border-left: none; }
+.mon-schedule-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 1fr;
+  border-bottom: 1px solid var(--border-light);
+}
+.mon-schedule-row.mon-row-highlight  { background: rgba(184,122,0,0.025); }
+.mon-schedule-row.mon-row-last       { border-bottom: none; }
+.mon-cell-checkpoint      { padding: 11px 13px; font-size: 12px; font-weight: 600; color: var(--navy); }
+.mon-cell-checkpoint.mon-cell-amber  { color: var(--amber); }
+.mon-cell             { padding: 11px 13px; font-size: 11.5px; color: var(--text); border-left: 1px solid var(--border-light); }
+.mon-cell.mon-cell-muted    { color: var(--muted); }
+.mon-cell.mon-cell-red      { color: var(--red); }
+.mon-cell.mon-cell-uncertain { color: var(--uncertain); }
+
+/* Renal dosing block */
+.renal-dosing-block   { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; }
+.renal-dosing-cols    { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.renal-dosing-col     { padding: 12px 14px; border-right: 1px solid var(--border-light); }
+.renal-dosing-col:last-child { border-right: none; }
+.renal-dosing-label   { font-size: 8.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 4px; }
+.renal-dosing-val     { font-size: 12px; font-weight: 600; }
+.renal-dosing-note    { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+.renal-dosing-footer  { padding: 7px 14px; border-top: 1px solid var(--border-light); background: var(--bg); font-size: 10.5px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.renal-dosing-footnote-label { font-weight: 600; color: var(--navy); }
+
+/* Clinical notes editor */
+.cn-tb-bold           { font-weight: 700; }
+.cn-tb-italic         { font-style: italic; }
+.cn-tb-autosaved      { color: var(--muted); }
+
+/* Polypharmacy section */
+.poly-cell-text       { font-size: 11px; color: var(--text); line-height: 1.5; }
+.poly-note            { font-size: 10.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+.poly-head-meta       { font-size: 10px; color: var(--muted); }
+.wn-col.wn-col-divided { border-top: 1px solid var(--border-light); }
+.dep-drug-class       { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.deprescribe-row.deprescribe-row-highlight { background: rgba(42,157,110,0.015); }
+
+/* Pathway triggers */
+.mn-pathway-trigger.mn-trigger-critical { /* critical is styled in existing CSS */ }
+.mn-pathway-trigger.mn-trigger-success  { background: rgba(42,157,110,0.05); border-color: rgba(42,157,110,0.15); }
+.mn-pathway-trigger-if.mn-trigger-if-green { color: var(--green); }
+
+/* Handoff section */
+.hf-doc-output        { }
+.hf-format-note       { margin-top: 12px; }
+
+/* Scenario input card */
+.si-card-meta         { font-size: 10px; color: var(--muted); }
+.si-val-sub           { color: var(--muted); font-size: 11px; }
+.si-val-amber-sub     { color: var(--amber); font-size: 11px; }
+.si-val-amber-note    { color: var(--amber); font-size: 10.5px; font-weight: 600; }
+.si-val-blue-note     { display: block; margin-top: 4px; font-size: 10px; color: var(--blue); font-weight: 600; }
+.si-patient-badge.si-pbadge-green { background: rgba(42,157,110,0.08); color: var(--green); }
+.si-activity-row      { padding: 12px 16px; border-top: 1px solid var(--border-light); display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-start; }
+.si-activity-list     { display: flex; flex-direction: column; gap: 3px; list-style: none; padding: 0; margin: 0; }
+.si-activity-list li  { font-size: 11.5px; color: var(--text); }
+.si-activity-list li::before { content: "• "; }
+.si-activity-amber    { color: var(--amber) !important; }
+
+/* ─── Additional utility classes (phase 14) ───────────────────────────── */
+.app-footer {
+  border-top: 1px solid var(--border);
+  padding: 9px 32px;
+  background: var(--white);
+  font-size: 10.5px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.poly-proposed-chip   { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 2px; background: rgba(42,157,110,0.12); color: var(--green); margin-left: 4px; }
+.renal-cascade-head-row { background: var(--bg); font-size: 8.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; border: 1px solid var(--border); }
+.mn-esc-success        { background: rgba(42,157,110,0.04); border-radius: 5px; padding: 6px 0; }
+.mn-esc-arrow-success  { color: var(--green); }
+.text-red-bold         { color: var(--red); font-weight: 600; }
+.text-amber-bold       { color: var(--amber); font-weight: 600; }
+.text-green-bold       { color: var(--green); font-weight: 600; }
+
+/* ─── Phase 15 final cleanup ────────────────────────────────────────────── */
+.ev-tag.ev-tag-amber  { background: rgba(184,122,0,0.08); color: var(--amber); border: 1px solid rgba(184,122,0,0.15); }
+.ev-tag.ev-tag-red    { background: rgba(184,50,41,0.07); color: var(--red); border: 1px solid rgba(184,50,41,0.14); }
+.escalation-link      { padding: 10px 16px; font-size: 11.5px; color: var(--blue); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.renal-cascade-footer { padding: 9px 16px; border-top: 1px solid var(--border-light); font-size: 11px; color: var(--muted); background: rgba(184,122,0,0.02); }
+.card-panel           { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.mn-stat-card-uncertain { background: var(--uncertain-bg); color: var(--uncertain); border: 1px solid var(--uncertain-border); }
+.escalation-link-mt { margin-top: 8px; }
+
+/* ─── Cleanup pass 2 utility classes ─────────────────────────────────────── */
+.text-navy              { color: var(--navy); }
+.text-bold              { font-weight: 700; }
+.dd-impact-label        { font-size: 10.5px; font-weight: 700; margin-bottom: 4px; }
+.dd-impact-red          { color: var(--red); }
+.dd-impact-amber        { color: var(--amber); }
+.dot-label              { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.dot-label.dot-label-green { color: var(--green); }
+.dot-label.dot-label-amber { color: var(--amber); }
+.dot-label.dot-label-red   { color: var(--red); }
+.ds-pcol                { }
+.ds-pcol-sub            { font-size: 11px; color: rgba(255,255,255,0.35); }
+.ds-pcol-drivers        { font-size: 11.5px; line-height: 1.6; }
+.lp-tp-dot.lp-dot-active { background: var(--blue); }
+.mn-stat-val-lg         { font-size: 15px; margin-top: 4px; }
+.mn-stat-uncertain      { color: var(--uncertain); }
+.mn-stat-val-pending    { font-size: 14px; margin-top: 4px; color: var(--uncertain); }
+.renal-dosing-val-amber { color: var(--amber); }
+.poly-flag-mt           { margin-top: 5px; display: inline-flex; }
+.poly-med-row-proposed  { background: rgba(42,157,110,0.02); }
+.poly-apap-detail       { font-size: 10.5px; color: var(--text); margin-top: 3px; line-height: 1.45; }
+.renal-cascade-body     { padding: 14px 16px; }
+.renal-cell-active      { color: var(--text); }
+.deprescribe-head-meta  { font-size: 10px; color: var(--muted); }
+.dep-action-note        { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.adherence-implication  { color: var(--muted); font-size: 11px; margin-top: 3px; display: block; }
+.icon-block-shrink      { display: block; flex-shrink: 0; }
+.hf-callout-top         { margin-top: 0; margin-bottom: 16px; }
+.mn-stat-card-uncertain { border-color: var(--uncertain-border); background: var(--uncertain-bg); }
+</style>
 </head>
 <body>
 
@@ -32,15 +293,11 @@
 
     <!-- LEFT: Patient summary + complexity -->
     <div class="ep-left">
-
-      <!-- Case header -->
       <div class="ep-case-header">
         <div class="ep-case-tag">CLINICAL SCENARIO</div>
         <h1 class="ep-case-title">Chronic Osteoarthritis — High Analgesic Complexity</h1>
         <p class="ep-case-subtitle">Bilateral knee OA with intersecting renal, gastrointestinal, cardiovascular, and polypharmacy constraints that collectively restrict the standard analgesic pathway.</p>
       </div>
-
-      <!-- Review Objective -->
       <div class="ep-review-objective">
         <div class="ep-ro-eyebrow">Medication Review Objective</div>
         <div class="ep-ro-objective">Evaluating analgesic safety under compound renal and GI constraint — balancing pain control against escalating polypharmacy and nephrotoxic risk</div>
@@ -51,8 +308,6 @@
           <span class="ep-ro-pill ep-ro-pill-blue">Initiate acetaminophen TID</span>
         </div>
       </div>
-
-      <!-- Patient summary card -->
       <div class="ep-patient-card">
         <div class="ep-patient-header">
           <div class="ep-patient-avatar">F</div>
@@ -95,33 +350,24 @@
           </div>
         </div>
         <div class="ep-prior-failure">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0 icon-mt1"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
           Prior treatment failures: physiotherapy (incomplete), ibuprofen (GI adverse event), diclofenac (BP elevation). Two prior NSAIDs contraindicated. Opioid pathway avoided due to fall risk and sedation sensitivity.
         </div>
       </div>
-
-      <!-- Clinical context blocks -->
       <div class="ep-clinical-blocks">
-        <!-- Clinical Review Objective -->
         <div class="ep-clinical-block ep-clinical-block--objective">
           <div class="ep-clinical-block-label">Clinical Review Objective</div>
           <div class="ep-clinical-block-body">Evaluate escalating NSAID-related renal and gastrointestinal risk in a high-complexity longitudinal medication-management scenario.</div>
         </div>
-
-        <!-- Primary Clinical Concern -->
         <div class="ep-clinical-block ep-clinical-block--concern">
           <div class="ep-clinical-block-label">Primary Clinical Concern</div>
           <div class="ep-clinical-block-body">Progressive renal decline under chronic analgesic exposure with increasing monitoring burden and worsening GI safety profile.</div>
         </div>
-
-        <!-- Suggested Pharmacist Action -->
         <div class="ep-clinical-block ep-clinical-block--action">
           <div class="ep-clinical-block-label">Suggested Pharmacist Action</div>
           <div class="ep-clinical-block-body">Consider reducing NSAID exposure and initiating monitored alternative therapy with renal reassessment follow-up.</div>
         </div>
       </div>
-
-      <!-- Complexity indicators -->
       <div class="ep-complexity-section">
         <div class="ep-section-label">Complexity Indicators</div>
         <div class="ep-complexity-grid">
@@ -164,12 +410,10 @@
       </div>
 
     </div>
-
-    <!-- RIGHT: Workflow overview + CTA -->
-    <div class="ep-right">
+      <div class="ep-right">
 
       <div class="ep-workflow-card">
-        <div class="ep-section-label" style="margin-bottom:14px;">Workflow Overview</div>
+        <div class="ep-section-label">Workflow Overview</div>
         <p class="ep-workflow-intro">Medication review workspace for a constrained analgesic pathway under compound GI, renal, and CV pressure. Parameters are pre-populated and all sections recalculate when values change.</p>
 
         <div class="ep-workflow-steps">
@@ -212,7 +456,7 @@
       </div>
 
       <div class="ep-modifiable-card">
-        <div class="ep-section-label" style="margin-bottom:12px;">What You Can Modify</div>
+        <div class="ep-section-label">What You Can Modify</div>
         <div class="ep-mod-list">
           <div class="ep-mod-row">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -266,24 +510,16 @@
   <!-- ════════════════ SIDEBAR ════════════════ -->
   <div class="dp-sidebar">
 
-    <!-- LOGO: Full wordmark — symbol + Clinstrux text -->
-    <div class="dp-logo" style="padding:16px 16px 14px;">
-      <svg width="148" height="30" viewBox="0 0 148 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">
-        <!-- ── Concentric octagon symbol ── -->
-        <!-- Outer octagon stroke -->
+      <div class="dp-logo">
+      <svg width="148" height="30" viewBox="0 0 148 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-block-shrink">
         <polygon points="15,1.5 22.2,3.8 27.2,9.2 27.2,20.8 22.2,26.2 15,28.5 7.8,26.2 2.8,20.8 2.8,9.2 7.8,3.8"
           fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.1"/>
-        <!-- Second ring -->
         <polygon points="15,4.5 20.8,6.5 25,11.2 25,18.8 20.8,23.5 15,25.5 9.2,23.5 5,18.8 5,11.2 9.2,6.5"
           fill="none" stroke="rgba(255,255,255,0.50)" stroke-width="1.1"/>
-        <!-- Third ring -->
         <polygon points="15,7.5 19.4,9.2 22.8,13.2 22.8,16.8 19.4,20.8 15,22.5 10.6,20.8 7.2,16.8 7.2,13.2 10.6,9.2"
           fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.1"/>
-        <!-- Inner diamond -->
         <polygon points="15,11 19,14.5 19,15.5 15,19 11,15.5 11,14.5"
           fill="none" stroke="rgba(255,255,255,0.40)" stroke-width="1.1"/>
-
-        <!-- ── "Clinstrux" wordmark ── -->
         <text x="36" y="21"
           font-family="'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif"
           font-size="15.5"
@@ -293,8 +529,7 @@
       </svg>
     </div>
 
-    <!-- SCENARIO CONTEXT -->
-    <div class="dp-sidebar-top">
+      <div class="dp-sidebar-top">
       <a href="#" class="dp-back">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         All Scenarios
@@ -308,8 +543,7 @@
       <div class="dp-scenario-status">Active session</div>
     </div>
 
-    <!-- RISK SUMMARY STRIP -->
-    <div class="dp-risk-strip">
+      <div class="dp-risk-strip">
       <div class="dp-risk-strip-row">
         <span class="dp-risk-dot dp-risk-dot-red"></span>
         <span class="dp-risk-text">NSAID pathway closed · GI + renal</span>
@@ -324,8 +558,7 @@
       </div>
     </div>
 
-    <!-- WORKFLOW NAV -->
-    <div class="dp-nav">
+      <div class="dp-nav">
 
       <!-- Phase I: Understand the concern -->
       <div class="dp-nav-phase">
@@ -462,8 +695,7 @@
       </div>
     </div>
 
-    <!-- FOOTER -->
-    <div class="dp-sidebar-footer">
+      <div class="dp-sidebar-footer">
       <div class="dp-user-profile">
         <div class="dp-user-avatar">ME</div>
         <div>
@@ -492,7 +724,6 @@
   <!-- ════════════════ MAIN ════════════════ -->
   <div class="dp-main">
 
-    <!-- CLINICAL TOPBAR -->
     <div class="dp-topbar">
       <div class="dp-topbar-meta">
         <div class="dp-topbar-case">
@@ -528,9 +759,6 @@
 
     <div class="dp-content">
 
-    <!-- ══════════════════════════════════════
-         REVIEW OBJECTIVE BANNER
-    ═══════════════════════════════════════ -->
     <div class="rob-banner" id="rob-banner">
       <div class="rob-accent"></div>
       <div class="rob-inner">
@@ -539,12 +767,10 @@
             <div class="rob-eyebrow">Medication Review Objective</div>
             <div class="rob-objective" id="rob-objective-text">Evaluating analgesic safety under compound renal and GI constraint — assessing acetaminophen adequacy and escalation threshold</div>
           </div>
-          <div class="rob-right-cluster">
-            <div class="rob-concern-pill">
-              <div class="rob-concern-dot"></div>
-              <span class="rob-concern-label">Primary Concern</span>
-              <span class="rob-concern-text" id="rob-concern-text">Progressive renal decline · NSAID pathway closed</span>
-            </div>
+          <div class="rob-concern-pill">
+            <div class="rob-concern-dot"></div>
+            <span class="rob-concern-label">Primary Concern</span>
+            <span class="rob-concern-text" id="rob-concern-text">Progressive renal decline · NSAID pathway closed</span>
           </div>
         </div>
         <div class="rob-bottom">
@@ -562,12 +788,8 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         PHARMACIST INTERVENTION PANEL
-    ═══════════════════════════════════════ -->
     <div class="pi-panel" id="pi-panel">
 
-      <!-- Header row -->
       <div class="pi-header">
         <div class="pi-header-left">
           <div class="pi-eyebrow">
@@ -588,8 +810,7 @@
       <!-- Three-column intervention body -->
       <div class="pi-body">
 
-        <!-- COL 1: Suggested Intervention -->
-        <div class="pi-col pi-col-intervention">
+<div class="pi-col pi-col-intervention">
           <div class="pi-col-label">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Suggested Intervention
@@ -644,9 +865,7 @@
         </div>
 
       </div>
-
-      <!-- Bottom action pathway strip -->
-      <div class="pi-pathway-strip" id="pi-pathway-strip">
+<div class="pi-pathway-strip" id="pi-pathway-strip">
         <div class="pi-pathway-label">Action Pathway</div>
         <div class="pi-pathway-steps" id="pi-pathway-steps">
           <!-- populated dynamically -->
@@ -656,10 +875,7 @@
 
     </div>
 
-    <!-- ══════════════════════════════════════
-         CLINICAL REASONING VISIBILITY BLOCK
-    ═══════════════════════════════════════ -->
-    <div class="cr-block" id="cr-block" style="margin-bottom:20px;">
+    <div class="cr-block" id="cr-block">
       <div class="cr-block-head">
         <div class="cr-block-title">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
@@ -687,7 +903,7 @@
           </div>
           <div class="cr-signal-val" id="crs-monitor-val">Renal function — eGFR</div>
           <div class="cr-signal-sub" id="crs-monitor-sub">Baseline today · Recheck Wk 2 + Wk 6 · Flag if drops &gt;10%</div>
-          <div class="uq-note" style="margin-top:4px;">No prior eGFR on file — trajectory unknown. Baseline required before any NSAID escalation decision.</div>
+          <div class="uq-note">No prior eGFR on file — trajectory unknown. Baseline required before any NSAID escalation decision.</div>
         </div>
 
         <!-- 3. Main Treatment Constraint -->
@@ -718,7 +934,7 @@
           </div>
           <div class="cr-signal-val" id="crs-longitudinal-val">Inconsistent PRN — prescribe TID fixed</div>
           <div class="cr-signal-sub" id="crs-longitudinal-sub">First objective check Week 2 · Subtherapeutic use confounds outcome</div>
-          <div class="uq-note" style="margin-top:4px;">Self-reported only — do not interpret partial response as treatment failure until adherence confirmed</div>
+          <div class="uq-note">Self-reported only — do not interpret partial response as treatment failure until adherence confirmed</div>
         </div>
 
         <!-- 6. Current Risk Balance -->
@@ -728,7 +944,7 @@
             Current Risk Balance
           </div>
           <div class="cr-signal-val" id="crs-balance-val">Favorable — within safe pathway</div>
-          <div id="crs-balance-pill" class="cr-risk-balance rb-favorable" style="margin-top:5px;">Acetaminophen: low systemic risk</div>
+          <div id="crs-balance-pill" class="cr-risk-balance rb-favorable">Acetaminophen: low systemic risk</div>
         </div>
 
       </div>
@@ -740,7 +956,6 @@
         <span class="cr-tradeoff-deprioritized" id="cr-tradeoff-deprioritized">NSAID escalation deprioritized</span>
       </div>
 
-      <!-- Causality attribution panel — shown only after user edits parameters -->
       <div class="cr-causality-panel" id="cr-causality-panel">
         <div class="cr-causality-head">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -751,16 +966,12 @@
         </div>
       </div>
 
-      <!-- Reason recommendation changed — shown only after user edits parameters -->
       <div class="cr-change-callout" id="cr-change-row">
         <span class="cr-change-callout-label">Why Changed</span>
         <span class="cr-change-callout-text" id="cr-change-text">—</span>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         CLINICAL SUMMARY LAYER
-    ═══════════════════════════════════════ -->
     <div class="csl-block" id="csl-block">
       <div class="csl-head">
         <div class="csl-head-left">
@@ -869,7 +1080,6 @@
       </div>
     </div>
 
-    ═══════════════════════════════════════ -->
     <div id="section-scenario" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -882,11 +1092,7 @@
           Edit scenario
         </button>
       </div>
-
-      <!-- ╔══════════════════════════════════════════
-           LONGITUDINAL PROGRESSION CONTEXT SELECTOR
-           ══════════════════════════════════════════╗ -->
-      <div class="lp-bar" id="lp-bar">
+            <div class="lp-bar" id="lp-bar">
         <div class="lp-bar-head">
           <div class="lp-bar-title">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -896,29 +1102,28 @@
         </div>
         <div class="lp-timepoints">
           <button class="lp-tp lp-active" id="lp-tp-0" onclick="setTimepoint(0)">
-            <div class="lp-tp-week"><span class="lp-tp-dot lp-dot-active" style="background:var(--blue);"></span>Day 1</div>
+            <div class="lp-tp-week"><span class="lp-tp-dot lp-dot-active"></span>Day 1</div>
             <div class="lp-tp-label">Initiation visit</div>
           </button>
           <button class="lp-tp lp-future" id="lp-tp-1" onclick="setTimepoint(1)">
-            <div class="lp-tp-week"><span class="lp-tp-dot" style="background:transparent;border:1px solid var(--border);border-radius:50%;display:inline-block;"></span>Week 2</div>
+            <div class="lp-tp-week"><span class="lp-tp-dot lp-dot-future"></span>Week 2</div>
             <div class="lp-tp-label">Pain &amp; adherence review</div>
           </button>
           <button class="lp-tp lp-future" id="lp-tp-2" onclick="setTimepoint(2)">
-            <div class="lp-tp-week"><span class="lp-tp-dot" style="background:transparent;border:1px solid var(--border);border-radius:50%;display:inline-block;"></span>Week 4</div>
+            <div class="lp-tp-week"><span class="lp-tp-dot lp-dot-future"></span>Week 4</div>
             <div class="lp-tp-label">Escalation decision</div>
           </button>
           <button class="lp-tp lp-future" id="lp-tp-3" onclick="setTimepoint(3)">
-            <div class="lp-tp-week"><span class="lp-tp-dot" style="background:transparent;border:1px solid var(--border);border-radius:50%;display:inline-block;"></span>Week 8</div>
+            <div class="lp-tp-week"><span class="lp-tp-dot lp-dot-future"></span>Week 8</div>
             <div class="lp-tp-label">Comprehensive review</div>
           </button>
           <button class="lp-tp lp-future" id="lp-tp-4" onclick="setTimepoint(4)">
-            <div class="lp-tp-week"><span class="lp-tp-dot" style="background:transparent;border:1px solid var(--border);border-radius:50%;display:inline-block;"></span>3 Months</div>
+            <div class="lp-tp-week"><span class="lp-tp-dot lp-dot-future"></span>3 Months</div>
             <div class="lp-tp-label">Stable-phase review</div>
           </button>
         </div>
       </div>
 
-      <!-- Missed follow-up consequence banner -->
       <div class="lp-missed-banner" id="lp-missed-banner">
         <div class="lp-missed-dot"></div>
         <div>
@@ -927,7 +1132,6 @@
         </div>
       </div>
 
-      <!-- Progression delta strip — only visible when timepoint > 0 -->
       <div class="lp-delta" id="lp-delta">
         <div class="lp-delta-head">
           <div class="lp-delta-label" id="lp-delta-label">
@@ -945,7 +1149,6 @@
         </div>
       </div>
 
-      <!-- INTERACTIVE PATIENT PARAMETERS PANEL -->
       <div class="ip-panel">
         <div class="ip-panel-head">
           <div class="ip-panel-title">
@@ -960,7 +1163,6 @@
           <button class="ip-update-dismiss" onclick="dismissUpdateBanner()">Dismiss</button>
         </div>
         <div class="ip-grid">
-          <!-- eGFR -->
           <div class="ip-param" id="ip-egfr" onclick="openPopover('egfr',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">
@@ -973,7 +1175,6 @@
             <div class="ip-escalation-tag" id="ip-esc-egfr"></div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- GI Bleeding History -->
           <div class="ip-param" id="ip-gi" onclick="openPopover('gi',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">GI Bleeding Hx</div>
@@ -982,7 +1183,6 @@
             <div class="ip-escalation-tag" id="ip-esc-gi"></div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Blood Pressure -->
           <div class="ip-param" id="ip-bp" onclick="openPopover('bp',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Blood Pressure</div>
@@ -991,7 +1191,6 @@
             <div class="ip-escalation-tag" id="ip-esc-bp"></div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- CV Risk -->
           <div class="ip-param" id="ip-cv" onclick="openPopover('cv',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Cardiovascular Risk</div>
@@ -999,7 +1198,6 @@
             <div class="ip-param-risk" id="ip-risk-cv">Hypertension</div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Pain Severity -->
           <div class="ip-param" id="ip-pain" onclick="openPopover('pain',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Pain Severity</div>
@@ -1007,7 +1205,6 @@
             <div class="ip-param-risk" id="ip-risk-pain">Moderate</div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Age -->
           <div class="ip-param" id="ip-age" onclick="openPopover('age',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Age</div>
@@ -1015,7 +1212,6 @@
             <div class="ip-param-risk" id="ip-risk-age">≥65 flag active</div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Failed Therapies -->
           <div class="ip-param" id="ip-failed" onclick="openPopover('failed',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Failed Therapies <span class="uq-flag"><span class="uq-flag-dot"></span>Incomplete hx</span></div>
@@ -1024,7 +1220,6 @@
             <div class="uq-note">Duration of prior trials unclear — early discontinuation may not reflect true therapeutic failure</div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Adherence -->
           <div class="ip-param" id="ip-adh" onclick="openPopover('adh',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Adherence <span class="uq-flag"><span class="uq-flag-dot"></span>Self-reported</span></div>
@@ -1033,7 +1228,6 @@
             <div class="uq-note">Reliability uncertain — not verified by pharmacy or pill count at this visit</div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Sedation Risk -->
           <div class="ip-param" id="ip-sed" onclick="openPopover('sed',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Sedation Risk</div>
@@ -1041,7 +1235,6 @@
             <div class="ip-param-risk" id="ip-risk-sed">Patient refuses sedation</div>
             <button class="ip-edit-btn">Edit ↗</button>
           </div>
-          <!-- Med Intolerance -->
           <div class="ip-param" id="ip-intol" onclick="openPopover('intol',event)">
             <div class="ip-edit-indicator"></div>
             <div class="ip-param-label">Med Intolerance <span class="uq-flag"><span class="uq-flag-dot"></span>Partial record</span></div>
@@ -1059,7 +1252,6 @@
         </div>
       </div>
 
-      <!-- POPOVERS -->
       <div id="pop-egfr" class="ip-popover">
         <div class="ip-pop-title">eGFR / Renal Function</div>
         <div class="ip-pop-desc">Affects NSAID eligibility, opioid metabolite clearance, and dose adjustment thresholds.</div>
@@ -1243,7 +1435,7 @@
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Patient Context
           </div>
-          <span style="font-size:10px;color:var(--muted);">Created May 15, 2026 · by Mikhail Evteev</span>
+          <span class="si-card-meta">Created May 15, 2026 · by Mikhail Evteev</span>
         </div>
         <div class="si-body">
           <div class="si-patient-row">
@@ -1266,8 +1458,8 @@
                 <span class="si-patient-badge si-pbadge-amber">Mild renal impairment (eGFR 58)</span>
                 <span class="si-patient-badge si-pbadge-blue">Hypertension controlled</span>
                 <span class="si-patient-badge si-pbadge-blue">Mobility preservation priority</span>
-                <span class="si-patient-badge" style="background:rgba(74,111,165,0.08);color:var(--blue);">NSAID intolerance × 2</span>
-                <span class="si-patient-badge" style="background:rgba(42,157,110,0.08);color:var(--green);">Low polypharmacy burden</span>
+                <span class="si-patient-badge si-pbadge-blue">NSAID intolerance × 2</span>
+                <span class="si-patient-badge si-pbadge-green">Low polypharmacy burden</span>
               </div>
             </div>
           </div>
@@ -1278,7 +1470,7 @@
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                 Condition
               </div>
-              <div class="si-item-value">Knee osteoarthritis<br><span style="color:var(--muted);font-size:11px;">Chronic · Bilateral</span></div>
+              <div class="si-item-value">Knee osteoarthritis<br><span class="si-val-sub">Chronic · Bilateral</span></div>
             </div>
             <div class="si-grid-item">
               <div class="si-item-label">
@@ -1305,8 +1497,8 @@
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 Key risk factors
               </div>
-              <div class="si-item-value" style="font-size:12px;line-height:1.6;">
-                Prior peptic ulcer (2 yrs)<br>Age ≥65<br>Controlled hypertension<br><span style="color:var(--amber);font-size:11px;">eGFR 58 — mild CKD (stage G2)</span>
+              <div class="si-item-value">
+                Prior peptic ulcer (2 yrs)<br>Age ≥65<br>Controlled hypertension<br><span class="si-val-amber-sub">eGFR 58 — mild CKD (stage G2)</span>
               </div>
             </div>
             <div class="si-grid-item">
@@ -1314,33 +1506,32 @@
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01M8 12h.01M16 12h.01"/></svg>
                 Current medications
               </div>
-              <div class="si-item-value" style="font-size:12px;line-height:1.65;">
+              <div class="si-item-value">
                 Amlodipine 5 mg<br>Pantoprazole 40 mg<br>
-                <span style="color:var(--muted);font-size:11px;">+ Acetaminophen proposed (3rd agent)</span><br>
-                <span style="color:var(--amber);font-size:10.5px;font-weight:600;">No anticoagulants · No corticosteroids</span>
-                <span style="display:block;margin-top:4px;font-size:10px;color:var(--blue);font-weight:600;">Low polypharmacy burden — interaction risk manageable</span>
+                <span class="si-val-sub">+ Acetaminophen proposed (3rd agent)</span><br>
+                <span class="si-val-amber-note">No anticoagulants · No corticosteroids</span>
+                <span class="si-val-blue-note">Low polypharmacy burden — interaction risk manageable</span>
               </div>
             </div>
           </div>
 
-          <!-- Medication history & failed therapies -->
-          <div class="si-med-section">
+      <div class="si-med-section">
             <div class="si-med-col">
               <div class="si-med-label">Previous therapies tried</div>
-              <div class="si-med-item">Ibuprofen 400 mg — <span style="color:var(--red);font-weight:600;">discontinued</span> (GI discomfort, epigastric pain after 3 weeks)</div>
-              <div class="si-med-item">Diclofenac oral 50 mg — <span style="color:var(--red);font-weight:600;">discontinued</span> (blood pressure elevation +18 mmHg systolic)</div>
+              <div class="si-med-item">Ibuprofen 400 mg — <span class="text-red-bold">discontinued</span> (GI discomfort, epigastric pain after 3 weeks)</div>
+              <div class="si-med-item">Diclofenac oral 50 mg — <span class="text-red-bold">discontinued</span> (blood pressure elevation +18 mmHg systolic)</div>
               <div class="si-med-item">Physiotherapy (8 sessions) — partial functional benefit; patient unable to continue due to transport access</div>
-              <div class="si-med-item">Topical diclofenac gel — tried briefly; <span style="color:var(--amber);font-weight:600;">inconsistent use</span> (patient reports difficulty applying to both knees)</div>
-              <div class="uq-intol-caveat" style="margin-top:6px;">Duration of NSAID trials not fully documented — early GI response may reflect inadequate PPI co-prescribing rather than true class intolerance. Clinical judgement required before closing NSAID pathway on this basis alone.</div>
+              <div class="si-med-item">Topical diclofenac gel — tried briefly; <span class="text-amber-bold">inconsistent use</span> (patient reports difficulty applying to both knees)</div>
+              <div class="uq-intol-caveat">Duration of NSAID trials not fully documented — early GI response may reflect inadequate PPI co-prescribing rather than true class intolerance. Clinical judgement required before closing NSAID pathway on this basis alone.</div>
             </div>
             <div class="si-med-col">
               <div class="si-med-label">Adherence &amp; tolerance notes</div>
-              <div class="si-med-item"><span style="color:var(--green);font-weight:600;">Good adherence</span> to amlodipine and pantoprazole — confirmed by pharmacy records</div>
-              <div class="si-med-item"><span style="color:var(--amber);font-weight:600;">Inconsistent adherence</span> to PRN analgesics — reports "forgetting" when pain is mild</div>
+              <div class="si-med-item"><span class="text-green-bold">Good adherence</span> to amlodipine and pantoprazole — confirmed by pharmacy records</div>
+              <div class="si-med-item"><span class="text-amber-bold">Inconsistent adherence</span> to PRN analgesics — reports "forgetting" when pain is mild</div>
               <div class="si-med-item">Previous GI intolerance to oral NSAIDs documented in chart — epigastric symptoms within 2–3 weeks of use</div>
               <div class="si-med-item">Expressed strong concern about sedating agents — "doesn't want to feel foggy"</div>
               <div class="si-med-item">Prefers fewest possible daily medications — currently managing 2 daily drugs</div>
-              <div class="uq-intol-caveat" style="margin-top:6px;">Adherence to analgesics self-reported only. No pill count, blister pack review, or pharmacy dispensing frequency check available. Actual exposure pattern may differ from reported use.</div>
+              <div class="uq-intol-caveat">Adherence to analgesics self-reported only. No pill count, blister pack review, or pharmacy dispensing frequency check available. Actual exposure pattern may differ from reported use.</div>
             </div>
           </div>
 
@@ -1356,19 +1547,17 @@
             <span class="si-pref-chip">Avoid injections</span>
           </div>
 
-          <!-- Activity limitations -->
-          <div style="padding:12px 16px;border-top:1px solid var(--border-light);display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;">
-            <span class="si-prefs-label" style="padding-top:2px;">Activity limitations</span>
-            <div style="display:flex;flex-direction:column;gap:3px;">
-              <span style="font-size:11.5px;color:var(--text);">• Difficulty descending stairs — pain worsens on stairs (reported at last visit)</span>
-              <span style="font-size:11.5px;color:var(--text);">• Cannot walk &gt;10 minutes without stopping — functional limitation progressing over 6 months</span>
-              <span style="font-size:11.5px;color:var(--text);">• Unable to kneel or squat — bilateral joint involvement</span>
-              <span style="font-size:11.5px;color:var(--amber);">• Patient reports pain is now limiting social activities and independent mobility</span>
-            </div>
+      <div class="si-activity-row">
+            <span class="si-prefs-label">Activity limitations</span>
+            <ul class="si-activity-list">
+              <li>Difficulty descending stairs — pain worsens on stairs (reported at last visit)</li>
+              <li>Cannot walk &gt;10 minutes without stopping — functional limitation progressing over 6 months</li>
+              <li>Unable to kneel or squat — bilateral joint involvement</li>
+              <li class="si-activity-amber">Patient reports pain is now limiting social activities and independent mobility</li>
+            </ul>
           </div>
 
-          <!-- Goals -->
-          <div class="si-goals-row">
+      <div class="si-goals-row">
             <span class="si-goals-label">Treatment goals</span>
             <span class="si-goal-chip">
               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1391,14 +1580,11 @@
       </div>
 
       <div class="dp-disclaimer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         Scenario data is used to generate decision output. All inputs should reflect the actual patient context.
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 2 — DECISION OUTPUT
-    ═══════════════════════════════════════ -->
     <div id="section-summary" class="dp-section active">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -1408,7 +1594,6 @@
         </div>
       </div>
 
-      <!-- PRIMARY RECOMMENDATION — dominates the screen -->
       <div class="ds-primary">
         <div class="ds-primary-eyebrow" id="dyn-eyebrow">Primary treatment recommendation · First-line</div>
         <div class="ds-primary-rec">
@@ -1419,14 +1604,12 @@
           GI risk is the binding constraint. Prior peptic ulcer + two documented NSAID intolerances close the NSAID pathway entirely. Acetaminophen provides adequate first-line analgesia without GI or renal burden. eGFR 58 (CKD Stage 3a) reinforces NSAID avoidance. Aligns with ACR 2023, Beers Criteria (≥65), and NICE CG177. Oral route preferred per patient history of inconsistent topical use.
         </div>
 
-        <!-- Why this changed — shown only when parameter update shifts the recommendation -->
-        <div class="ds-primary-trigger-note" id="ds-trigger-note">
+      <div class="ds-primary-trigger-note" id="ds-trigger-note">
           <div class="ds-primary-trigger-note-label">Why this recommendation changed</div>
           <span id="ds-trigger-note-text">—</span>
         </div>
 
-        <!-- EVIDENCE CHIPS — directly under rationale -->
-        <div class="ds-primary-ev-chips">
+      <div class="ds-primary-ev-chips">
           <span class="ds-primary-ev-chip strong">ACR Guideline Aligned · 2023</span>
           <span class="ds-primary-ev-chip strong">NICE Guidance Supported</span>
           <span class="ds-primary-ev-chip strong">Beers Criteria Compliant · AGS 2023</span>
@@ -1435,8 +1618,7 @@
           <span class="ds-primary-ev-chip">GI risk literature considered</span>
         </div>
 
-        <!-- CONFIDENCE LAYER — directly under recommendation -->
-        <div class="ds-conf-strip">
+      <div class="ds-conf-strip">
           <div class="ds-conf-main">
             <div class="ds-conf-pct" id="dyn-conf-pct">82%<span class="uq-conf-band" id="dyn-conf-band"></span></div>
             <div class="ds-conf-detail">
@@ -1454,30 +1636,28 @@
           </div>
         </div>
 
-        <!-- Columns -->
-        <div class="ds-primary-cols">
+      <div class="ds-primary-cols">
           <div>
             <div class="ds-pcol-label">Alternative options</div>
             <div class="ds-pcol-val">
               Topical NSAIDs <span class="ds-pcol-pill ds-pcol-cond">Conditional</span><br>
-              <span style="font-size:11px;color:rgba(255,255,255,0.35);">Localized pain · Lower systemic risk</span>
+              <span class="ds-pcol-sub">Localized pain · Lower systemic risk</span>
             </div>
           </div>
-          <div>
+          <div class="ds-pcol">
             <div class="ds-pcol-label">Avoid</div>
             <div class="ds-pcol-val">
               High-dose NSAIDs <span class="ds-pcol-pill ds-pcol-avoid">Avoid</span><br>
-              <span style="font-size:11px;color:rgba(255,255,255,0.35);">GI risk outweighs benefit</span>
+              <span class="ds-pcol-sub">GI risk outweighs benefit</span>
             </div>
           </div>
-          <div>
+          <div class="ds-pcol">
             <div class="ds-pcol-label">Primary decision drivers</div>
-            <div class="ds-pcol-val" id="dyn-drivers-summary" style="font-size:11.5px;line-height:1.6;">High GI risk · Age ≥65 · Prior NSAID intolerance · Mild renal impairment (eGFR 58) · Long-term use requirement · Mobility preservation goal</div>
+            <div class="ds-pcol-val" id="dyn-drivers-summary" class="ds-pcol-drivers">High GI risk · Age ≥65 · Prior NSAID intolerance · Mild renal impairment (eGFR 58) · Long-term use requirement · Mobility preservation goal</div>
           </div>
         </div>
       </div>
 
-      <!-- PREFERRED CARD — detail -->
       <div class="ds-preferred">
         <div class="ds-preferred-top">
           <div>
@@ -1513,7 +1693,6 @@
         </div>
       </div>
 
-      <!-- WHY NOT OTHER OPTIONS — structured reasoning for physician trust -->
       <div class="dp-subsection-label">Why not other options?</div>
       <div class="wn-block">
         <div class="wn-head">
@@ -1537,7 +1716,7 @@
             <div class="wn-item" id="dyn-opioid-renal">Renal metabolite clearance — eGFR 58 limits elimination of opioid metabolites (esp. morphine-6-glucuronide)</div>
             <div class="wn-item" id="dyn-opioid-stage">No clinical indication at this stage — moderate OA pain without multimodal failure</div>
           </div>
-          <div class="wn-col" style="border-top:1px solid var(--border-light);">
+          <div class="wn-col wn-col-divided">
             <div class="wn-col-title">Topical NSAIDs <span class="wn-col-state cond">Conditional</span></div>
             <div class="wn-reason">Considered adjunctive rather than primary strategy at this stage.</div>
             <div class="wn-item">Bilateral knee involvement — topical coverage limited for bilateral application; compliance concern documented</div>
@@ -1545,7 +1724,7 @@
             <div class="wn-item">Analgesic ceiling — lower analgesic power than systemic options for moderate-severity OA (NRS 6/10)</div>
             <div class="wn-item">May be added as adjunct if oral monotherapy inadequate at Week 2 or 4</div>
           </div>
-          <div class="wn-col" style="border-top:1px solid var(--border-light);">
+          <div class="wn-col wn-col-divided">
             <div class="wn-col-title">Duloxetine <span class="wn-col-state esc">Escalation</span></div>
             <div class="wn-reason">May be considered later — not first-line in current scenario.</div>
             <div class="wn-item">Sedation risk in older adult — fall-risk profile; patient expressly refuses sedating agents</div>
@@ -1556,7 +1735,6 @@
         </div>
       </div>
 
-      <!-- ALTERNATIVES -->
       <div class="dp-subsection-label">Treatment options</div>
       <div class="ds-alts">
         <div class="ds-alt-card">
@@ -1638,7 +1816,6 @@
         </div>
       </div>
 
-      <!-- RATIONALE -->
       <div class="dp-subsection-label">Rationale for recommendation</div>
       <div class="ds-rationale">
         <div class="ds-rationale-head">Clinical reasoning</div>
@@ -1660,15 +1837,13 @@
         </div>
       </div>
 
-      <!-- AT-A-GLANCE TABLE -->
       <div class="dp-subsection-label">Treatment comparison</div>
-      <!-- Evidence traceability summary -->
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding:9px 13px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);align-items:center;">
-        <span style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-right:4px;white-space:nowrap;">Evidence basis</span>
-        <span style="font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:3px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.15);">ACR Guideline Aligned</span>
-        <span style="font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:3px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.15);">Moderate–High Evidence</span>
-        <span style="font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:3px;background:rgba(184,50,41,0.06);color:var(--red);border:1px solid rgba(184,50,41,0.14);">GI risk literature considered</span>
-        <span style="font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:3px;background:var(--bg);color:var(--muted);border:1px solid var(--border);">Beers Criteria 2023</span>
+            <div class="evidence-basis-strip">
+        <span class="ev-basis-label">Evidence basis</span>
+        <span class="ev-basis-chip ev-chip-green">ACR Guideline Aligned</span>
+        <span class="ev-basis-chip ev-chip-green">Moderate–High Evidence</span>
+        <span class="ev-basis-chip ev-chip-red">GI risk literature considered</span>
+        <span class="ev-basis-chip ev-chip-muted">Beers Criteria 2023</span>
       </div>
       <div class="ds-glance">
         <div class="ds-glance-title">Key trade-offs at a glance</div>
@@ -1685,30 +1860,30 @@
           <tbody>
             <tr class="preferred-row">
               <td><span class="ds-drug-name preferred">Acetaminophen</span></td>
-              <td><div class="dot-row"><div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Moderate</div></td>
-              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--green);margin-top:2px;">Very good</div></td>
-              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--green);margin-top:2px;">Good</div></td>
+              <td><div class="dot-row"><div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label">Moderate</div></td>
+              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div></div><div class="dot-label dot-label-green">Very good</div></td>
+              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div></div><div class="dot-label dot-label-green">Good</div></td>
               <td><span class="badge badge-best">Best balance</span></td>
             </tr>
             <tr>
               <td><span class="ds-drug-name">Topical NSAIDs</span></td>
-              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Low–Moderate</div></td>
-              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--green);margin-top:2px;">Good</div></td>
-              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--green);margin-top:2px;">Good</div></td>
+              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label">Low–Moderate</div></td>
+              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label dot-label-green">Good</div></td>
+              <td><div class="dot-row"><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot filled green"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label dot-label-green">Good</div></td>
               <td><span class="badge badge-adj">Conditional</span></td>
             </tr>
             <tr>
               <td><span class="ds-drug-name">Low-dose NSAID + PPI</span></td>
-              <td><div class="dot-row"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">High</div></td>
-              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--amber);margin-top:2px;">Moderate ↑ risk</div></td>
-              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--amber);margin-top:2px;">Moderate</div></td>
+              <td><div class="dot-row"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label">High</div></td>
+              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label dot-label-amber">Moderate ↑ risk</div></td>
+              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label dot-label-amber">Moderate</div></td>
               <td><span class="badge badge-cond">Conditional</span></td>
             </tr>
             <tr>
               <td><span class="ds-drug-name">High-dose NSAIDs</span></td>
-              <td><div class="dot-row"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">High</div></td>
-              <td><div class="dot-row"><div class="dot filled red"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--red);margin-top:2px;">Poor</div></td>
-              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div style="font-size:10px;color:var(--amber);margin-top:2px;">Moderate</div></td>
+              <td><div class="dot-row"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label">High</div></td>
+              <td><div class="dot-row"><div class="dot filled red"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label dot-label-red">Poor</div></td>
+              <td><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div><div class="dot empty"></div></div><div class="dot-label dot-label-amber">Moderate</div></td>
               <td><span class="badge badge-avoid">Poor balance</span></td>
             </tr>
           </tbody>
@@ -1716,14 +1891,11 @@
       </div>
 
       <div class="dp-disclaimer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         Not a substitute for clinical judgment. Clinstrux supports decisions but does not replace clinician expertise.
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 3 — TRADE-OFFS & DRIVERS
-    ═══════════════════════════════════════ -->
     <div id="section-drivers" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -1792,7 +1964,7 @@
       </div>
 
       <div class="dp-subsection-label">Key decision drivers</div>
-      <table class="dd-table" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <table class="dd-table" class="card-panel">
         <thead>
           <tr>
             <th style="width:28%">Driver</th>
@@ -1803,32 +1975,32 @@
         <tbody>
           <tr>
             <td><div class="dd-driver-name"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>GI bleeding risk<span class="dd-impact-badge dd-impact-high">High</span></div></td>
-            <td><div style="font-size:10.5px;font-weight:700;color:var(--red);margin-bottom:4px;">Strong negative</div><div class="dot-row"><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot empty"></div></div></td>
+            <td><div class="dd-impact-label dd-impact-red">Strong negative</div><div class="dot-row"><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot empty"></div></div></td>
             <td><div class="dd-rationale">Prior peptic ulcer significantly increases NSAID-related GI risk. Strongest driver against NSAID selection.</div><div class="dd-refs"><span class="dd-ref">ACG Guideline</span><span class="dd-ref">Beers Criteria</span></div></td>
           </tr>
           <tr>
             <td><div class="dd-driver-name"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Age ≥65<span class="dd-impact-badge dd-impact-high">High</span></div></td>
-            <td><div style="font-size:10.5px;font-weight:700;color:var(--red);margin-bottom:4px;">Strong negative</div><div class="dot-row"><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div></div></td>
+            <td><div class="dd-impact-label dd-impact-red">Strong negative</div><div class="dot-row"><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div></div></td>
             <td><div class="dd-rationale">Older age amplifies GI bleeding risk and drug sensitivity. Beers Criteria flags NSAIDs in adults ≥65.</div><div class="dd-refs"><span class="dd-ref">Beers 2023</span></div></td>
           </tr>
           <tr>
             <td><div class="dd-driver-name"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 9.5V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v4.5M3 15h18M3 15a9 9 0 0 0 9 9 9 9 0 0 0 9-9"/></svg>Long-term use<span class="dd-impact-badge dd-impact-mod">Moderate</span></div></td>
-            <td><div style="font-size:10.5px;font-weight:700;color:var(--amber);margin-bottom:4px;">Moderate</div><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div></div></td>
+            <td><div class="dd-impact-label dd-impact-amber">Moderate</div><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div></div></td>
             <td><div class="dd-rationale">Chronic pain requires sustained therapy. NSAIDs not recommended for chronic use in this risk profile.</div><div class="dd-refs"><span class="dd-ref">ACR Guideline</span></div></td>
           </tr>
           <tr>
             <td><div class="dd-driver-name"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="4"/><path d="M4 6v6a8 4 0 0 0 16 0V6"/><path d="M4 12v6a8 4 0 0 0 16 0v-6"/></svg>Renal function<span class="dd-impact-badge dd-impact-mod">Moderate</span></div></td>
-            <td><div style="font-size:10.5px;font-weight:700;color:var(--amber);margin-bottom:4px;">Moderate caution</div><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div></div></td>
+            <td><div class="dd-impact-label dd-impact-amber">Moderate caution</div><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div></div></td>
             <td><div class="dd-rationale">Baseline eGFR 58 (CKD stage G2). NSAIDs contraindicated if eGFR &lt;45 — currently marginal. NSAID-induced renal impairment would eliminate escalation options entirely.</div><div class="dd-refs"><span class="dd-ref">KDIGO Guidelines</span><span class="dd-ref">BNF Renal guidance</span></div></td>
           </tr>
           <tr>
             <td><div class="dd-driver-name"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Therapy failure history<span class="dd-impact-badge dd-impact-high">High</span></div></td>
-            <td><div style="font-size:10.5px;font-weight:700;color:var(--red);margin-bottom:4px;">Strong evidence</div><div class="dot-row"><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot empty"></div></div></td>
+            <td><div class="dd-impact-label dd-impact-red">Strong evidence</div><div class="dot-row"><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot filled red"></div><div class="dot empty"></div></div></td>
             <td><div class="dd-rationale">Two prior NSAID trials (ibuprofen, diclofenac) both discontinued due to GI intolerance and BP elevation. Direct clinical evidence that NSAID pathway is not viable for this patient.</div><div class="dd-refs"><span class="dd-ref">Chart review</span><span class="dd-ref">Patient history</span></div></td>
           </tr>
           <tr>
             <td><div class="dd-driver-name"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>CV risk<span class="dd-impact-badge dd-impact-mod">Moderate</span></div></td>
-            <td><div style="font-size:10.5px;font-weight:700;color:var(--amber);margin-bottom:4px;">Moderate</div><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div></div></td>
+            <td><div class="dd-impact-label dd-impact-amber">Moderate</div><div class="dot-row"><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot filled amber"></div><div class="dot empty"></div><div class="dot empty"></div></div></td>
             <td><div class="dd-rationale">Controlled hypertension in older patient. NSAIDs can raise BP and impair antihypertensive efficacy. Previous diclofenac raised BP by +18 mmHg — documented.</div><div class="dd-refs"><span class="dd-ref">ESC Guidelines</span><span class="dd-ref">Patient chart</span></div></td>
           </tr>
         </tbody>
@@ -1849,14 +2021,11 @@
       </div>
 
       <div class="dp-disclaimer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         Drivers are weighted based on clinical impact for this patient scenario. Weighting should be reviewed when scenario parameters change.
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 4 — CLINICAL NOTES
-    ═══════════════════════════════════════ -->
     <div id="section-notes" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -1878,8 +2047,8 @@
           <div id="cn-panel-clinical" class="cn-panel active">
             <div class="cn-editor-wrap">
               <div class="cn-editor-toolbar">
-                <button class="cn-tb-btn" style="font-weight:700">B</button>
-                <button class="cn-tb-btn" style="font-style:italic">I</button>
+                <button class="cn-tb-btn cn-tb-bold">B</button>
+                <button class="cn-tb-btn cn-tb-italic">I</button>
                 <div class="cn-tb-sep"></div>
                 <button class="cn-tb-btn">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
@@ -1935,9 +2104,9 @@
           <div id="cn-panel-followup" class="cn-panel">
             <div class="cn-editor-wrap">
               <div class="cn-editor-toolbar">
-                <button class="cn-tb-btn" style="font-weight:700">B</button>
-                <button class="cn-tb-btn" style="font-style:italic">I</button>
-                <div class="cn-tb-right"><span style="color:var(--muted);">Auto-saved</span></div>
+                <button class="cn-tb-btn cn-tb-bold">B</button>
+                <button class="cn-tb-btn cn-tb-italic">I</button>
+                <div class="cn-tb-right"><span class="cn-tb-autosaved">Auto-saved</span></div>
               </div>
               <div class="cn-editor-body" contenteditable="true">
                 <h4>Follow-up plan — May 17, 2026 · M. Evteev</h4>
@@ -1968,11 +2137,11 @@
           <div id="cn-panel-team" class="cn-panel">
             <div class="cn-editor-wrap">
               <div class="cn-editor-toolbar">
-                <button class="cn-tb-btn" style="font-weight:700">B</button>
-                <button class="cn-tb-btn" style="font-style:italic">I</button>
-                <div class="cn-tb-right"><span style="color:var(--muted);">Shared with team</span></div>
+                <button class="cn-tb-btn cn-tb-bold">B</button>
+                <button class="cn-tb-btn cn-tb-italic">I</button>
+                <div class="cn-tb-right"><span class="cn-tb-autosaved">Shared with team</span></div>
               </div>
-              <div class="cn-editor-body" contenteditable="true" style="min-height:200px;">
+              <div class="cn-editor-body" contenteditable="true">
                 <h4>Team notes — May 17, 2026</h4>
                 <ul>
                   <li><strong>For nursing:</strong> Patient has history of inconsistent adherence to PRN analgesics. Reinforce fixed TID dosing schedule for acetaminophen — not as-needed. Provide written instructions.</li>
@@ -1985,7 +2154,7 @@
             </div>
           </div>
           <div class="cn-disclaimer">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0 icon-mt1"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
             These notes are for clinician reference only and are not used to generate recommendations. Do not include patient identifiers.
           </div>
         </div>
@@ -2039,9 +2208,6 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 5 — TREATMENT PROGRESSION
-    ═══════════════════════════════════════ -->
     <div id="section-progression" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -2051,34 +2217,32 @@
         </div>
       </div>
 
-      <!-- PROGRESSION OVERVIEW STRIP -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:13px 18px;margin-bottom:18px;display:flex;gap:24px;flex-wrap:wrap;">
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Initial strategy</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--navy);">Acetaminophen monotherapy</div>
-          <div style="font-size:11px;color:var(--muted);">Day 1 — fixed schedule</div>
+      <div class="prog-overview-strip">
+        <div class="prog-overview-item">
+          <div class="prog-overview-label">Initial strategy</div>
+          <div class="prog-overview-value">Acetaminophen monotherapy</div>
+          <div class="prog-overview-sub">Day 1 — fixed schedule</div>
         </div>
-        <div style="width:1px;background:var(--border-light);flex-shrink:0;"></div>
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">First reassessment</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--navy);">Week 2</div>
-          <div style="font-size:11px;color:var(--muted);">Pain score, stair use, GI tolerability</div>
+        <div class="prog-divider"></div>
+        <div class="prog-overview-item">
+          <div class="prog-overview-label">First reassessment</div>
+          <div class="prog-overview-value">Week 2</div>
+          <div class="prog-overview-sub">Pain score, stair use, GI tolerability</div>
         </div>
-        <div style="width:1px;background:var(--border-light);flex-shrink:0;"></div>
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Escalation decision</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--amber);">Week 4</div>
-          <div style="font-size:11px;color:var(--muted);">If NRS ≥5 → escalate</div>
+        <div class="prog-divider"></div>
+        <div class="prog-overview-item">
+          <div class="prog-overview-label">Escalation decision</div>
+          <div class="prog-overview-value prog-overview-amber">Week 4</div>
+          <div class="prog-overview-sub">If NRS ≥5 → escalate</div>
         </div>
-        <div style="width:1px;background:var(--border-light);flex-shrink:0;"></div>
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:3px;">Success threshold</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--green);">NRS ≤3 + stair use</div>
-          <div style="font-size:11px;color:var(--muted);">Maintain and step-down monitoring</div>
+        <div class="prog-divider"></div>
+        <div class="prog-overview-item">
+          <div class="prog-overview-label">Success threshold</div>
+          <div class="prog-overview-value prog-overview-green">NRS ≤3 + stair use</div>
+          <div class="prog-overview-sub">Maintain and step-down monitoring</div>
         </div>
       </div>
 
-      <!-- LONGITUDINAL PATHWAY -->
       <div class="dp-subsection-label">Longitudinal treatment pathway</div>
       <div class="mn-pathway">
         <div class="mn-pathway-head">
@@ -2088,9 +2252,7 @@
 
         <div class="mn-pathway-item" id="lp-pathway-0">
           <div class="mn-pathway-week">Day 1</div>
-          <div style="display:flex;flex-direction:column;align-items:center;">
-            <div class="mn-pathway-dot active" id="lp-pdot-0"></div>
-          </div>
+          <div class="mn-pathway-dot active" id="lp-pdot-0"></div>
           <div class="mn-pathway-content">
             <div class="mn-pathway-title">Treatment initiation <span class="mn-pathway-badge checkpoint">Initiation</span> <span id="lp-outcome-0"></span></div>
             <div class="mn-pathway-desc">Initiate acetaminophen 1g TID (max 3g/day — older adult dose ceiling). Fixed schedule — not PRN. Counsel patient on dose ceiling and alcohol avoidance. Confirm pantoprazole 40 mg ongoing. Document baseline NRS 6/10 and stair-climbing impairment. Reinforce that effect may take 1–2 weeks to become meaningful.</div>
@@ -2100,92 +2262,80 @@
 
         <div class="mn-pathway-item" id="lp-pathway-1">
           <div class="mn-pathway-week">Week 2</div>
-          <div style="display:flex;flex-direction:column;align-items:center;">
-            <div class="mn-pathway-dot" id="lp-pdot-1"></div>
-          </div>
+          <div class="mn-pathway-dot" id="lp-pdot-1"></div>
           <div class="mn-pathway-content">
             <div class="mn-pathway-title">Initial pain &amp; function review <span class="mn-pathway-badge checkpoint">Checkpoint</span> <span id="lp-outcome-1"></span></div>
             <div class="mn-pathway-desc">Reassess NRS pain score — compare to baseline 6/10. Stair-climbing function: restored, unchanged, or worsened? Walking distance &gt;10 min? Confirm adherence to fixed TID schedule. Ask specifically about GI tolerability — epigastric pain, nausea.</div>
             <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> NRS ≥6 or no functional improvement → add topical diclofenac gel (right knee priority — higher pain burden side)</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> GI symptoms emerge (epigastric pain, nausea) → hold escalation. Review pantoprazole adequacy. Do not add any NSAID until GI stable.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> adherence suboptimal (PRN rather than TID) → reinforce fixed schedule. Do not escalate dose before confirming adherence.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;background:rgba(42,157,110,0.05);border-color:rgba(42,157,110,0.15);"><span class="mn-pathway-trigger-if" style="color:var(--green);">If</span> NRS ≤3 and stair use improved → maintain regimen. No dose escalation required. Review again at 4 weeks.</div>
-            <div class="uq-pathway-note" style="margin-top:7px;"><span class="uq-pathway-note-label">Caution</span>Adherence has not yet been independently verified. Do not interpret persistent pain at Week 2 as treatment failure until fixed-schedule adherence is confirmed. Escalation based on apparent non-response may reflect adherence failure rather than pharmacological inadequacy.</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> GI symptoms emerge (epigastric pain, nausea) → hold escalation. Review pantoprazole adequacy. Do not add any NSAID until GI stable.</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> adherence suboptimal (PRN rather than TID) → reinforce fixed schedule. Do not escalate dose before confirming adherence.</div>
+            <div class="mn-pathway-trigger mn-trigger-success"><span class="mn-pathway-trigger-if mn-trigger-if-green">If</span> NRS ≤3 and stair use improved → maintain regimen. No dose escalation required. Review again at 4 weeks.</div>
+            <div class="uq-pathway-note"><span class="uq-pathway-note-label">Caution</span>Adherence has not yet been independently verified. Do not interpret persistent pain at Week 2 as treatment failure until fixed-schedule adherence is confirmed. Escalation based on apparent non-response may reflect adherence failure rather than pharmacological inadequacy.</div>
           </div>
         </div>
 
         <div class="mn-pathway-item" id="lp-pathway-2">
           <div class="mn-pathway-week">Week 4</div>
-          <div style="display:flex;flex-direction:column;align-items:center;">
-            <div class="mn-pathway-dot trigger" id="lp-pdot-2"></div>
-          </div>
+          <div class="mn-pathway-dot trigger" id="lp-pdot-2"></div>
           <div class="mn-pathway-content">
             <div class="mn-pathway-title">Formal escalation decision point <span class="mn-pathway-badge escalation">Escalation Review</span> <span id="lp-outcome-2"></span></div>
             <div class="mn-pathway-desc">Formal pain + functional review against 4-week milestone. Compare NRS to baseline. Has walking distance improved (target: &gt;15 min sustained)? Assess stair function. Review adherence consistency. Evaluate GI status before any escalation.</div>
             <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> pain persists (NRS ≥5) and GI stable → escalate to topical diclofenac gel adjunct. Continue acetaminophen. Reassess bilateral coverage need at Week 6.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> neuropathic features emerge (burning, radiating, night pain) → initiate duloxetine 30 mg once daily. Monitor for sedation and fall risk. Titrate to 60 mg after 2 weeks if tolerated.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> mobility continues declining despite adequate analgesic trial → physiotherapy referral (home-based program — address transport barrier). Do not delay referral further.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;background:rgba(42,157,110,0.05);border-color:rgba(42,157,110,0.15);"><span class="mn-pathway-trigger-if" style="color:var(--green);">If</span> mobility meaningfully restored (stair use, walking &gt;15 min) → maintain current regimen. Reduce review frequency to 6–8 weekly.</div>
-            <div class="uq-pathway-note" style="margin-top:7px;"><span class="uq-pathway-note-label">Prerequisite</span>Escalation at Week 4 requires confirmed eGFR result from this visit. Without renal baseline established at Day 1, eGFR trend cannot be determined and topical or systemic NSAID escalation should be deferred until labs are available. Do not escalate on clinical grounds alone when renal trajectory is unknown.</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> neuropathic features emerge (burning, radiating, night pain) → initiate duloxetine 30 mg once daily. Monitor for sedation and fall risk. Titrate to 60 mg after 2 weeks if tolerated.</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> mobility continues declining despite adequate analgesic trial → physiotherapy referral (home-based program — address transport barrier). Do not delay referral further.</div>
+            <div class="mn-pathway-trigger mn-trigger-success"><span class="mn-pathway-trigger-if mn-trigger-if-green">If</span> mobility meaningfully restored (stair use, walking &gt;15 min) → maintain current regimen. Reduce review frequency to 6–8 weekly.</div>
+            <div class="uq-pathway-note"><span class="uq-pathway-note-label">Prerequisite</span>Escalation at Week 4 requires confirmed eGFR result from this visit. Without renal baseline established at Day 1, eGFR trend cannot be determined and topical or systemic NSAID escalation should be deferred until labs are available. Do not escalate on clinical grounds alone when renal trajectory is unknown.</div>
           </div>
         </div>
 
         <div class="mn-pathway-item" id="lp-pathway-3">
           <div class="mn-pathway-week">Week 8</div>
-          <div style="display:flex;flex-direction:column;align-items:center;">
-            <div class="mn-pathway-dot" id="lp-pdot-3"></div>
-          </div>
+          <div class="mn-pathway-dot" id="lp-pdot-3"></div>
           <div class="mn-pathway-content">
             <div class="mn-pathway-title">Comprehensive treatment review <span class="mn-pathway-badge checkpoint">Checkpoint</span> <span id="lp-outcome-3"></span></div>
             <div class="mn-pathway-desc">Full pharmacological and functional review. Reassess pain severity, mobility outcomes, medication safety (BP, eGFR, liver function), and treatment satisfaction. Physiotherapy progress review. Orthopedic referral threshold discussion — if conservative management ceiling is approaching.</div>
-            <div class="mn-pathway-trigger critical"><span class="mn-pathway-trigger-if">If</span> BP worsens (&gt;160 systolic) → discontinue any NSAID component immediately. Reassess amlodipine dose. Refer cardiology if uncontrolled.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> pain still inadequate (NRS ≥5) → consider low-dose celecoxib + continued PPI under close GI + renal monitoring. 2-week trial. Confirm eGFR ≥50 before initiation.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> functional decline despite optimized pharmacotherapy → orthopedic consultation for surgical candidacy assessment (TKA discussion).</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;background:rgba(42,157,110,0.05);border-color:rgba(42,157,110,0.15);"><span class="mn-pathway-trigger-if" style="color:var(--green);">If</span> functional goals met (NRS ≤3, walking &gt;15 min, stair use restored, social independence maintained) → step-down to 3-monthly monitoring. Current regimen maintained.</div>
+            <div class="mn-pathway-trigger mn-trigger-critical"><span class="mn-pathway-trigger-if">If</span> BP worsens (&gt;160 systolic) → discontinue any NSAID component immediately. Reassess amlodipine dose. Refer cardiology if uncontrolled.</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> pain still inadequate (NRS ≥5) → consider low-dose celecoxib + continued PPI under close GI + renal monitoring. 2-week trial. Confirm eGFR ≥50 before initiation.</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> functional decline despite optimized pharmacotherapy → orthopedic consultation for surgical candidacy assessment (TKA discussion).</div>
+            <div class="mn-pathway-trigger mn-trigger-success"><span class="mn-pathway-trigger-if mn-trigger-if-green">If</span> functional goals met (NRS ≤3, walking &gt;15 min, stair use restored, social independence maintained) → step-down to 3-monthly monitoring. Current regimen maintained.</div>
           </div>
         </div>
 
         <div class="mn-pathway-item" id="lp-pathway-4">
           <div class="mn-pathway-week">3 Months</div>
-          <div style="display:flex;flex-direction:column;align-items:center;">
-            <div class="mn-pathway-dot" id="lp-pdot-4"></div>
-          </div>
+          <div class="mn-pathway-dot" id="lp-pdot-4"></div>
           <div class="mn-pathway-content">
             <div class="mn-pathway-title">Stable-phase longitudinal review <span id="lp-outcome-4"></span></div>
             <div class="mn-pathway-desc">Every 3–6 months in stable phase: reassess pain score, functional independence, medication safety profile. Repeat eGFR annually. Maintain pain diary review at visits. Assess whether activity and social engagement has been restored.</div>
-            <div class="mn-pathway-trigger critical"><span class="mn-pathway-trigger-if">If</span> functional decline resumes despite pharmacotherapy → refer to physiotherapy (home-based program) and orthopedic evaluation for surgical candidacy</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;"><span class="mn-pathway-trigger-if">If</span> eGFR continues declining trend → nephrology co-management. Avoid all NSAIDs. Reduce acetaminophen to 2g/day if eGFR &lt;30.</div>
-            <div class="mn-pathway-trigger" style="margin-top:5px;background:rgba(42,157,110,0.05);border-color:rgba(42,157,110,0.15);"><span class="mn-pathway-trigger-if" style="color:var(--green);">If</span> sustained improvement maintained → continue current regimen. Annual medication safety review. Reinforce adherence to fixed schedule at each visit.</div>
+            <div class="mn-pathway-trigger mn-trigger-critical"><span class="mn-pathway-trigger-if">If</span> functional decline resumes despite pharmacotherapy → refer to physiotherapy (home-based program) and orthopedic evaluation for surgical candidacy</div>
+            <div class="mn-pathway-trigger"><span class="mn-pathway-trigger-if">If</span> eGFR continues declining trend → nephrology co-management. Avoid all NSAIDs. Reduce acetaminophen to 2g/day if eGFR &lt;30.</div>
+            <div class="mn-pathway-trigger mn-trigger-success"><span class="mn-pathway-trigger-if mn-trigger-if-green">If</span> sustained improvement maintained → continue current regimen. Annual medication safety review. Reinforce adherence to fixed schedule at each visit.</div>
           </div>
         </div>
       </div>
 
-      <!-- ESCALATION PATHWAY SUMMARY -->
       <div class="dp-subsection-label">Escalation pathway summary</div>
       <div class="mn-escalation">
         <div class="mn-esc-label">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
           Condition-triggered escalation rules
         </div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">Pain uncontrolled at Week 2 (NRS ≥6)</strong> → add topical diclofenac gel (right knee priority). Reassess bilateral symptom pattern at Week 4.</span></div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">Inadequate relief at Week 4 (NRS ≥5)</strong> → consider low-dose celecoxib + PPI with close GI and renal monitoring. Confirm eGFR ≥50 before initiation.</span></div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">Neuropathic features emerge</strong> → initiate duloxetine 30 mg as adjunct. Titrate to 60 mg if tolerated. Monitor for sedation — patient expressly refuses sedating agents. Reassess at 3 weeks.</span></div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">GI symptoms at any stage</strong> → halt NSAID escalation. Review pantoprazole adequacy (consider dose increase or H. pylori retest). No NSAID addition until GI stability confirmed.</span></div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">BP worsens (&gt;160 systolic)</strong> → discontinue any NSAID component immediately. Reassess amlodipine dose.</span></div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">eGFR drops below 50</strong> → reclassify renal risk. All NSAID use absolutely contraindicated. Reduce acetaminophen to 2g/day as precaution. Nephrology co-management if eGFR &lt;40.</span></div>
-        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong style="color:var(--navy);">Functional decline despite optimized pharmacotherapy</strong> → refer to physiotherapy (home-based, address transport barrier) and orthopedic evaluation for TKA candidacy.</span></div>
-        <div class="mn-esc-item" style="background:rgba(42,157,110,0.04);border-radius:5px;padding:6px 0;"><span class="mn-esc-arrow" style="color:var(--green);">✓</span><span><strong style="color:var(--green);">If mobility improves</strong> (stair use restored, walking &gt;15 min, NRS ≤3, social independence maintained) → <strong>maintain current regimen</strong>. Step-down monitoring to 3-monthly. Reinforce fixed TID schedule.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">Pain uncontrolled at Week 2 (NRS ≥6)</strong> → add topical diclofenac gel (right knee priority). Reassess bilateral symptom pattern at Week 4.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">Inadequate relief at Week 4 (NRS ≥5)</strong> → consider low-dose celecoxib + PPI with close GI and renal monitoring. Confirm eGFR ≥50 before initiation.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">Neuropathic features emerge</strong> → initiate duloxetine 30 mg as adjunct. Titrate to 60 mg if tolerated. Monitor for sedation — patient expressly refuses sedating agents. Reassess at 3 weeks.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">GI symptoms at any stage</strong> → halt NSAID escalation. Review pantoprazole adequacy (consider dose increase or H. pylori retest). No NSAID addition until GI stability confirmed.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">BP worsens (&gt;160 systolic)</strong> → discontinue any NSAID component immediately. Reassess amlodipine dose.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">eGFR drops below 50</strong> → reclassify renal risk. All NSAID use absolutely contraindicated. Reduce acetaminophen to 2g/day as precaution. Nephrology co-management if eGFR &lt;40.</span></div>
+        <div class="mn-esc-item"><span class="mn-esc-arrow">→</span><span><strong class="text-navy">Functional decline despite optimized pharmacotherapy</strong> → refer to physiotherapy (home-based, address transport barrier) and orthopedic evaluation for TKA candidacy.</span></div>
+        <div class="mn-esc-item mn-esc-success"><span class="mn-esc-arrow mn-esc-arrow-success">✓</span><span><strong style="color:var(--green);">If mobility improves</strong> (stair use restored, walking &gt;15 min, NRS ≤3, social independence maintained) → <strong>maintain current regimen</strong>. Step-down monitoring to 3-monthly. Reinforce fixed TID schedule.</span></div>
       </div>
 
       <div class="dp-disclaimer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         Treatment progression should be reassessed at each encounter. Pathway logic adapts to new clinical information — escalation and de-escalation decisions require clinical judgment at point of care.
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 6 — MONITORING & SAFETY
-    ═══════════════════════════════════════ -->
     <div id="section-monitoring" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -2204,53 +2354,53 @@
         </div>
         <div class="mn-stat-card">
           <div class="mn-stat-label">Next review</div>
-          <div class="mn-stat-val" style="font-size:15px;margin-top:4px;">2 weeks</div>
+          <div class="mn-stat-val mn-stat-val-lg">2 weeks</div>
           <div class="mn-stat-sub">Pain score, stair function &amp; tolerability</div>
         </div>
-        <div class="mn-stat-card" style="border-color:var(--uncertain-border);background:var(--uncertain-bg);">
-          <div class="mn-stat-label" style="color:var(--uncertain);">Baseline labs status</div>
-          <div class="mn-stat-val" style="font-size:14px;margin-top:4px;color:var(--uncertain);">Pending</div>
-          <div class="mn-stat-sub" style="color:var(--uncertain);">No prior eGFR on record — obtain at Day 1 visit to establish renal trend</div>
+        <div class="mn-stat-card mn-stat-card-uncertain">
+          <div class="mn-stat-label mn-stat-uncertain">Baseline labs status</div>
+          <div class="mn-stat-val mn-stat-val-pending">Pending</div>
+          <div class="mn-stat-sub mn-stat-uncertain">No prior eGFR on record — obtain at Day 1 visit to establish renal trend</div>
         </div>
       </div>
 
       <div class="dp-subsection-label">Safety monitoring schedule</div>
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;">
-        <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;background:var(--bg);border-bottom:1px solid var(--border);">
-          <div style="padding:9px 13px;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Checkpoint</div>
-          <div style="padding:9px 13px;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-left:1px solid var(--border-light);">Labs / tests</div>
-          <div style="padding:9px 13px;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-left:1px solid var(--border-light);">Clinical assessment</div>
-          <div style="padding:9px 13px;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-left:1px solid var(--border-light);">Safety action trigger</div>
+      <div class="mon-schedule-grid">
+        <div class="mon-schedule-head">
+          <div>Checkpoint</div>
+          <div>Labs / tests</div>
+          <div>Clinical assessment</div>
+          <div>Safety action trigger</div>
         </div>
-        <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;border-bottom:1px solid var(--border-light);">
-          <div style="padding:11px 13px;font-size:12px;font-weight:600;color:var(--navy);">Baseline (Day 1)</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">eGFR <span class="uq-missing">Not yet obtained</span>, creatinine, LFT, BP 128/76</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">NRS 6/10, stair function, GI status, weight</div>
-          <div style="padding:11px 13px;font-size:11.5px;border-left:1px solid var(--border-light);color:var(--uncertain);">Baseline eGFR required at this visit — no prior result on file. Do not defer. Renal trend undetermined without this result.</div>
+        <div class="mon-schedule-row">
+          <div class="mon-cell-checkpoint">Baseline (Day 1)</div>
+          <div class="mon-cell">eGFR <span class="uq-missing">Not yet obtained</span>, creatinine, LFT, BP 128/76</div>
+          <div class="mon-cell">NRS 6/10, stair function, GI status, weight</div>
+          <div class="mon-cell mon-cell-uncertain">Baseline eGFR required at this visit — no prior result on file. Do not defer. Renal trend undetermined without this result.</div>
         </div>
-        <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;border-bottom:1px solid var(--border-light);">
-          <div style="padding:11px 13px;font-size:12px;font-weight:600;color:var(--navy);">Week 2</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">—</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">NRS, stair use, GI tolerability, adherence (TID vs PRN) <span class="uq-flag"><span class="uq-flag-dot"></span>First objective adherence check</span></div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--muted);border-left:1px solid var(--border-light);">GI symptoms → hold escalation. Adherence gap → reinforce before escalating. Do not interpret partial response as treatment failure before adherence confirmed.</div>
+        <div class="mon-schedule-row">
+          <div class="mon-cell-checkpoint">Week 2</div>
+          <div class="mon-cell">—</div>
+          <div class="mon-cell">NRS, stair use, GI tolerability, adherence (TID vs PRN) <span class="uq-flag"><span class="uq-flag-dot"></span>First objective adherence check</span></div>
+          <div class="mon-cell mon-cell-muted">GI symptoms → hold escalation. Adherence gap → reinforce before escalating. Do not interpret partial response as treatment failure before adherence confirmed.</div>
         </div>
-        <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;border-bottom:1px solid var(--border-light);background:rgba(184,122,0,0.025);">
-          <div style="padding:11px 13px;font-size:12px;font-weight:600;color:var(--amber);">Week 4–6 ★</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">LFT (ALT/AST), eGFR, creatinine, BP</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">Pain + function review, walking distance, adherence</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--red);border-left:1px solid var(--border-light);">eGFR &lt;50 → no NSAID. ALT &gt;3×ULN → reduce dose. SBP &gt;160 → stop NSAID</div>
+        <div class="mon-schedule-row mon-row-highlight">
+          <div class="mon-cell-checkpoint mon-cell-amber">Week 4–6 ★</div>
+          <div class="mon-cell">LFT (ALT/AST), eGFR, creatinine, BP</div>
+          <div class="mon-cell">Pain + function review, walking distance, adherence</div>
+          <div class="mon-cell mon-cell-red">eGFR &lt;50 → no NSAID. ALT &gt;3×ULN → reduce dose. SBP &gt;160 → stop NSAID</div>
         </div>
-        <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;border-bottom:1px solid var(--border-light);">
-          <div style="padding:11px 13px;font-size:12px;font-weight:600;color:var(--navy);">Month 3</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">eGFR, creatinine, LFT if on high-end dose</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">Comprehensive review: pain, mobility, BP, adherence, satisfaction</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--muted);border-left:1px solid var(--border-light);">Goals met → step-down to 3-monthly. Decline → ortho referral</div>
+        <div class="mon-schedule-row">
+          <div class="mon-cell-checkpoint">Month 3</div>
+          <div class="mon-cell">eGFR, creatinine, LFT if on high-end dose</div>
+          <div class="mon-cell">Comprehensive review: pain, mobility, BP, adherence, satisfaction</div>
+          <div class="mon-cell mon-cell-muted">Goals met → step-down to 3-monthly. Decline → ortho referral</div>
         </div>
-        <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;">
-          <div style="padding:11px 13px;font-size:12px;font-weight:600;color:var(--navy);">Annual</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">Full metabolic panel, eGFR, LFT</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--text);border-left:1px solid var(--border-light);">Medication review, ADL function, falls risk, mobility assessment</div>
-          <div style="padding:11px 13px;font-size:11.5px;color:var(--muted);border-left:1px solid var(--border-light);">Annual medication safety review. Reassess surgical threshold.</div>
+        <div class="mon-schedule-row mon-row-last">
+          <div class="mon-cell-checkpoint">Annual</div>
+          <div class="mon-cell">Full metabolic panel, eGFR, LFT</div>
+          <div class="mon-cell">Medication review, ADL function, falls risk, mobility assessment</div>
+          <div class="mon-cell mon-cell-muted">Annual medication safety review. Reassess surgical threshold.</div>
         </div>
       </div>
 
@@ -2327,30 +2477,29 @@
         </table>
       </div>
 
-      <!-- DYNAMIC RENAL DOSING IMPLICATION BLOCK -->
       <div class="dp-subsection-label">Renal dosing implications — current eGFR</div>
-      <div id="dyn-renal-dosing-block" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;">
-          <div style="padding:12px 14px;border-right:1px solid var(--border-light);" id="dyn-rd-apap">
-            <div style="font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:4px;">Acetaminophen ceiling</div>
-            <div style="font-size:12px;font-weight:600;color:var(--amber);" id="dyn-rd-apap-val">3 g/day (eGFR 45–59)</div>
-            <div style="font-size:10.5px;color:var(--muted);margin-top:3px;" id="dyn-rd-apap-note">Older adult dose ceiling at eGFR 58. Reduce to 2 g/day if eGFR drops below 30.</div>
+      <div id="dyn-renal-dosing-block" class="renal-dosing-block">
+        <div class="renal-dosing-cols">
+          <div class="renal-dosing-col" id="dyn-rd-apap">
+            <div class="renal-dosing-label">Acetaminophen ceiling</div>
+            <div class="renal-dosing-val renal-dosing-val-amber" id="dyn-rd-apap-val">3 g/day (eGFR 45–59)</div>
+            <div class="poly-note" id="dyn-rd-apap-note">Older adult dose ceiling at eGFR 58. Reduce to 2 g/day if eGFR drops below 30.</div>
           </div>
-          <div style="padding:12px 14px;border-right:1px solid var(--border-light);" id="dyn-rd-nsaid">
-            <div style="font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:4px;">NSAID status (renal)</div>
-            <div style="font-size:12px;font-weight:600;" id="dyn-rd-nsaid-val">Avoid (eGFR + intolerance)</div>
-            <div style="font-size:10.5px;color:var(--muted);margin-top:3px;" id="dyn-rd-nsaid-note">Prostaglandin-dependent renal perfusion increasingly at risk below eGFR 60. Combined with documented intolerance — contraindicated.</div>
+          <div class="renal-dosing-col" id="dyn-rd-nsaid">
+            <div class="renal-dosing-label">NSAID status (renal)</div>
+            <div class="renal-dosing-val" id="dyn-rd-nsaid-val">Avoid (eGFR + intolerance)</div>
+            <div class="renal-dosing-note" id="dyn-rd-nsaid-note">Prostaglandin-dependent renal perfusion increasingly at risk below eGFR 60. Combined with documented intolerance — contraindicated.</div>
           </div>
-          <div style="padding:12px 14px;" id="dyn-rd-opioid">
-            <div style="font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:4px;">Opioid / adjunct risk</div>
-            <div style="font-size:12px;font-weight:600;color:var(--amber);" id="dyn-rd-opioid-val">Metabolite accumulation risk</div>
-            <div style="font-size:10.5px;color:var(--muted);margin-top:3px;" id="dyn-rd-opioid-note">eGFR 58 — morphine-6-glucuronide accumulation begins below eGFR 50. Avoid opioids unless unavoidable. Gabapentinoids require dose reduction at eGFR &lt;60.</div>
+          <div class="renal-dosing-col" id="dyn-rd-opioid">
+            <div class="renal-dosing-label">Opioid / adjunct risk</div>
+            <div class="renal-dosing-val renal-dosing-val-amber" id="dyn-rd-opioid-val">Metabolite accumulation risk</div>
+            <div class="renal-dosing-note" id="dyn-rd-opioid-note">eGFR 58 — morphine-6-glucuronide accumulation begins below eGFR 50. Avoid opioids unless unavoidable. Gabapentinoids require dose reduction at eGFR &lt;60.</div>
           </div>
         </div>
-        <div style="padding:7px 14px;border-top:1px solid var(--border-light);background:var(--bg);font-size:10.5px;color:var(--muted);display:flex;align-items:center;gap:8px;">
-          <span style="font-weight:600;color:var(--navy);">eGFR monitoring rationale:</span>
+        <div class="renal-dosing-footer">
+          <span class="renal-dosing-footnote-label">eGFR monitoring rationale:</span>
           <span id="dyn-rd-trajectory-note">Current eGFR 58 is within G3a range. A trajectory drop of ≥15% from baseline (i.e., eGFR ≤49) would change the renal category and tighten all dose thresholds. Next check due at 6 weeks.</span>
-          <span class="uq-flag" style="flex-shrink:0;"><span class="uq-flag-dot"></span>No prior eGFR — trend direction unestablished</span>
+          <span class="uq-flag" class="icon-shrink-0"><span class="uq-flag-dot"></span>No prior eGFR — trend direction unestablished</span>
         </div>
       </div>
 
@@ -2365,14 +2514,11 @@
       </div>
 
       <div class="dp-disclaimer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         Monitoring parameters should be adapted to individual patient context. Reassess the plan as new information becomes available.
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 7 — POLYPHARMACY & INTERACTIONS
-    ═══════════════════════════════════════ -->
     <div id="section-polypharmacy" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -2382,8 +2528,7 @@
         </div>
       </div>
 
-      <!-- MEDICATION SAFETY OVERVIEW RAIL -->
-      <div class="safety-rail" style="margin-bottom:14px;">
+      <div class="safety-rail">
         <div class="safety-rail-head">
           <span class="safety-rail-title">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2410,7 +2555,6 @@
         </div>
       </div>
 
-      <!-- POLYPHARMACY MEDICATION LIST -->
       <div class="dp-subsection-label">Current medication burden — interaction &amp; renal risk profiling</div>
       <div class="poly-panel">
         <div class="poly-head">
@@ -2434,20 +2578,20 @@
                 <div class="poly-drug-class">CCB · Antihypertensive</div>
               </div>
               <div class="poly-med-cell">
-                <div style="font-size:11px;color:var(--text);line-height:1.5;">
+                <div class="poly-cell-text">
                   <span class="poly-interaction-flag poly-flag-red" id="poly-aml-nsaid-flag">⚠ NSAID: BP elevation risk</span>
-                  <div id="poly-aml-nsaid-detail" style="margin-top:4px;font-size:10.5px;color:var(--muted);">NSAIDs reduce antihypertensive efficacy by 3–5 mmHg systolic on average. Prior diclofenac caused +18 mmHg in this patient — documented. NSAID avoidance removes this risk entirely.</div>
-                  <div style="margin-top:5px;"><span class="poly-interaction-flag poly-flag-green">✓ No interaction: acetaminophen</span></div>
-                  <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">Acetaminophen does not antagonize CCB antihypertensive effect — safe combination.</div>
+                  <div id="poly-aml-nsaid-detail" class="poly-note">NSAIDs reduce antihypertensive efficacy by 3–5 mmHg systolic on average. Prior diclofenac caused +18 mmHg in this patient — documented. NSAID avoidance removes this risk entirely.</div>
+                  <span class="poly-interaction-flag poly-flag-green poly-flag-mt">✓ No interaction: acetaminophen</span>
+                  <div class="poly-note">Acetaminophen does not antagonize CCB antihypertensive effect — safe combination.</div>
                 </div>
               </div>
               <div class="poly-med-cell">
                 <div class="poly-renal-dose renal-ok">No adjustment required</div>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">Hepatically metabolised (CYP3A4). Renal impairment does not alter dosing. Safe across all eGFR ranges.</div>
+                <div class="poly-note">Hepatically metabolised (CYP3A4). Renal impairment does not alter dosing. Safe across all eGFR ranges.</div>
               </div>
               <div class="poly-med-cell">
                 <span class="poly-deprescribe-tag poly-deprescribe-maintain">Maintain</span>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4;">Ongoing hypertension indication. BP controlled at 128/76. Essential to maintain — deprescribing would unmask cardiovascular risk and increase NSAID danger.</div>
+                <div class="poly-note">Ongoing hypertension indication. BP controlled at 128/76. Essential to maintain — deprescribing would unmask cardiovascular risk and increase NSAID danger.</div>
               </div>
             </div>
             <!-- Pantoprazole -->
@@ -2457,49 +2601,49 @@
                 <div class="poly-drug-class">PPI · GI prophylaxis</div>
               </div>
               <div class="poly-med-cell">
-                <div style="font-size:11px;color:var(--text);line-height:1.5;">
+                <div class="poly-cell-text">
                   <span class="poly-interaction-flag poly-flag-green">✓ No significant interactions</span>
-                  <div style="margin-top:4px;font-size:10.5px;color:var(--muted);">No clinically significant interaction with acetaminophen or amlodipine at standard doses. CYP2C19 interaction with clopidogrel would apply if antiplatelet added — flag if regimen changes.</div>
-                  <div style="margin-top:5px;"><span class="poly-interaction-flag poly-flag-blue">ℹ Celecoxib: dose-dependent PPI requirement</span></div>
-                  <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">If celecoxib considered at escalation: 40 mg pantoprazole mandatory concurrently — already prescribed. Review adequacy at that stage.</div>
+                  <div class="poly-note">No clinically significant interaction with acetaminophen or amlodipine at standard doses. CYP2C19 interaction with clopidogrel would apply if antiplatelet added — flag if regimen changes.</div>
+                  <span class="poly-interaction-flag poly-flag-blue poly-flag-mt">ℹ Celecoxib: dose-dependent PPI requirement</span>
+                  <div class="poly-note">If celecoxib considered at escalation: 40 mg pantoprazole mandatory concurrently — already prescribed. Review adequacy at that stage.</div>
                 </div>
               </div>
               <div class="poly-med-cell">
                 <div class="poly-renal-dose renal-ok">No adjustment required</div>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">Hepatic metabolism. eGFR does not influence PPI dosing. No accumulation risk with renal impairment.</div>
+                <div class="poly-note">Hepatic metabolism. eGFR does not influence PPI dosing. No accumulation risk with renal impairment.</div>
               </div>
               <div class="poly-med-cell">
                 <span class="poly-deprescribe-tag poly-deprescribe-review">Review at 6 months</span>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4;">Currently essential: prior peptic ulcer + high GI-risk patient. If analgesic regimen stabilises on acetaminophen only, consider step-down to on-demand use at 6–12 months if ulcer healed and NSAID exposure has been zero.</div>
+                <div class="poly-note">Currently essential: prior peptic ulcer + high GI-risk patient. If analgesic regimen stabilises on acetaminophen only, consider step-down to on-demand use at 6–12 months if ulcer healed and NSAID exposure has been zero.</div>
               </div>
             </div>
             <!-- Acetaminophen (proposed) -->
-            <div class="poly-med-row" style="background:rgba(42,157,110,0.02);">
+            <div class="poly-med-row poly-med-row-proposed">
               <div class="poly-med-cell">
-                <div class="poly-drug-name">Acetaminophen 1g TID <span style="font-size:9px;font-weight:700;padding:1px 5px;border-radius:2px;background:rgba(42,157,110,0.12);color:var(--green);margin-left:4px;">Proposed</span></div>
+                <div class="poly-drug-name">Acetaminophen 1g TID <span class="poly-proposed-chip">Proposed</span></div>
                 <div class="poly-drug-class">Analgesic · First-line</div>
               </div>
               <div class="poly-med-cell">
-                <div style="font-size:11px;color:var(--text);line-height:1.5;">
+                <div class="poly-cell-text">
                   <span class="poly-interaction-flag poly-flag-green">✓ Low interaction burden</span>
-                  <div style="margin-top:4px;font-size:10.5px;color:var(--muted);">No significant pharmacodynamic interaction with amlodipine or pantoprazole at doses ≤3 g/day. Does not affect BP control. Does not inhibit CYP3A4 at therapeutic doses.</div>
-                  <div style="margin-top:5px;"><span class="poly-interaction-flag poly-flag-amber" id="poly-apap-warfarin-flag">⚠ If warfarin added: INR monitoring required</span></div>
-                  <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">Not currently prescribed. Flag for future: acetaminophen &gt;2g/day increases anticoagulant effect of warfarin. Monitor INR if anticoagulation initiated.</div>
+                  <div class="poly-note">No significant pharmacodynamic interaction with amlodipine or pantoprazole at doses ≤3 g/day. Does not affect BP control. Does not inhibit CYP3A4 at therapeutic doses.</div>
+                  <span class="poly-interaction-flag poly-flag-amber poly-flag-mt" id="poly-apap-warfarin-flag">⚠ If warfarin added: INR monitoring required</span>
+                  <div class="poly-note">Not currently prescribed. Flag for future: acetaminophen &gt;2g/day increases anticoagulant effect of warfarin. Monitor INR if anticoagulation initiated.</div>
                 </div>
               </div>
               <div class="poly-med-cell" id="poly-apap-renal-cell">
                 <div class="poly-renal-dose renal-adjust" id="poly-apap-renal-label">Dose ceiling active (eGFR 58)</div>
-                <div style="font-size:10.5px;color:var(--text);margin-top:3px;line-height:1.45;" id="poly-apap-renal-detail">Max 3 g/day (reduced from 4 g/day standard) — older adult dose ceiling. If eGFR drops &lt;30: reduce further to 2 g/day and extend interval consideration. Current eGFR permits standard older-adult dosing.</div>
+                <div class="poly-apap-detail" id="poly-apap-renal-detail">Max 3 g/day (reduced from 4 g/day standard) — older adult dose ceiling. If eGFR drops &lt;30: reduce further to 2 g/day and extend interval consideration. Current eGFR permits standard older-adult dosing.</div>
               </div>
               <div class="poly-med-cell">
                 <span class="poly-deprescribe-tag poly-deprescribe-maintain">Maintain + monitor</span>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4;">Step-down appropriate only if pain control goals met (NRS ≤3, functional restoration). Do not deprescribe prematurely — inadequate pain control increases functional decline and activity limitation.</div>
+                <div class="poly-note">Step-down appropriate only if pain control goals met (NRS ≤3, functional restoration). Do not deprescribe prematurely — inadequate pain control increases functional decline and activity limitation.</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- DRUG–DRUG INTERACTION MATRIX -->
+  
         <div class="poly-interaction-matrix">
           <div class="poly-interaction-matrix-head">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -2533,22 +2677,21 @@
         </div>
       </div>
 
-      <!-- RENAL DOSING CASCADE -->
       <div class="dp-subsection-label">Renal function–driven dose adjustment cascade</div>
-      <div class="poly-panel" style="margin-bottom:14px;">
+      <div class="poly-panel">
         <div class="poly-head">
           <span class="poly-head-title">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             eGFR-dependent therapy logic — how renal function changes treatment decisions
           </span>
-          <span style="font-size:10px;color:var(--muted);" id="poly-renal-current-egfr">Current eGFR: 58 mL/min</span>
+          <span class="poly-head-meta" id="poly-renal-current-egfr">Current eGFR: 58 mL/min</span>
         </div>
-        <div style="padding:14px 16px;">
+        <div class="renal-cascade-body">
           <div class="renal-cascade-head">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
             CKD stage → implications for analgesic safety and dosing
           </div>
-          <div class="renal-cascade-row" style="background:var(--bg);font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;border:1px solid var(--border);">
+          <div class="renal-cascade-row renal-cascade-head-row">
             <div class="renal-cascade-cell renal-cascade-egfr">eGFR Range</div>
             <div class="renal-cascade-cell">CKD Stage</div>
             <div class="renal-cascade-cell">Analgesic implications</div>
@@ -2556,35 +2699,34 @@
           </div>
           <div class="renal-cascade-row" id="renal-row-60plus">
             <div class="renal-cascade-cell renal-cascade-egfr">≥60 mL/min</div>
-            <div class="renal-cascade-cell" style="color:var(--green);font-weight:600;">G1–G2 (Normal/Mild)</div>
+            <div class="renal-cascade-cell text-green-bold">G1–G2 (Normal/Mild)</div>
             <div class="renal-cascade-cell renal-cascade-implications">Acetaminophen: standard adult dose (max 4 g/day). Oral NSAIDs: conditionally permissible with GI and CV monitoring. Topical NSAIDs: safe. No dose ceiling purely on renal grounds.</div>
             <div class="renal-cascade-cell renal-cascade-action">Baseline monitoring. No dose adjustment needed above 60.</div>
           </div>
           <div class="renal-cascade-row renal-active-row" id="renal-row-4559">
             <div class="renal-cascade-cell renal-cascade-egfr egfr-current">45–59 mL/min <span class="renal-active-marker" id="renal-active-marker">CURRENT</span></div>
-            <div class="renal-cascade-cell" style="color:var(--amber);font-weight:600;">G3a (Mild–Moderate)</div>
-            <div class="renal-cascade-cell renal-cascade-implications" style="color:var(--text);">Acetaminophen: reduce to max 3 g/day (older adult ceiling — applies here at age 68 + eGFR 58). Oral NSAIDs: avoid unless unavoidable — prostaglandin-mediated renal perfusion increasingly dependent on baseline function. Topical NSAIDs: acceptable with close monitoring. eGFR trajectory monitoring every 6 weeks.</div>
-            <div class="renal-cascade-cell renal-cascade-action" style="color:var(--amber);font-weight:600;">Active dose ceiling: APAP ≤3 g/day. NSAID avoidance recommended. Monitor eGFR 6-weekly.</div>
+            <div class="renal-cascade-cell text-amber-bold">G3a (Mild–Moderate)</div>
+            <div class="renal-cascade-cell renal-cascade-implications renal-cell-active">Acetaminophen: reduce to max 3 g/day (older adult ceiling — applies here at age 68 + eGFR 58). Oral NSAIDs: avoid unless unavoidable — prostaglandin-mediated renal perfusion increasingly dependent on baseline function. Topical NSAIDs: acceptable with close monitoring. eGFR trajectory monitoring every 6 weeks.</div>
+            <div class="renal-cascade-cell renal-cascade-action text-amber-bold">Active dose ceiling: APAP ≤3 g/day. NSAID avoidance recommended. Monitor eGFR 6-weekly.</div>
           </div>
           <div class="renal-cascade-row" id="renal-row-3044">
             <div class="renal-cascade-cell renal-cascade-egfr">30–44 mL/min</div>
-            <div class="renal-cascade-cell" style="color:var(--amber);font-weight:600;">G3b (Moderate)</div>
+            <div class="renal-cascade-cell text-amber-bold">G3b (Moderate)</div>
             <div class="renal-cascade-cell renal-cascade-implications">Acetaminophen: max 2–3 g/day. Oral NSAIDs: contraindicated — prostaglandin inhibition at this eGFR level significantly impairs autoregulation of GFR. Nephrotoxicity risk clinically meaningful. Topical NSAIDs: monitor closely — some systemic absorption occurs. Opioids: metabolite accumulation risk increases; use with caution if unavoidable.</div>
-            <div class="renal-cascade-cell renal-cascade-action" style="color:var(--red);font-weight:600;">NSAIDs now absolutely contraindicated. APAP ≤2.5 g/day. Nephrology input if further decline.</div>
+            <div class="renal-cascade-cell renal-cascade-action text-red-bold">NSAIDs now absolutely contraindicated. APAP ≤2.5 g/day. Nephrology input if further decline.</div>
           </div>
           <div class="renal-cascade-row" id="renal-row-under30">
-            <div class="renal-cascade-cell renal-cascade-egfr" style="color:var(--red);font-weight:700;">&lt;30 mL/min</div>
-            <div class="renal-cascade-cell" style="color:var(--red);font-weight:600;">G4–G5 (Severe–Failure)</div>
+            <div class="renal-cascade-cell renal-cascade-egfr text-red-bold">&lt;30 mL/min</div>
+            <div class="renal-cascade-cell text-red-bold">G4–G5 (Severe–Failure)</div>
             <div class="renal-cascade-cell renal-cascade-implications">Acetaminophen: max 2 g/day with extended dosing interval (every 6–8 hours). All NSAIDs — oral and topical — absolutely contraindicated. Opioids: significant metabolite accumulation; use only with specialist oversight and dose titration. Gabapentinoids: dose reduction required per CrCl; monitor closely.</div>
-            <div class="renal-cascade-cell renal-cascade-action" style="color:var(--red);font-weight:600;">Nephrology referral mandatory. APAP ≤2 g/day. All NSAIDs stopped immediately.</div>
+            <div class="renal-cascade-cell renal-cascade-action text-red-bold">Nephrology referral mandatory. APAP ≤2 g/day. All NSAIDs stopped immediately.</div>
           </div>
         </div>
-        <div style="padding:9px 16px;border-top:1px solid var(--border-light);font-size:11px;color:var(--muted);background:rgba(184,122,0,0.02);">
-          <strong style="color:var(--navy);">eGFR trajectory monitoring:</strong> Current eGFR of <span id="poly-egfr-inline">58</span> mL/min is close to the G3a/G3b boundary. A 10% decline from baseline would place this patient at eGFR &lt;52 mL/min — still within G3a but tightening the margin. Any escalation plan involving NSAIDs must be contingent on eGFR remaining ≥50 mL/min and showing no downward trend.
+        <div class="renal-cascade-footer">
+          <strong class="text-navy">eGFR trajectory monitoring:</strong> Current eGFR of <span id="poly-egfr-inline">58</span> mL/min is close to the G3a/G3b boundary. A 10% decline from baseline would place this patient at eGFR &lt;52 mL/min — still within G3a but tightening the margin. Any escalation plan involving NSAIDs must be contingent on eGFR remaining ≥50 mL/min and showing no downward trend.
         </div>
       </div>
 
-      <!-- DEPRESCRIBING CONSIDERATIONS -->
       <div class="dp-subsection-label">Deprescribing review — medication optimisation considerations</div>
       <div class="deprescribe-panel">
         <div class="deprescribe-head">
@@ -2592,7 +2734,7 @@
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
             Structured deprescribing assessment — all current medications
           </span>
-          <span style="font-size:10px;color:var(--muted);">Low polypharmacy burden — optimise before adding agents</span>
+          <span class="deprescribe-head-meta">Low polypharmacy burden — optimise before adding agents</span>
         </div>
         <div class="deprescribe-body">
           <div class="deprescribe-row dep-row-head">
@@ -2604,7 +2746,7 @@
           <div class="deprescribe-row">
             <div class="deprescribe-cell">
               <div class="dep-drug-name">Amlodipine 5 mg</div>
-              <div style="font-size:10px;color:var(--muted);margin-top:2px;">CCB antihypertensive</div>
+              <div class="dep-drug-class">CCB antihypertensive</div>
             </div>
             <div class="deprescribe-cell">
               <div class="dep-rationale">Essential ongoing indication (hypertension). Deprescribing would destabilise BP control and increase risk from any future NSAID analgesic use. No absolute indication to stop. Age-appropriate: CCBs have favourable safety profile in older adults — not Beers-listed.</div>
@@ -2614,13 +2756,13 @@
             </div>
             <div class="deprescribe-cell">
               <span class="dep-action-chip dep-maintain">Maintain</span>
-              <div style="font-size:10px;color:var(--muted);margin-top:4px;">No deprescribing trigger present. Annual medication review appropriate.</div>
+              <div class="dep-action-note">No deprescribing trigger present. Annual medication review appropriate.</div>
             </div>
           </div>
           <div class="deprescribe-row">
             <div class="deprescribe-cell">
               <div class="dep-drug-name">Pantoprazole 40 mg</div>
-              <div style="font-size:10px;color:var(--muted);margin-top:2px;">PPI · GI prophylaxis</div>
+              <div class="dep-drug-class">PPI · GI prophylaxis</div>
             </div>
             <div class="deprescribe-cell">
               <div class="dep-rationale">Currently appropriate: prior peptic ulcer + ongoing analgesic therapy. Risk of prolonged PPI use: hypomagnesaemia (check at 12 months if continued), Clostridioides difficile risk (low at standard doses), potential reduction in enteric calcium absorption (relevant given age). PPIs are over-used in older adults — this use is clinically justified but should not become indefinite without review.</div>
@@ -2630,13 +2772,13 @@
             </div>
             <div class="deprescribe-cell">
               <span class="dep-action-chip dep-review">Review at 6 months</span>
-              <div style="font-size:10px;color:var(--muted);margin-top:4px;">Maintain while analgesic therapy is active. Re-evaluate for step-down if NSAID-free at 6-month mark.</div>
+              <div class="dep-action-note">Maintain while analgesic therapy is active. Re-evaluate for step-down if NSAID-free at 6-month mark.</div>
             </div>
           </div>
-          <div class="deprescribe-row" style="background:rgba(42,157,110,0.015);">
+          <div class="deprescribe-row deprescribe-row-highlight">
             <div class="deprescribe-cell">
               <div class="dep-drug-name">Acetaminophen 1g TID</div>
-              <div style="font-size:10px;color:var(--muted);margin-top:2px;">Analgesic (proposed)</div>
+              <div class="dep-drug-class">Analgesic (proposed)</div>
             </div>
             <div class="deprescribe-cell">
               <div class="dep-rationale">Indication-driven agent — deprescribing appropriate only on clinical response. Do not deprescribe before adequate trial (minimum 4–6 weeks on fixed schedule). Premature stopping on partial response prevents proper efficacy assessment. Functional restoration is the endpoint, not time-based withdrawal.</div>
@@ -2646,30 +2788,28 @@
             </div>
             <div class="deprescribe-cell">
               <span class="dep-action-chip dep-maintain">Maintain through trial</span>
-              <div style="font-size:10px;color:var(--muted);margin-top:4px;">Premature deprescribing undermines the therapeutic assessment. Outcome-driven.</div>
+              <div class="dep-action-note">Premature deprescribing undermines the therapeutic assessment. Outcome-driven.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ADHERENCE BARRIER ANALYSIS -->
       <div class="dp-subsection-label">Adherence risk and medication optimisation</div>
       <div class="adherence-concern-strip">
         <div class="adherence-concern-label">Adherence risk</div>
         <div class="adherence-concern-text">
           <strong>Documented barrier:</strong> Prior inconsistent PRN analgesic use — patient reports forgetting doses when pain is mild. Inconsistent use of topical diclofenac due to bilateral application difficulty. Good adherence to amlodipine and pantoprazole (confirmed by pharmacy records) — suggests adherence is regimen-complexity-dependent, not general non-compliance.<br>
-          <span style="color:var(--muted);font-size:11px;margin-top:3px;display:block;"><strong>Clinical implication:</strong> Fixed TID schedule (rather than PRN) removes the dose-decision burden and matches the pattern of successful adherence with amlodipine. Do not escalate analgesic dose before confirming fixed-schedule adherence is established — apparent treatment failure may be adherence failure.</span>
+          <span class="adherence-implication"><strong>Clinical implication:</strong> Fixed TID schedule (rather than PRN) removes the dose-decision burden and matches the pattern of successful adherence with amlodipine. Do not escalate analgesic dose before confirming fixed-schedule adherence is established — apparent treatment failure may be adherence failure.</span>
         </div>
         <div class="uq-adherence-caveat">Adherence pattern is self-reported only. No pharmacy dispensing frequency, blister pack audit, or caregiver confirmation available at this stage. Reliability of the adherence history should be treated as moderate at best until confirmed at the Week 2 review. Escalation decisions made before Week 2 adherence confirmation carry meaningful misclassification risk.</div>
         <div class="adherence-concern-actions">
           <span class="adherence-action-chip">Fixed TID schedule</span>
           <span class="adherence-action-chip">Blister packs</span>
           <span class="adherence-action-chip">Confirm at week 2</span>
-          <span class="adherence-action-chip" style="background:var(--uncertain-bg);color:var(--uncertain);border:1px solid var(--uncertain-border);">Pharmacy dispense check</span>
+          <span class="adherence-action-chip" class="mn-stat-card-uncertain">Pharmacy dispense check</span>
         </div>
       </div>
 
-      <!-- POST-MEDICATION-CHANGE MONITORING INTENSITY -->
       <div class="dp-subsection-label">Monitoring intensity after medication changes</div>
       <div id="poly-monitoring-banner" class="monitoring-intensity-banner mib-mod">
         <span class="mib-label" id="poly-mib-label">Moderate intensity</span>
@@ -2678,14 +2818,11 @@
       </div>
 
       <div class="dp-disclaimer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         Polypharmacy assessment should be reviewed whenever the regimen changes. Any new prescribing should trigger re-evaluation of the full drug–drug interaction and renal dose profile.
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 8 — EVIDENCE LAYER
-    ═══════════════════════════════════════ -->
     <div id="section-evidence" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -2695,77 +2832,76 @@
         </div>
       </div>
 
-      <!-- Guideline alignment summary -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;">
-        <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+      <div class="ev-summary-card">
+        <div class="ev-summary-head">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           Guideline alignment &amp; confidence summary
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.18);">
+        <div class="ev-summary-badges">
+          <span class="ev-guideline-badge">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             ACR 2023 · Strong recommendation
           </span>
-          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.18);">
+          <span class="ev-guideline-badge">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             NICE CG177 · Conditional
           </span>
-          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.18);">
+          <span class="ev-guideline-badge">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             AGS Beers Criteria 2023 · Compliant
           </span>
-          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.18);">
+          <span class="ev-guideline-badge">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Moderate–High evidence overall
           </span>
-          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;background:var(--amber-bg);color:var(--amber);border:1px solid rgba(184,122,0,0.18);">
+          <span class="ev-amber-badge">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
             GI risk literature considered
           </span>
-          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;background:rgba(74,111,165,0.08);color:var(--blue);border:1px solid rgba(74,111,165,0.18);">
+          <span class="ev-blue-badge">
             Renal monitoring recommended
           </span>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border-light);padding-top:12px;">
-          <div style="padding-right:18px;border-right:1px solid var(--border-light);">
-            <div style="font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Evidence confidence — by domain</div>
-            <div style="display:flex;flex-direction:column;gap:4px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;">
-                <span style="color:var(--text);">Analgesic efficacy in OA</span>
-                <span style="font-weight:700;color:var(--green);">High</span>
+        <div class="ev-confidence-grid">
+          <div class="ev-confidence-col">
+            <div class="ev-confidence-head">Evidence confidence — by domain</div>
+            <div class="ev-confidence-rows">
+              <div class="ev-confidence-row">
+                <span>Analgesic efficacy in OA</span>
+                <span class="ev-confidence ev-confidence-high">High</span>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;">
-                <span style="color:var(--text);">GI safety vs. NSAIDs</span>
-                <span style="font-weight:700;color:var(--green);">High</span>
+              <div class="ev-confidence-row">
+                <span>GI safety vs. NSAIDs</span>
+                <span class="ev-confidence ev-confidence-high">High</span>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;">
-                <span style="color:var(--text);">Efficacy in age ≥65</span>
-                <span style="font-weight:700;color:var(--green);">High</span>
+              <div class="ev-confidence-row">
+                <span>Efficacy in age ≥65</span>
+                <span class="ev-confidence ev-confidence-high">High</span>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;">
-                <span style="color:var(--text);">Long-term safety (&gt;2yr)</span>
-                <span style="font-weight:700;color:var(--amber);">Moderate</span>
+              <div class="ev-confidence-row">
+                <span>Long-term safety (&gt;2yr)</span>
+                <span class="ev-confidence ev-confidence-mod">Moderate</span>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;">
-                <span style="color:var(--text);">Functional outcome (mobility)</span>
-                <span style="font-weight:700;color:var(--amber);">Moderate</span>
+              <div class="ev-confidence-row">
+                <span>Functional outcome (mobility)</span>
+                <span class="ev-confidence ev-confidence-mod">Moderate</span>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;padding-top:3px;border-top:1px solid var(--border-light);margin-top:2px;">
-                <span style="color:var(--uncertain);">Applicability: incomplete adherence hx</span>
-                <span style="font-weight:700;color:var(--uncertain);">Reduced</span>
+              <div class="ev-confidence-row ev-confidence-sep">
+                <span class="ev-uncertain">Applicability: incomplete adherence hx</span>
+                <span class="ev-confidence ev-confidence-reduced">Reduced</span>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;">
-                <span style="color:var(--uncertain);">Applicability: unknown renal trend</span>
-                <span style="font-weight:700;color:var(--uncertain);">Reduced</span>
+              <div class="ev-confidence-row">
+                <span class="ev-uncertain">Applicability: unknown renal trend</span>
+                <span class="ev-confidence ev-confidence-reduced">Reduced</span>
               </div>
             </div>
           </div>
-          <div style="padding-left:18px;">
-            <div style="font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Evidence limitations noted</div>
-            <div style="font-size:11.5px;color:var(--text);line-height:1.65;">
+          <div class="ev-limitations-col">
+            <div class="ev-confidence-head">Evidence limitations noted</div>
+            <div class="ev-limitations-text">
               Most RCTs are &lt;12 months duration — long-term efficacy data in chronic OA is limited. Analgesic effect size is modest (NRS reduction ~1.5–2.0). Evidence base primarily addresses pain outcomes; functional mobility improvement data is mixed. Guideline confidence remains moderate-to-high for this patient profile given NSAID contraindication.
             </div>
-            <div class="uq-evidence-caveat" style="margin-top:8px;"><span style="font-weight:700;flex-shrink:0;">Real-world caveat:</span> RCT populations assume verified adherence and documented medication histories. This patient's incomplete adherence record and absent renal baseline reduce the direct applicability of trial-derived efficacy estimates. Outcomes at Week 4 may underestimate true pharmacological response if adherence was subtherapeutic.</div>
+            <div class="uq-evidence-caveat"><span class="text-bold icon-shrink-0">Real-world caveat:</span> RCT populations assume verified adherence and documented medication histories. This patient's incomplete adherence record and absent renal baseline reduce the direct applicability of trial-derived efficacy estimates. Outcomes at Week 4 may underestimate true pharmacological response if adherence was subtherapeutic.</div>
           </div>
         </div>
       </div>
@@ -2783,8 +2919,8 @@
           <div class="ev-stat-num">5</div>
           <div class="ev-stat-label">Randomized Trials</div>
         </div>
-        <div class="ev-stat-card" style="border-top:2px solid var(--green);">
-          <div class="ev-stat-num" style="color:var(--green);">High</div>
+        <div class="ev-stat-card ev-stat-card-highlight">
+          <div class="ev-stat-num ev-stat-num-green">High</div>
           <div class="ev-stat-label">Overall evidence level</div>
         </div>
       </div>
@@ -2807,79 +2943,76 @@
         <div class="ev-item">
           <div>
             <div class="ev-source-title">ACR/Arthritis Foundation Guideline for Osteoarthritis · 2023</div>
-            <div class="ev-source-authors" style="margin-bottom:5px;">Strong recommendation for acetaminophen; conditional for topical NSAIDs in patients with high GI risk.</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
-              <span style="font-size:9px;font-weight:700;padding:1.5px 6px;border-radius:3px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.15);">Supports recommendation</span>
-              <span style="font-size:9px;font-weight:600;padding:1.5px 6px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);">OA · GI risk</span>
+            <div class="ev-source-authors">Strong recommendation for acetaminophen; conditional for topical NSAIDs in patients with high GI risk.</div>
+            <div class="ev-source-tags">
+              <span class="ev-tag ev-tag-green">Supports recommendation</span>
+              <span class="ev-tag ev-tag-muted">OA · GI risk</span>
             </div>
           </div>
           <div><span class="ev-type-badge ev-type-guideline">Guideline</span></div>
-          <div style="font-size:11.5px;font-weight:700;color:var(--green);">High</div>
+          <div class="ev-level ev-level-high">High</div>
           <div class="ev-rel"><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot empty"></div></div>
         </div>
         <div class="ev-item">
           <div>
             <div class="ev-source-title">Fletcher et al. — Acetaminophen for OA Pain · 2018</div>
-            <div class="ev-source-authors" style="margin-bottom:5px;">RCT showing acetaminophen superior to placebo for knee OA pain with good tolerability in older adults.</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
-              <span style="font-size:9px;font-weight:700;padding:1.5px 6px;border-radius:3px;background:rgba(42,157,110,0.08);color:var(--green);border:1px solid rgba(42,157,110,0.15);">Supports recommendation</span>
-              <span style="font-size:9px;font-weight:600;padding:1.5px 6px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);">Age ≥65 · Tolerability</span>
+            <div class="ev-source-authors">RCT showing acetaminophen superior to placebo for knee OA pain with good tolerability in older adults.</div>
+            <div class="ev-source-tags">
+              <span class="ev-tag ev-tag-green">Supports recommendation</span>
+              <span class="ev-tag ev-tag-muted">Age ≥65 · Tolerability</span>
             </div>
           </div>
           <div><span class="ev-type-badge ev-type-rct">RCT</span></div>
-          <div style="font-size:11.5px;font-weight:700;color:var(--green);">High</div>
+          <div class="ev-level ev-level-high">High</div>
           <div class="ev-rel"><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot empty"></div></div>
         </div>
         <div class="ev-item">
           <div>
             <div class="ev-source-title">Cochrane Review: Topical NSAIDs for OA · 2021</div>
-            <div class="ev-source-authors" style="margin-bottom:5px;">Topical NSAIDs provide pain relief with lower risk of systemic adverse effects than oral NSAIDs.</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
-              <span style="font-size:9px;font-weight:700;padding:1.5px 6px;border-radius:3px;background:rgba(184,122,0,0.08);color:var(--amber);border:1px solid rgba(184,122,0,0.15);">Supports conditional option</span>
-              <span style="font-size:9px;font-weight:600;padding:1.5px 6px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);">Topical · Systemic risk</span>
+            <div class="ev-source-authors">Topical NSAIDs provide pain relief with lower risk of systemic adverse effects than oral NSAIDs.</div>
+            <div class="ev-source-tags">
+              <span class="ev-tag ev-tag-amber">Supports conditional option</span>
+              <span class="ev-tag ev-tag-muted">Topical · Systemic risk</span>
             </div>
           </div>
           <div><span class="ev-type-badge ev-type-review">Review</span></div>
-          <div style="font-size:11.5px;font-weight:700;color:var(--amber);">Moderate</div>
+          <div class="ev-level ev-level-mod">Moderate</div>
           <div class="ev-rel"><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot empty"></div><div class="ev-rel-dot empty"></div></div>
         </div>
         <div class="ev-item">
           <div>
             <div class="ev-source-title">Choosing Wisely Campaign · 2022</div>
-            <div class="ev-source-authors" style="margin-bottom:5px;">Avoid long-term high-dose NSAIDs in older adults with high GI risk. Supports stepwise analgesic approach.</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
-              <span style="font-size:9px;font-weight:700;padding:1.5px 6px;border-radius:3px;background:rgba(184,50,41,0.07);color:var(--red);border:1px solid rgba(184,50,41,0.15);">Supports NSAID avoidance</span>
-              <span style="font-size:9px;font-weight:600;padding:1.5px 6px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);">High-dose NSAIDs · Older adults</span>
+            <div class="ev-source-authors">Avoid long-term high-dose NSAIDs in older adults with high GI risk. Supports stepwise analgesic approach.</div>
+            <div class="ev-source-tags">
+              <span class="ev-tag ev-tag-red">Supports NSAID avoidance</span>
+              <span class="ev-tag ev-tag-muted">High-dose NSAIDs · Older adults</span>
             </div>
           </div>
           <div><span class="ev-type-badge ev-type-guideline">Guideline</span></div>
-          <div style="font-size:11.5px;font-weight:700;color:var(--green);">High</div>
+          <div class="ev-level ev-level-high">High</div>
           <div class="ev-rel"><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div></div>
         </div>
         <div class="ev-item">
           <div>
             <div class="ev-source-title">AGS Beers Criteria · 2023 Update</div>
-            <div class="ev-source-authors" style="margin-bottom:5px;">Explicit recommendation against oral NSAIDs in adults ≥65 unless alternatives are inadequate.</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
-              <span style="font-size:9px;font-weight:700;padding:1.5px 6px;border-radius:3px;background:rgba(184,50,41,0.07);color:var(--red);border:1px solid rgba(184,50,41,0.15);">Drives NSAID exclusion</span>
-              <span style="font-size:9px;font-weight:600;padding:1.5px 6px;border-radius:3px;background:var(--bg);border:1px solid var(--border);color:var(--muted);">Age ≥65 · NSAIDs</span>
+            <div class="ev-source-authors">Explicit recommendation against oral NSAIDs in adults ≥65 unless alternatives are inadequate.</div>
+            <div class="ev-source-tags">
+              <span class="ev-tag ev-tag-red">Drives NSAID exclusion</span>
+              <span class="ev-tag ev-tag-muted">Age ≥65 · NSAIDs</span>
             </div>
           </div>
           <div><span class="ev-type-badge ev-type-guideline">Guideline</span></div>
-          <div style="font-size:11.5px;font-weight:700;color:var(--green);">High</div>
+          <div class="ev-level ev-level-high">High</div>
           <div class="ev-rel"><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div><div class="ev-rel-dot filled"></div></div>
         </div>
       </div>
 
-      <div style="padding:10px 16px;font-size:11.5px;color:var(--blue);cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-top:8px;">
+      <div class="escalation-link escalation-link-mt">
         View all references (13)
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════
-         SECTION 8 — CLINICAL HANDOFF & COMMUNICATION
-    ═══════════════════════════════════════ -->
     <div id="section-handoff" class="dp-section">
       <div class="dp-section-header">
         <div class="dp-section-title-wrap">
@@ -2887,15 +3020,12 @@
           <div class="dp-section-title">Clinical Handoff</div>
           <div class="dp-section-subtitle">Structured communication outputs for handoffs, escalations, and team coordination.</div>
         </div>
-        <div style="display:flex;gap:6px;">
-          <button class="dp-action-btn" onclick="copyHandoffDocument()">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Copy document
-          </button>
-        </div>
+        <button class="dp-action-btn" onclick="copyHandoffDocument()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy document
+        </button>
       </div>
 
-      <!-- Document type selector -->
       <div class="hf-doc-selector" id="hf-type-selector">
         <button class="hf-doc-type active" onclick="selectHandoffType('pharmacist', this)">
           <div class="hf-doc-type-label">Pharmacist</div>
@@ -2928,9 +3058,7 @@
       </div>
 
       <div class="hf-output-wrap">
-
-        <!-- LEFT — document output -->
-        <div>
+        <div class="hf-doc-output">
           <div class="hf-status-strip">
             <div class="hf-status-left">Generated from current patient parameters</div>
             <div class="hf-status-right">CS-2026-00841 · May 2026 · M. Evteev</div>
@@ -2944,12 +3072,10 @@
                 <div class="hf-doc-title">Pharmacist Recommendation Summary</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · 68 y/o F · Chronic OA Pain · High GI Risk</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
@@ -3019,12 +3145,10 @@
                 <div class="hf-doc-title">Monitoring Handoff Note</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · For incoming pharmacist / clinical team</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
@@ -3110,16 +3234,14 @@
                 <div class="hf-doc-title">Escalation Summary</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · For supervising physician / team lead</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
-              <div class="hf-amber-callout" style="margin-top:0;margin-bottom:16px;">
+              <div class="hf-amber-callout hf-callout-top">
                 <div class="hf-amber-callout-label">Escalation pathway — conditions met</div>
                 Two NSAID trials failed (GI + BP intolerance). Current acetaminophen monotherapy is appropriate first-line but has a limited analgesic ceiling. Pathway review due at Week 4 if pain uncontrolled.
               </div>
@@ -3194,12 +3316,10 @@
                 <div class="hf-doc-title">Attending Physician Brief</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · Concise summary for physician review</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
@@ -3266,12 +3386,10 @@
                 <div class="hf-doc-title">Medication Risk Summary</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · Analgesic risk profile — structured for safety review</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
@@ -3361,12 +3479,10 @@
                 <div class="hf-doc-title">Treatment Change Rationale</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · Documented reasoning for analgesic selection decision</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
@@ -3436,12 +3552,10 @@
                 <div class="hf-doc-title">Follow-up Monitoring Priorities</div>
                 <div class="hf-doc-subtitle">Case CS-2026-00841 · For next clinical contact — structured review agenda</div>
               </div>
-              <div class="hf-doc-actions">
-                <button class="hf-copy-btn" onclick="copyHandoffDocument()">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  Copy
-                </button>
-              </div>
+              <button class="hf-copy-btn" onclick="copyHandoffDocument()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
             <div class="hf-doc-body">
 
@@ -3525,8 +3639,8 @@
             </div>
           </div>
 
-          <div class="hf-format-note" style="margin-top:12px;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div class="hf-format-note">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0 icon-mt1"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
             Documents are generated from current patient parameters. Content adapts when parameters change. Review and apply clinical judgment before use in patient care or formal handoff.
           </div>
         </div>
@@ -3651,7 +3765,7 @@
 </div><!-- /workflow-page -->
 
 <!-- FOOTER -->
-<div style="border-top:1px solid var(--border);padding:9px 32px;background:var(--white);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;max-width:1440px;margin:0 auto;">
+<div class="app-footer">
   <span>© 2026 Clinstrux · Evteev Advisory · Clinical Decision Infrastructure</span>
   <span>Not a substitute for clinical judgment. Clinstrux supports decisions but does not replace clinician expertise.</span>
 </div>
