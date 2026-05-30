@@ -336,6 +336,166 @@
 .mn-stat-card-uncertain { background: var(--uncertain-bg); color: var(--uncertain); border: 1px solid var(--uncertain-border); }
 .escalation-link-mt { margin-top: 8px; }
 
+/* ─── Clinical Status Summary block ─────────────────────────────────────── */
+.css-block {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.css-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 18px 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.css-block-head-left { display: flex; flex-direction: column; gap: 3px; }
+.css-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+}
+.css-block-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--navy);
+}
+.css-block-head-right { flex-shrink: 0; }
+.css-overall-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(58,170,120,0.08);
+  color: var(--green);
+  border: 1px solid rgba(58,170,120,0.18);
+}
+.css-overall-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+.css-overall-badge.css-badge-amber {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border-color: rgba(196,138,48,0.22);
+}
+.css-overall-badge.css-badge-amber .css-overall-dot { background: var(--amber); }
+.css-overall-badge.css-badge-red {
+  background: var(--red-bg);
+  color: var(--red);
+  border-color: rgba(192,64,64,0.22);
+}
+.css-overall-badge.css-badge-red .css-overall-dot { background: var(--red); }
+
+.css-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid var(--border-light);
+}
+@media (max-width: 900px) {
+  .css-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .css-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.css-metric {
+  padding: 11px 14px;
+  border-right: 1px solid var(--border-light);
+}
+.css-metric:last-child { border-right: none; }
+.css-metric-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.css-metric-value {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+}
+.css-metric-value.css-val-green { color: var(--green); }
+.css-metric-value.css-val-amber { color: var(--amber); }
+.css-metric-value.css-val-red   { color: var(--red); }
+.css-metric-sub {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.css-assessment-row {
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.css-assessment-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.css-assessment-text {
+  font-size: 11.5px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.css-reasoning-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  flex-wrap: wrap;
+}
+.css-reasoning-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.css-reasoning-items { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.css-reasoning-chip {
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.css-chip-red    { background: var(--red-bg); color: var(--red); border: 1px solid rgba(192,64,64,0.18); }
+.css-chip-amber  { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(196,138,48,0.18); }
+.css-chip-blue   { background: rgba(204,117,70,0.09); color: var(--accent); border: 1px solid rgba(204,117,70,0.20); }
+.css-chip-green  { background: rgba(58,170,120,0.08); color: var(--green); border: 1px solid rgba(58,170,120,0.15); }
+.css-chip-muted  { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
 /* ─── Cleanup pass 2 utility classes ─────────────────────────────────────── */
 .text-navy              { color: var(--navy); }
 .text-bold              { font-weight: 700; }
@@ -514,6 +674,13 @@
             <div>
               <div class="ep-step-title">Patient &amp; Scenario Parameters</div>
               <div class="ep-step-desc">Review and modify live patient parameters — age, eGFR, GI risk, CV status, prior failures, adherence, and sedation sensitivity.</div>
+            </div>
+          </div>
+          <div class="ep-step">
+            <div class="ep-step-num">→</div>
+            <div>
+              <div class="ep-step-title">Clinical Status Summary</div>
+              <div class="ep-step-desc">Automated clinical assessment bridging patient inputs and recommendations — clinical status, functional impact, symptom burden, risk profile, and overall assessment.</div>
             </div>
           </div>
           <div class="ep-step">
@@ -1686,6 +1853,82 @@
         Scenario data is used to generate decision output. All inputs should reflect the actual patient context.
       </div>
     </div>
+
+    <!-- ════════════════ CLINICAL STATUS SUMMARY ════════════════ -->
+    <div class="css-block" id="css-block">
+      <div class="css-block-head">
+        <div class="css-block-head-left">
+          <div class="css-eyebrow">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Clinical Status Summary
+          </div>
+          <div class="css-block-title" id="css-title">Patient Assessment — Day 1</div>
+        </div>
+        <div class="css-block-head-right">
+          <div class="css-overall-badge" id="css-overall-badge">
+            <span class="css-overall-dot" id="css-overall-dot"></span>
+            <span id="css-overall-label">Clinically Stable</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="css-grid">
+
+        <div class="css-metric" id="css-metric-status">
+          <div class="css-metric-label">Clinical Status</div>
+          <div class="css-metric-value" id="css-status-val">Stable</div>
+          <div class="css-metric-sub" id="css-status-sub">No acute deterioration</div>
+        </div>
+
+        <div class="css-metric" id="css-metric-functional">
+          <div class="css-metric-label">Functional Impact</div>
+          <div class="css-metric-value" id="css-functional-val">Moderate</div>
+          <div class="css-metric-sub" id="css-functional-sub">Stair use and walking limited</div>
+        </div>
+
+        <div class="css-metric" id="css-metric-symptom">
+          <div class="css-metric-label">Symptom Burden</div>
+          <div class="css-metric-value" id="css-symptom-val">Moderate–High</div>
+          <div class="css-metric-sub" id="css-symptom-sub">NRS 6/10 · Bilateral</div>
+        </div>
+
+        <div class="css-metric" id="css-metric-risk">
+          <div class="css-metric-label">Risk Profile</div>
+          <div class="css-metric-value" id="css-risk-val">Moderate–High</div>
+          <div class="css-metric-sub" id="css-risk-sub">GI + renal + age constraints</div>
+        </div>
+
+        <div class="css-metric" id="css-metric-pathway">
+          <div class="css-metric-label">Treatment Pathway</div>
+          <div class="css-metric-value" id="css-pathway-val">Constrained</div>
+          <div class="css-metric-sub" id="css-pathway-sub">NSAID &amp; opioid closed</div>
+        </div>
+
+        <div class="css-metric" id="css-metric-urgency">
+          <div class="css-metric-label">Intervention Urgency</div>
+          <div class="css-metric-value" id="css-urgency-val">Prompt</div>
+          <div class="css-metric-sub" id="css-urgency-sub">Initiate today · Review Wk 2</div>
+        </div>
+
+      </div>
+
+      <div class="css-assessment-row">
+        <div class="css-assessment-label">Overall Assessment</div>
+        <div class="css-assessment-text" id="css-assessment-text">Patient remains symptomatic but clinically stable. Pain is moderate-to-severe with progressive functional limitation. Analgesic options are significantly restricted by compound GI, renal, and cardiovascular constraints. First-line treatment initiation is appropriate today — acetaminophen TID provides the best achievable safety-efficacy balance within the current constraint profile.</div>
+      </div>
+
+      <div class="css-reasoning-strip" id="css-reasoning-strip">
+        <span class="css-reasoning-label">Why this recommendation follows</span>
+        <div class="css-reasoning-items" id="css-reasoning-items">
+          <span class="css-reasoning-chip css-chip-red">GI risk binding</span>
+          <span class="css-reasoning-chip css-chip-amber">Renal monitoring required</span>
+          <span class="css-reasoning-chip css-chip-amber">NSAID pathway closed ×2</span>
+          <span class="css-reasoning-chip css-chip-blue">Acetaminophen: lowest systemic risk</span>
+          <span class="css-reasoning-chip css-chip-muted">ACR 2023 aligned</span>
+        </div>
+      </div>
+    </div>
+    <!-- ════════════════ /CLINICAL STATUS SUMMARY ════════════════ -->
 
     <div id="section-summary" class="dp-section active">
       <div class="dp-section-header">

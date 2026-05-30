@@ -719,6 +719,7 @@ function updateRenalDosingBlock() {
 function runReasoningEngine() {
   updateParamTiles();
   updateComplexityBar();
+  updateClinicalStatusSummary();
 
   var rec    = buildPrimaryRec();
   var nsaidR = buildNsaidReasoning();
@@ -2249,6 +2250,196 @@ function updatePathwayStates(activeIdx) {
 
 
 /* ════════════════════════════════════════════════════════════
+   SECTION 21A — CLINICAL STATUS SUMMARY
+════════════════════════════════════════════════════════════ */
+
+function updateClinicalStatusSummary() {
+  var block = document.getElementById('css-block');
+  if (!block) return;
+
+  // ── helpers ──────────────────────────────────────────────────────────────
+  function setVal(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+  function setClass(id, cls) {
+    var el = document.getElementById(id);
+    if (el) { el.className = el.className.replace(/css-val-\w+/g, '').trim(); if (cls) el.classList.add(cls); }
+  }
+
+  // ── derive clinical dimensions from P ────────────────────────────────────
+  var eR = egfrRisk();          // 'low' | 'mild' | 'moderate' | 'severe'
+  var gR = giRisk();            // 'low' | 'high' | 'very-high'
+  var nsaidClosed = nsaidContraindicated();
+  var opioidClosed = opioidAvoidable();
+  var complexity = computeComplexity();
+
+  // 1. Clinical Status
+  var statusVal, statusSub, statusCls;
+  if (P.egfr < 30 || P.bp >= 170 || gR === 'very-high') {
+    statusVal = 'Unstable'; statusSub = 'Acute risk factors present'; statusCls = 'css-val-red';
+  } else if (P.egfr < 45 || P.bp >= 150 || gR === 'high') {
+    statusVal = 'Guarded'; statusSub = 'Active risk factors — monitor closely'; statusCls = 'css-val-amber';
+  } else {
+    statusVal = 'Stable'; statusSub = 'No acute deterioration'; statusCls = 'css-val-green';
+  }
+  setVal('css-status-val', statusVal);
+  setVal('css-status-sub', statusSub);
+  setClass('css-status-val', statusCls);
+
+  // 2. Functional Impact
+  var funcVal, funcSub, funcCls;
+  if (P.pain >= 8) {
+    funcVal = 'Severe'; funcSub = 'Markedly limits daily activities'; funcCls = 'css-val-red';
+  } else if (P.pain >= 6) {
+    funcVal = 'Moderate'; funcSub = 'Stair use and walking limited'; funcCls = 'css-val-amber';
+  } else if (P.pain >= 4) {
+    funcVal = 'Mild–Moderate'; funcSub = 'Some activity restriction'; funcCls = 'css-val-amber';
+  } else {
+    funcVal = 'Mild'; funcSub = 'Manageable with current regimen'; funcCls = 'css-val-green';
+  }
+  setVal('css-functional-val', funcVal);
+  setVal('css-functional-sub', funcSub);
+  setClass('css-functional-val', funcCls);
+
+  // 3. Symptom Burden
+  var symVal, symSub, symCls;
+  if (P.pain >= 8) {
+    symVal = 'High'; symSub = 'NRS ' + P.pain + '/10 · Severe'; symCls = 'css-val-red';
+  } else if (P.pain >= 6) {
+    symVal = 'Moderate–High'; symSub = 'NRS ' + P.pain + '/10 · Bilateral'; symCls = 'css-val-amber';
+  } else if (P.pain >= 4) {
+    symVal = 'Moderate'; symSub = 'NRS ' + P.pain + '/10'; symCls = 'css-val-amber';
+  } else {
+    symVal = 'Low'; symSub = 'NRS ' + P.pain + '/10 · Manageable'; symCls = 'css-val-green';
+  }
+  setVal('css-symptom-val', symVal);
+  setVal('css-symptom-sub', symSub);
+  setClass('css-symptom-val', symCls);
+
+  // 4. Risk Profile
+  var riskVal, riskSub, riskCls;
+  var riskCount = (gR === 'high' || gR === 'very-high' ? 1 : 0) +
+    (eR === 'moderate' || eR === 'severe' ? 2 : eR === 'mild' ? 1 : 0) +
+    (ageFlag() ? 1 : 0) +
+    (P.cv === 'high' || P.cv === 'very-high' ? 1 : 0) +
+    (P.bp >= 150 ? 1 : 0);
+  if (riskCount >= 5) {
+    riskVal = 'High'; riskSub = 'Multiple compound constraints'; riskCls = 'css-val-red';
+  } else if (riskCount >= 3) {
+    riskVal = 'Moderate–High'; riskSub = 'GI + renal + age constraints'; riskCls = 'css-val-amber';
+  } else if (riskCount >= 1) {
+    riskVal = 'Moderate'; riskSub = 'Active risk factors present'; riskCls = 'css-val-amber';
+  } else {
+    riskVal = 'Low'; riskSub = 'No major risk factors active'; riskCls = 'css-val-green';
+  }
+  setVal('css-risk-val', riskVal);
+  setVal('css-risk-sub', riskSub);
+  setClass('css-risk-val', riskCls);
+
+  // 5. Treatment Pathway
+  var pathVal, pathSub, pathCls;
+  var closedCount = (nsaidClosed ? 1 : 0) + (opioidClosed ? 1 : 0) + (acetaminophenFailed() ? 1 : 0);
+  if (closedCount >= 3) {
+    pathVal = 'Severely Limited'; pathSub = 'Most classes exhausted'; pathCls = 'css-val-red';
+  } else if (nsaidClosed && opioidClosed) {
+    pathVal = 'Constrained'; pathSub = 'NSAID & opioid closed'; pathCls = 'css-val-amber';
+  } else if (nsaidClosed) {
+    pathVal = 'Restricted'; pathSub = 'NSAID pathway closed'; pathCls = 'css-val-amber';
+  } else {
+    pathVal = 'Open'; pathSub = 'Standard options available'; pathCls = 'css-val-green';
+  }
+  setVal('css-pathway-val', pathVal);
+  setVal('css-pathway-sub', pathSub);
+  setClass('css-pathway-val', pathCls);
+
+  // 6. Intervention Urgency
+  var urgVal, urgSub, urgCls;
+  if (P.pain >= 8 || gR === 'very-high' || P.egfr < 30) {
+    urgVal = 'Urgent'; urgSub = 'Immediate action required'; urgCls = 'css-val-red';
+  } else if (P.pain >= 6 || gR === 'high' || eR === 'mild') {
+    urgVal = 'Prompt'; urgSub = 'Initiate today · Review Wk 2'; urgCls = 'css-val-amber';
+  } else {
+    urgVal = 'Routine'; urgSub = 'Elective — monitor at follow-up'; urgCls = '';
+  }
+  setVal('css-urgency-val', urgVal);
+  setVal('css-urgency-sub', urgSub);
+  setClass('css-urgency-val', urgCls);
+
+  // ── Overall badge ────────────────────────────────────────────────────────
+  var badge = document.getElementById('css-overall-badge');
+  var badgeLabel = document.getElementById('css-overall-label');
+  if (badge && badgeLabel) {
+    badge.className = 'css-overall-badge';
+    if (statusVal === 'Unstable' || riskVal === 'High') {
+      badge.classList.add('css-badge-red');
+      badgeLabel.textContent = 'Clinical Review Required';
+    } else if (statusVal === 'Guarded' || riskVal === 'Moderate–High') {
+      badge.classList.add('css-badge-amber');
+      badgeLabel.textContent = 'Monitoring Elevated';
+    } else {
+      badgeLabel.textContent = 'Clinically Stable';
+    }
+  }
+
+  // ── Overall Assessment narrative ─────────────────────────────────────────
+  var narrativeParts = [];
+  // Pain / symptom framing
+  if (P.pain >= 8) {
+    narrativeParts.push('Patient presents with severe pain (NRS ' + P.pain + '/10) causing significant functional impairment.');
+  } else if (P.pain >= 6) {
+    narrativeParts.push('Patient remains symptomatic with moderate-to-severe pain (NRS ' + P.pain + '/10) and progressive functional limitation.');
+  } else {
+    narrativeParts.push('Patient reports moderate pain (NRS ' + P.pain + '/10) with manageable functional impact.');
+  }
+  // Constraint summary
+  if (nsaidClosed && opioidClosed) {
+    narrativeParts.push('Analgesic options are significantly restricted by compound ' +
+      (gR !== 'low' ? 'GI, ' : '') +
+      (eR !== 'low' ? 'renal, ' : '') +
+      'and cardiovascular constraints.');
+  } else if (nsaidClosed) {
+    narrativeParts.push('NSAIDs are contraindicated; alternative analgesic strategies are required.');
+  }
+  // Recommendation bridge
+  if (acetaminophenFailed()) {
+    narrativeParts.push('First-line acetaminophen has failed — pathway review and specialist input are required before escalation.');
+  } else if (nsaidClosed) {
+    narrativeParts.push('First-line treatment initiation is appropriate today — acetaminophen TID provides the best achievable safety-efficacy balance within the current constraint profile.');
+  } else {
+    narrativeParts.push('Treatment initiation is appropriate — acetaminophen is recommended as first-line with close monitoring.');
+  }
+  setVal('css-assessment-text', narrativeParts.join(' '));
+
+  // ── Reasoning chips ──────────────────────────────────────────────────────
+  var chipsEl = document.getElementById('css-reasoning-items');
+  if (chipsEl) {
+    var chips = [];
+    if (gR === 'very-high' || gR === 'high')   chips.push({ label: 'GI risk binding', cls: 'css-chip-red' });
+    if (eR === 'mild' || eR === 'moderate')     chips.push({ label: 'Renal monitoring required', cls: 'css-chip-amber' });
+    if (eR === 'severe')                         chips.push({ label: 'Severe renal impairment', cls: 'css-chip-red' });
+    if (P.failed === '2nsaid' || P.failed === 'multi') chips.push({ label: 'NSAID pathway closed ×2', cls: 'css-chip-amber' });
+    else if (P.failed === '1nsaid')              chips.push({ label: 'NSAID failed ×1', cls: 'css-chip-amber' });
+    if (ageFlag())                               chips.push({ label: 'Age ≥65 (Beers)', cls: 'css-chip-amber' });
+    if (P.bp >= 150)                             chips.push({ label: 'BP elevated', cls: 'css-chip-amber' });
+    if (!acetaminophenFailed() && !nsaidClosed)  chips.push({ label: 'Acetaminophen: first-line', cls: 'css-chip-blue' });
+    else if (!acetaminophenFailed())             chips.push({ label: 'Acetaminophen: lowest systemic risk', cls: 'css-chip-blue' });
+    if (P.adh === 'partial' || P.adh === 'poor') chips.push({ label: 'Adherence concern', cls: 'css-chip-amber' });
+    chips.push({ label: 'ACR 2023 aligned', cls: 'css-chip-muted' });
+
+    chipsEl.innerHTML = chips.map(function(c) {
+      return '<span class="css-reasoning-chip ' + c.cls + '">' + c.label + '</span>';
+    }).join('');
+  }
+
+  // ── Block title ──────────────────────────────────────────────────────────
+  var timepointLabels = ['Day 1', 'Week 2', 'Week 4', 'Week 8', '3 Months'];
+  var tpLabel = timepointLabels[LP_CURRENT_TP] || 'Day 1';
+  setVal('css-title', 'Patient Assessment — ' + tpLabel);
+}
+
+
+/* ════════════════════════════════════════════════════════════
    SECTION 21 — ENTRY PAGE GATE
 ════════════════════════════════════════════════════════════ */
 
@@ -2274,6 +2465,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Core reasoning engine boot
   updateParamTiles();
   updateComplexityBar();
+  updateClinicalStatusSummary();
   var rec    = buildPrimaryRec();
   var nsaidR = buildNsaidReasoning();
   _isFirstRun = true;
