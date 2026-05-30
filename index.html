@@ -499,16 +499,18 @@
 /* ─── Clinical Impression block ─────────────────────────────────────────── */
 .ci-block {
   margin-bottom: 10px;
-  padding: 13px 18px 14px;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  overflow: hidden;
 }
 .ci-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  padding: 9px 16px 8px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
 }
 .ci-eyebrow {
   display: flex;
@@ -527,42 +529,70 @@
   letter-spacing: 0.3px;
 }
 .ci-body {
+  padding: 14px 18px 15px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 .ci-paragraphs {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0;
+  margin-bottom: 12px;
 }
+/* Each clinical note line — no left bar, just flowing prose with a dim rule between */
 .ci-line {
   font-size: 12px;
   color: var(--text);
-  line-height: 1.6;
-  padding-left: 11px;
-  border-left: 2px solid var(--border-light);
+  line-height: 1.68;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border-light);
+  position: relative;
 }
-.ci-line.ci-line-amber { border-left-color: var(--amber); color: var(--text); }
-.ci-line.ci-line-red   { border-left-color: var(--red);   color: var(--text); }
-.ci-line.ci-line-green { border-left-color: var(--green); color: var(--text); }
-.ci-line.ci-line-muted { border-left-color: var(--border); color: var(--muted); font-style: italic; }
+.ci-line:first-child { padding-top: 0; }
+.ci-line:last-child  { border-bottom: none; }
+/* Tone indicator — a small left-edge dot, not a bar */
+.ci-line::before {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.ci-line.ci-line-amber::before { background: var(--amber); }
+.ci-line.ci-line-red::before   { background: var(--red); }
+.ci-line.ci-line-green::before { background: var(--green); }
+.ci-line.ci-line-muted { color: var(--muted); }
+.ci-line.ci-line-muted::before { background: var(--border); }
+
+/* Conclusion — sits below a stronger rule, styled as a clinical direction note */
 .ci-conclusion {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--navy);
-  line-height: 1.55;
-  padding-top: 6px;
-  border-top: 1px solid var(--border-light);
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
 }
 .ci-conclusion-label {
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--muted);
-  display: block;
-  margin-bottom: 3px;
+  letter-spacing: 0.7px;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+  min-width: 90px;
+}
+.ci-conclusion-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--navy);
+  line-height: 1.6;
 }
 
 /* ─── Cleanup pass 2 utility classes ─────────────────────────────────────── */
@@ -2018,7 +2048,8 @@
           <!-- populated by JS -->
         </div>
         <div class="ci-conclusion" id="ci-conclusion">
-          <!-- populated by JS -->
+          <span class="ci-conclusion-label">Clinical direction</span>
+          <span class="ci-conclusion-text" id="ci-conclusion-text"><!-- populated by JS --></span>
         </div>
       </div>
     </div>
@@ -4603,7 +4634,10 @@
           </div>
           <div class="ci-body">
             <div class="ci-paragraphs" id="abx-ci-paragraphs"></div>
-            <div class="ci-conclusion" id="abx-ci-conclusion"></div>
+            <div class="ci-conclusion" id="abx-ci-conclusion">
+              <span class="ci-conclusion-label">Clinical direction</span>
+              <span class="ci-conclusion-text" id="abx-ci-conclusion-text"></span>
+            </div>
           </div>
         </div>
 

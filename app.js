@@ -2448,99 +2448,101 @@ function updateClinicalImpression() {
   var el = document.getElementById('ci-block');
   if (!el) return;
 
-  var eR  = egfrRisk();
-  var gR  = giRisk();
+  var eR          = egfrRisk();
+  var gR          = giRisk();
   var nsaidClosed = nsaidContraindicated();
-  var opioidClosed = opioidAvoidable();
-  var apapFailed = acetaminophenFailed();
-  var multimodal = multimodalFailure();
+  var opioidClosed= opioidAvoidable();
+  var apapFailed  = acetaminophenFailed();
+  var multimodal  = multimodalFailure();
 
   // ── Timepoint label ──────────────────────────────────────────────────────
   var tpLabels = ['Day 1', 'Week 2', 'Week 4', 'Week 8', '3 Months'];
-  var tpLabel = tpLabels[LP_CURRENT_TP] || 'Day 1';
+  var tpLabel  = tpLabels[LP_CURRENT_TP] || 'Day 1';
   var tpEl = document.getElementById('ci-timepoint');
   if (tpEl) tpEl.textContent = tpLabel;
 
-  // ── Build impression lines ───────────────────────────────────────────────
+  // ── Clinical impression lines ────────────────────────────────────────────
   var lines = [];
 
-  // 1. Symptomatic status — the opening clinical observation
+  // 1. Presenting symptom burden
   if (P.pain >= 8) {
-    lines.push({ text: 'Patient presents with severe, functionally disabling pain (NRS ' + P.pain + '/10). Activity is significantly curtailed and the current analgesic approach is inadequate.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Severe pain at NRS ' + P.pain + '/10 is producing significant functional impairment. The patient is unable to perform basic daily activities and the current analgesic approach has not provided adequate relief.' });
   } else if (P.pain >= 6) {
-    lines.push({ text: 'Patient remains symptomatic with moderate-to-severe pain (NRS ' + P.pain + '/10) and progressive functional limitation. Bilateral joint involvement is contributing to reduced mobility and social independence.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Patient remains symptomatic at NRS ' + P.pain + '/10 with moderate-to-severe pain and progressive functional limitation. Bilateral joint involvement is contributing to restricted mobility and reduced independence with daily activities.' });
   } else if (P.pain >= 4) {
-    lines.push({ text: 'Patient reports moderate pain (NRS ' + P.pain + '/10). Functional capacity is partially preserved but activity limitation is evident.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Moderate pain at NRS ' + P.pain + '/10. Functional capacity is partially preserved but activity limitation is present and affecting daily routine.' });
   } else {
-    lines.push({ text: 'Pain is currently well-controlled (NRS ' + P.pain + '/10). Functional status appears maintained at this timepoint.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Pain is currently well-controlled at NRS ' + P.pain + '/10. Functional status appears maintained at this timepoint and no acute deterioration is evident.' });
   }
 
-  // 2. Risk constraint framing — the binding clinical context
+  // 2. Primary risk constraint — what shapes the analgesic decision
   if (gR === 'very-high' && (eR === 'moderate' || eR === 'severe')) {
-    lines.push({ text: 'Risk profile is substantially constrained. Active GI haemorrhage history combined with significant renal impairment (eGFR ' + P.egfr + ') narrows the analgesic pathway to the least nephrotoxic and gastrotoxic agents only.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Analgesic options are substantially constrained by a compound risk profile. A history of GI haemorrhage combined with significant renal impairment (eGFR ' + P.egfr + ' mL/min) closes the NSAID pathway on two independent grounds and limits escalation options to the least nephrotoxic and gastrotoxic agents.' });
   } else if (gR === 'very-high') {
-    lines.push({ text: 'GI risk is the dominant clinical constraint. Prior bleeding history renders NSAIDs of all classes inappropriate regardless of pain severity. This is not a provisional restriction — it is a firm contraindication.', tone: 'red' });
-  } else if (gR === 'high' && (eR === 'mild' || eR === 'moderate' || eR === 'severe')) {
-    lines.push({ text: 'Compound GI and renal risk limits analgesic selection. Prior peptic ulcer and a borderline eGFR (' + P.egfr + ' mL/min) together close the NSAID pathway and restrict escalation options at both the GI and nephrotoxicity axes.', tone: 'amber' });
+    lines.push({ tone: 'red',   text: 'Prior GI haemorrhage is the dominant risk constraint. NSAIDs of all classes are contraindicated regardless of pain severity or selectivity — this is a firm, non-negotiable restriction that must guide the analgesic strategy.' });
+  } else if (gR === 'high' && eR !== 'low') {
+    lines.push({ tone: 'amber', text: 'Compound GI and renal risk restricts analgesic selection. A documented peptic ulcer history alongside borderline renal function (eGFR ' + P.egfr + ' mL/min) places the NSAID pathway beyond reach and limits the available escalation options at both axes.' });
   } else if (gR === 'high') {
-    lines.push({ text: 'Prior peptic ulcer represents a sustained GI risk. NSAIDs carry meaningful ulcer reactivation and bleeding risk in this context — particularly with age-related mucosal vulnerability.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Peptic ulcer history introduces a sustained GI constraint. NSAIDs carry meaningful risk of ulcer reactivation and GI bleeding in this context, particularly given the patient\'s age.' });
   } else if (eR === 'moderate' || eR === 'severe') {
-    lines.push({ text: 'Renal function is significantly impaired (eGFR ' + P.egfr + ') and is the primary constraint on analgesic escalation. Prostaglandin-dependent renal autoregulation is at risk; NSAIDs are contraindicated at this level of function.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Renal impairment (eGFR ' + P.egfr + ' mL/min) is the primary analgesic constraint at this stage. Prostaglandin-dependent renal autoregulation is at risk; NSAIDs are contraindicated and acetaminophen dose adjustment is required.' });
   } else if (eR === 'mild') {
-    lines.push({ text: 'Mild renal impairment (eGFR ' + P.egfr + ', CKD G3a) introduces a dose ceiling for acetaminophen and warrants monitoring of any analgesic with nephrotoxic potential. The trajectory of renal function is currently unconfirmed.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Mild renal impairment (eGFR ' + P.egfr + ' mL/min, CKD G3a) warrants monitoring of any analgesic with nephrotoxic potential and introduces a dose ceiling for standard acetaminophen regimens.' });
   }
 
-  // 3. BP / CV — only if clinically relevant
+  // 3. Cardiovascular / BP — include only when clinically meaningful
   if (P.bp >= 170) {
-    lines.push({ text: 'Blood pressure is uncontrolled (SBP ' + P.bp + ' mmHg). NSAID use in this context carries direct risk of further BP elevation and antihypertensive antagonism — this is a firm contraindication to any NSAID trial.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Blood pressure is uncontrolled at SBP ' + P.bp + ' mmHg. Any NSAID use at this level carries direct risk of further BP elevation and interference with antihypertensive therapy.' });
   } else if (P.bp >= 150) {
-    lines.push({ text: 'Blood pressure is mildly elevated (SBP ' + P.bp + ' mmHg). NSAIDs would likely impair amlodipine efficacy; previous diclofenac trial produced a documented +18 mmHg rise, which reinforces avoidance.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Blood pressure is elevated at SBP ' + P.bp + ' mmHg. NSAIDs are likely to antagonise amlodipine efficacy; previous diclofenac use produced a documented rise of +18 mmHg, supporting continued avoidance.' });
   }
 
-  // 4. Prior treatment failures — what this means for current decision
+  // 4. Treatment history — what it means for next decision
   if (multimodal) {
-    lines.push({ text: 'Multiple analgesic classes have failed. The treatment pathway is substantially exhausted — further escalation requires specialist input before any new agent class is introduced.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Multiple analgesic classes have been trialled without sustained benefit. The conventional treatment pathway is substantially exhausted and further escalation decisions require specialist review before any new agent class is introduced.' });
   } else if (apapFailed) {
-    lines.push({ text: 'Acetaminophen has been trialled and failed. The primary conservative option is no longer available, and escalation to a second-line agent — within the bounds of the current risk profile — is now appropriate.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Acetaminophen has been trialled at adequate dose and frequency without sufficient effect. First-line conservative management has been explored; escalation to a second-line option appropriate to the current risk profile is now warranted.' });
   } else if (P.failed === '2nsaid') {
-    lines.push({ text: 'Two NSAID trials have been discontinued due to documented intolerance. This is not a relative contraindication — it constitutes direct clinical evidence that the NSAID pathway is not viable for this patient. Acetaminophen TID has not yet been trialled on a fixed schedule.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Two NSAIDs have been discontinued due to documented intolerance. These trials collectively confirm the NSAID pathway is not viable for this patient. Fixed-schedule acetaminophen TID has not yet been formally evaluated and should be established before any further escalation is considered.' });
   } else if (P.failed === '1nsaid') {
-    lines.push({ text: 'One NSAID has been discontinued due to intolerance. Caution is appropriate before attempting a second NSAID trial; alternative first-line options should be exhausted first.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'One NSAID has been discontinued due to intolerance. First-line alternatives should be fully evaluated before considering a second NSAID trial.' });
   }
 
-  // 5. Adherence — clinical implication, not a flag
+  // 5. Adherence — interpret cautiously, never as accusation
   if (P.adh === 'poor') {
-    lines.push({ text: 'Adherence is documented as poor. Any apparent treatment failure at this stage must be interpreted cautiously — subtherapeutic drug exposure cannot be excluded as the primary explanation for ongoing pain.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Adherence to the prescribed regimen is documented as poor. Apparent treatment failure at this stage cannot be meaningfully assessed without first establishing consistent drug exposure on a fixed schedule.' });
   } else if (P.adh === 'partial') {
-    lines.push({ text: 'Adherence to the analgesic regimen is inconsistent. The patient has been using medication on a PRN basis rather than a fixed schedule. A first assessment of true fixed-schedule adherence has not yet been obtained.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Medication use has been inconsistent, taken on a PRN basis rather than as a scheduled regimen. Adequacy of analgesic exposure on a fixed-dose schedule has not yet been assessed.' });
   }
 
-  // 6. Sedation / opioid gate
-  if (opioidClosed && (P.failed === 'multi' || P.pain >= 8)) {
-    lines.push({ text: 'Opioid analgesics are not appropriate in this context. The patient\'s fall risk profile, sedation sensitivity, and expressed preference collectively close this pathway, regardless of pain severity.', tone: 'muted' });
+  // 6. Opioid — note the closure only when it becomes decision-relevant
+  if (opioidClosed && (multimodal || P.pain >= 8)) {
+    lines.push({ tone: 'muted', text: 'Opioid analgesia is not appropriate for this patient. Fall risk, sedation sensitivity, and the patient\'s own preference collectively place this pathway outside the current scope of management.' });
   }
 
-  // 7. Stability note — only at timepoints > 0 or if stable
+  // 7. Trajectory note — timepoint-aware
   if (LP_CURRENT_TP > 0 && P.pain <= 5 && eR !== 'severe') {
-    lines.push({ text: 'Clinical presentation remains stable despite persistent symptoms. No acute deterioration has occurred since the previous review.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Clinical status remains stable compared to the previous review. Symptom burden has not escalated and no new risk factors have emerged at this timepoint.' });
+  } else if (LP_CURRENT_TP > 0 && P.pain >= 7) {
+    lines.push({ tone: 'amber', text: 'Symptom control remains inadequate at this review. The current management approach warrants reassessment given sustained pain burden at follow-up.' });
   } else if (LP_CURRENT_TP === 0 && !multimodal && !apapFailed) {
-    lines.push({ text: 'No major escalation triggers are present at this stage. Conservative management is clinically appropriate and should be established before further pathway decisions are made.', tone: 'muted' });
+    lines.push({ tone: 'muted', text: 'No acute escalation triggers are present at initial assessment. Conservative management can be established and formally evaluated before any further pathway decisions are required.' });
   }
 
-  // ── Conclusion sentence — the bridge to the recommendation ───────────────
-  var conclusion = '';
+  // ── Clinical direction — bridges assessment to recommendation ────────────
+  var conclusion;
   if (multimodal) {
-    conclusion = 'Specialist-led review is required before any further analgesic class is initiated. Current symptomatic management should be optimised within available options while referral is arranged.';
+    conclusion = 'Specialist-led review is required before initiating any further analgesic class. Symptomatic management should be optimised within available options while referral is arranged.';
   } else if (apapFailed) {
-    conclusion = 'First-line acetaminophen has failed on adequate trial. Escalation to the next available option within the current risk profile is now clinically indicated.';
-  } else if (gR === 'very-high' || (gR === 'high' && (eR === 'moderate' || eR === 'severe'))) {
-    conclusion = 'Given compound contraindications, the recommendation reflects the safest achievable option — not an ideal analgesic choice. Clinical expectations should be calibrated accordingly, and functional outcome monitoring is essential.';
-  } else if (nsaidClosed && !apapFailed) {
-    conclusion = 'Current risk profile supports conservative management with acetaminophen TID as a fixed-schedule first-line trial. The adequacy of this approach should be formally assessed at Week 2 before any escalation decision is made.';
+    conclusion = 'First-line acetaminophen has been trialled without adequate effect. Escalation within the current risk profile is now appropriate, subject to the constraint analysis above.';
+  } else if (gR === 'very-high' || (gR === 'high' && eR !== 'low')) {
+    conclusion = 'The recommendation reflects the safest achievable option given the compound contraindications present. Expectations for analgesia should be calibrated accordingly, and functional outcomes should be monitored at each review.';
+  } else if (nsaidClosed) {
+    conclusion = 'Risk profile supports initiation of acetaminophen TID on a fixed schedule as first-line management. Adequacy should be formally assessed at Week 2 before any further escalation decision is made.';
   } else if (P.pain <= 4 && LP_CURRENT_TP > 0) {
-    conclusion = 'Clinical trajectory is favourable. Current management should be maintained and monitoring intensity stepped down if stability is confirmed at the next scheduled review.';
+    conclusion = 'Clinical trajectory is favourable at this review. Current management should be continued and monitoring intensity can be stepped down if stability is confirmed at the next contact.';
   } else {
-    conclusion = 'Conservative management is appropriate at this stage. Initiation of scheduled acetaminophen, combined with systematic monitoring, represents the correct first step in this clinical pathway.';
+    conclusion = 'Initiation of scheduled acetaminophen with systematic monitoring is the appropriate first step in this clinical pathway. Early reassessment will confirm whether the response is sufficient or whether escalation is warranted.';
   }
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -2550,11 +2552,8 @@ function updateClinicalImpression() {
       return '<div class="ci-line ci-line-' + l.tone + '">' + l.text + '</div>';
     }).join('');
   }
-
-  var concEl = document.getElementById('ci-conclusion');
-  if (concEl) {
-    concEl.innerHTML = '<span class="ci-conclusion-label">Clinical direction</span>' + conclusion;
-  }
+  var concTextEl = document.getElementById('ci-conclusion-text');
+  if (concTextEl) concTextEl.textContent = conclusion;
 }
 
 
@@ -2871,61 +2870,67 @@ function abxUpdateClinicalStatusSummary() {
 function abxUpdateClinicalImpression() {
   var lines = [];
 
-  // Opening — trajectory is always first
+  // 1. Clinical trajectory — always the opening observation, always primary
   if (abxWorsening()) {
-    lines.push({ text: 'Patient is clinically deteriorating despite ' + (abxCrpVeryHigh() ? 'very high inflammatory markers (CRP ' + ABX.crp + ' mg/L, WBC ' + ABX.wbc + ')' : 'current antimicrobial therapy') + '. This constitutes a treatment failure signal and must be escalated urgently. Laboratory values, however elevated, are secondary to this clinical deterioration.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Clinical trajectory is deteriorating on current antimicrobial therapy. This represents the primary stewardship concern at this review and takes precedence over laboratory data. Symptomatic worsening in the context of ongoing treatment is the accepted definition of treatment failure until an alternative explanation is established.' });
   } else if (abxImproving()) {
-    lines.push({ text: 'Patient is clinically improving — this is the single most important stewardship observation on Day 3 review. Symptomatic improvement with return of oral tolerance and mobility is a validated criterion for IV-to-oral step-down consideration.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Patient is demonstrating meaningful clinical improvement on Day 3 of therapy. Return of oral tolerance and improved mobility are recognised step-down criteria. Clinical trajectory is the primary determinant of the stewardship decision at this stage.' });
   } else {
-    lines.push({ text: 'Clinical trajectory is stable but without meaningful improvement. This is an intermediate position — neither a clear trigger for escalation nor a safe basis for de-escalation. A further 24–48hr period of observation is appropriate before committing to a pathway change.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Clinical trajectory is stable without clear improvement. The patient has not deteriorated, but the response to current therapy is incomplete. This intermediate position does not provide a firm basis for de-escalation and warrants a further period of observation before any pathway change is made.' });
   }
 
-  // Inflammatory markers — always contextualised against trajectory
+  // 2. Inflammatory markers — always contextualised against trajectory, never in isolation
   if (abxWbcSeverely() || abxCrpVeryHigh()) {
-    lines.push({ text: 'Inflammatory markers are severely elevated (WBC ' + ABX.wbc + ', CRP ' + ABX.crp + ' mg/L). In the context of ' + (abxWorsening() ? 'clinical deterioration, this confirms inadequate treatment response.' : 'clinical improvement, markedly elevated markers should not alone prevent de-escalation — CRP has a well-documented lag of 48–72hr behind clinical response.'), tone: abxWorsening() ? 'red' : 'amber' });
+    if (abxWorsening()) {
+      lines.push({ tone: 'red',   text: 'Inflammatory markers are severely elevated (WBC ' + ABX.wbc + ' ×10\u2079/L, CRP ' + ABX.crp + ' mg/L). In the context of clinical deterioration, this pattern is consistent with inadequate antimicrobial treatment response.' });
+    } else {
+      lines.push({ tone: 'amber', text: 'Inflammatory markers remain significantly elevated (WBC ' + ABX.wbc + ' ×10\u2079/L, CRP ' + ABX.crp + ' mg/L). In a clinically improving patient, markedly elevated CRP should not independently prevent de-escalation — biochemical normalisation typically lags clinical response by 48–72 hours and should not be the primary decision driver.' });
+    }
   } else if (abxWbcElevated() || abxCrpHigh()) {
-    lines.push({ text: 'Inflammatory markers remain above normal (WBC ' + ABX.wbc + ', CRP ' + ABX.crp + ' mg/L). This is expected at Day 3 of an acute infective process and should be interpreted alongside clinical trajectory, not in isolation. Biochemical normalisation typically lags clinical improvement by 2–4 days.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Inflammatory markers remain above normal range (WBC ' + ABX.wbc + ' ×10\u2079/L, CRP ' + ABX.crp + ' mg/L). This is expected at Day 3 of an acute infective process. Markers should inform but not override the clinical assessment — trajectory is more meaningful than any single value.' });
   } else {
-    lines.push({ text: 'Inflammatory markers are settling towards normal range (WBC ' + ABX.wbc + ', CRP ' + ABX.crp + ' mg/L). This provides additional biochemical support for de-escalation alongside the clinical picture.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Inflammatory markers are settling (WBC ' + ABX.wbc + ' ×10\u2079/L, CRP ' + ABX.crp + ' mg/L). Biochemical improvement alongside clinical improvement provides strong composite support for de-escalation.' });
   }
 
-  // Fever
-  if (abxFeverActive()) {
-    lines.push({ text: 'Patient remains febrile (' + ABX.temp.toFixed(1) + '°C). Persistent fever in the context of ' + (abxWorsening() ? 'deterioration is a firm contraindication to de-escalation.' : 'overall clinical improvement may represent post-infective inflammation rather than active infection — clinical assessment is required to differentiate.'), tone: 'amber' });
+  // 3. Fever status
+  if (ABX.temp >= 38.5) {
+    lines.push({ tone: 'red',   text: 'Patient remains febrile at ' + ABX.temp.toFixed(1) + '\u00b0C. Active fever in this context is a caution against step-down — clinical reassessment is required to determine whether this represents ongoing infective activity or post-infective inflammation.' });
+  } else if (abxFeverActive()) {
+    lines.push({ tone: 'amber', text: 'Low-grade fever persists at ' + ABX.temp.toFixed(1) + '\u00b0C. In the context of ' + (abxImproving() ? 'overall clinical improvement, this may represent residual post-infective inflammation rather than active infection. Clinical assessment should guide interpretation.' : 'a stable trajectory, this requires monitoring before step-down is considered.') });
   } else {
-    lines.push({ text: 'Defervescence has been achieved (' + ABX.temp.toFixed(1) + '°C). Resolution of fever in combination with clinical improvement is a recognised IV-to-oral step-down criterion. This is a positive indicator.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Defervescence has been achieved (' + ABX.temp.toFixed(1) + '\u00b0C). Resolution of fever alongside clinical improvement satisfies a key IV-to-oral step-down criterion.' });
   }
 
-  // Culture data
+  // 4. Culture data — the microbiological anchor of the decision
   if (abxCultureResistant()) {
-    lines.push({ text: 'Culture has identified a resistant organism. Broad-spectrum IV cover must be maintained and therapy should be reviewed in conjunction with microbiology. De-escalation is not appropriate until susceptibility data is fully reviewed.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Culture has confirmed a resistant organism. Broad-spectrum IV cover must be maintained. The de-escalation pathway is closed pending full susceptibility review in conjunction with microbiology or infectious diseases.' });
   } else if (abxCultureSensitive()) {
-    lines.push({ text: 'Culture has identified a sensitive organism — a narrow-spectrum oral agent is likely to provide adequate cover. This is the strongest available microbiological support for de-escalation.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Culture has identified a sensitive organism amenable to narrow-spectrum oral therapy. This is the strongest available microbiological argument for IV-to-oral step-down and supports de-escalation alongside the clinical picture.' });
   } else if (abxCultureNoGrowth()) {
-    lines.push({ text: '72-hour culture is negative. No growth at 72hr in a clinically improving patient supports step-down from broad-spectrum IV therapy. The absence of a confirmed organism does not mandate continued broad-spectrum cover once clinical criteria are met.', tone: 'green' });
+    lines.push({ tone: 'green', text: 'Blood cultures are negative at 72 hours. No growth on adequate incubation in a clinically improving patient supports step-down from empirical broad-spectrum IV cover. Continued broad-spectrum therapy is not justified by the microbiological data.' });
   } else {
-    lines.push({ text: 'Culture data is still pending. Final de-escalation decision should be deferred until the result is available — however, clinical improvement criteria can be assessed independently and the pathway prepared in advance.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Culture data remains pending. The final de-escalation decision should account for this result; however, clinical criteria can be evaluated independently and a step-down plan prepared so that the transition can proceed promptly once the result is available.' });
   }
 
-  // Renal
+  // 5. Renal — dosing implications, concise
   if (abxGfrSevere()) {
-    lines.push({ text: 'Severe renal impairment (eGFR ' + ABX.gfr + ') requires urgent dose review of all renally-cleared agents. Piperacillin-tazobactam requires significant dose reduction or interval extension at this level. Nephrotoxic agents must be avoided entirely.', tone: 'red' });
+    lines.push({ tone: 'red',   text: 'Severe renal impairment (eGFR ' + ABX.gfr + ' mL/min) requires urgent dose review. All renally-cleared antimicrobials including piperacillin-tazobactam need significant interval adjustment, and any nephrotoxic agent is contraindicated.' });
   } else if (abxGfrImpaired()) {
-    lines.push({ text: 'Mild renal impairment (eGFR ' + ABX.gfr + ') is consistent with dose-adjusted pip-tazo at current frequency. eGFR should be rechecked at 72hr — acute illness may cause further transient deterioration.', tone: 'amber' });
+    lines.push({ tone: 'amber', text: 'Mild renal impairment (eGFR ' + ABX.gfr + ' mL/min) has been accounted for in the current dosing. eGFR should be rechecked at 72 hours, as acute illness can cause further transient deterioration.' });
   }
 
-  // Conclusion
-  var conclusion = '';
+  // ── Clinical direction ───────────────────────────────────────────────────
+  var conclusion;
   if (abxWorsening()) {
-    conclusion = 'Treatment failure must be assumed until proven otherwise. Urgent escalation of antimicrobial spectrum, urgent culture review, and infectious diseases input are all indicated. Do not de-escalate.';
+    conclusion = 'Treat as treatment failure until an alternative explanation is established. Escalation of antimicrobial spectrum, repeat cultures prior to any agent change, and urgent infectious diseases input are all indicated.';
   } else if (abxImproving() && (abxCultureSensitive() || abxCultureNoGrowth())) {
-    conclusion = 'IV-to-oral de-escalation is clinically and microbiologically supported. Step-down should proceed once prescriber reviews and consents — maintaining current IV therapy beyond this point is not stewardship-appropriate.';
+    conclusion = 'IV-to-oral de-escalation is supported on both clinical and microbiological grounds. Step-down should be initiated at the next prescriber review — continued IV therapy beyond this point is not consistent with stewardship principles.';
   } else if (abxImproving() && abxCulturePending()) {
-    conclusion = 'Clinical criteria for IV-to-oral step-down are met. De-escalation should proceed or be formally planned pending culture confirmation — a pending result alone is not sufficient reason to delay in a clinically improving patient.';
+    conclusion = 'Clinical step-down criteria are met. De-escalation should be planned now and executed once culture data is available — a pending result is not in itself a reason to delay in a clinically improving patient.';
   } else if (abxImproving() && abxCultureResistant()) {
-    conclusion = 'Despite clinical improvement, the resistant organism mandates continued broad-spectrum IV therapy. Stewardship should focus on duration optimisation and ensuring the narrowest effective agent is selected based on susceptibility data.';
+    conclusion = 'Clinical improvement is evident but the identified organism requires continued broad-spectrum IV cover. Stewardship focus should shift to duration optimisation and selection of the narrowest effective agent based on susceptibility data.';
   } else {
-    conclusion = 'Reassess in 48 hours. Continue current therapy and use the interim period to obtain culture data, recheck inflammatory markers, and formally document clinical trajectory criteria.';
+    conclusion = 'Continue current therapy and reassess formally in 48 hours. Use the interval to obtain or review culture data, recheck inflammatory markers, and document the clinical trajectory criteria against which the next decision will be made.';
   }
 
   var parasEl = document.getElementById('abx-ci-paragraphs');
@@ -2934,8 +2939,8 @@ function abxUpdateClinicalImpression() {
       return '<div class="ci-line ci-line-' + l.tone + '">' + l.text + '</div>';
     }).join('');
   }
-  var concEl = document.getElementById('abx-ci-conclusion');
-  if (concEl) concEl.innerHTML = '<span class="ci-conclusion-label">Clinical direction</span>' + conclusion;
+  var concTextEl = document.getElementById('abx-ci-conclusion-text');
+  if (concTextEl) concTextEl.textContent = conclusion;
 }
 
 /* ── 4. Recommendation ───────────────────────────────────────────────────── */
