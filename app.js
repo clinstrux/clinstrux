@@ -2565,14 +2565,493 @@ function updateClinicalImpression() {
 function enterWorkflow() {
   var ep = document.getElementById('entry-page');
   var wp = document.getElementById('workflow-page');
-  if (!ep || !wp) return;
-  ep.style.transition = 'opacity 0.25s ease';
-  ep.style.opacity    = '0';
-  setTimeout(function() {
-    ep.style.display = 'none';
-    wp.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }, 260);
+  var sp = document.getElementById('selector-page');
+  if (ep) { ep.style.display = 'none'; }
+  if (sp) { sp.style.display = 'none'; }
+  if (wp) { wp.style.display = 'block'; window.scrollTo({ top: 0, behavior: 'auto' }); }
+}
+
+function showSelector() {
+  var ep = document.getElementById('entry-page');
+  var wp = document.getElementById('workflow-page');
+  var ap = document.getElementById('abx-page');
+  var sp = document.getElementById('selector-page');
+  if (ep) ep.style.display = 'none';
+  if (wp) wp.style.display = 'none';
+  if (ap) ap.style.display = 'none';
+  if (sp) sp.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function returnToSelector() {
+  showSelector();
+}
+
+function enterAbxWorkflow() {
+  var sp = document.getElementById('selector-page');
+  var ap = document.getElementById('abx-page');
+  if (sp) sp.style.display = 'none';
+  if (ap) { ap.style.display = 'block'; window.scrollTo({ top: 0, behavior: 'auto' }); }
+  abxRunReasoningEngine();
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   ABX — STATE
+════════════════════════════════════════════════════════════ */
+
+var ABX = {
+  wbc:         14.2,
+  crp:         88,
+  gfr:         52,
+  temp:        37.4,
+  improvement: 'improving',
+  culture:     'pending'
+};
+
+var _abxActivePopover = null;
+
+/* ════════════════════════════════════════════════════════════
+   ABX — NAVIGATION
+════════════════════════════════════════════════════════════ */
+
+function abxShowSection(id, btn) {
+  var sections = document.querySelectorAll('#abx-page .dp-section');
+  sections.forEach(function(s) { s.classList.remove('active'); });
+  var target = document.getElementById(id);
+  if (target) target.classList.add('active');
+
+  var navItems = document.querySelectorAll('#abx-page .dp-nav-item');
+  navItems.forEach(function(n) { n.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════════════════════════
+   ABX — POPOVERS
+════════════════════════════════════════════════════════════ */
+
+function abxOpenPopover(key, e) {
+  if (e) e.stopPropagation();
+  abxClosePopover(_abxActivePopover);
+  var pop = document.getElementById('abx-pop-' + key);
+  var card = document.getElementById('abx-p-' + key);
+  if (!pop || !card) return;
+
+  // Sync slider/select to current ABX state before showing
+  if (key === 'wbc')  { var r = document.getElementById('abx-rng-wbc');  if (r) { r.value = ABX.wbc; document.getElementById('abx-rng-wbc-val').textContent = ABX.wbc; } }
+  if (key === 'crp')  { var r = document.getElementById('abx-rng-crp');  if (r) { r.value = ABX.crp; document.getElementById('abx-rng-crp-val').textContent = ABX.crp; } }
+  if (key === 'gfr')  { var r = document.getElementById('abx-rng-gfr');  if (r) { r.value = ABX.gfr; document.getElementById('abx-rng-gfr-val').textContent = ABX.gfr; } }
+  if (key === 'temp') { var r = document.getElementById('abx-rng-temp'); if (r) { r.value = ABX.temp; document.getElementById('abx-rng-temp-val').textContent = parseFloat(ABX.temp).toFixed(1); } }
+  if (key === 'improvement') { var s = document.getElementById('abx-sel-improvement'); if (s) s.value = ABX.improvement; }
+  if (key === 'culture')     { var s = document.getElementById('abx-sel-culture');     if (s) s.value = ABX.culture; }
+
+  pop.style.display = 'block';
+  // Position relative to card
+  var rect = card.getBoundingClientRect();
+  pop.style.top  = (card.offsetTop + card.offsetHeight + 4) + 'px';
+  pop.style.left = card.offsetLeft + 'px';
+
+  _abxActivePopover = key;
+}
+
+function abxClosePopover(key) {
+  if (!key) return;
+  var pop = document.getElementById('abx-pop-' + key);
+  if (pop) pop.style.display = 'none';
+  if (_abxActivePopover === key) _abxActivePopover = null;
+}
+
+document.addEventListener('click', function(e) {
+  if (!_abxActivePopover) return;
+  var pop = document.getElementById('abx-pop-' + _abxActivePopover);
+  if (pop && !pop.contains(e.target)) abxClosePopover(_abxActivePopover);
+});
+
+/* ════════════════════════════════════════════════════════════
+   ABX — APPLY PARAM
+════════════════════════════════════════════════════════════ */
+
+function abxApplyParam(key) {
+  if (key === 'wbc') {
+    var r = document.getElementById('abx-rng-wbc');
+    if (r) ABX.wbc = parseFloat(r.value);
+  }
+  if (key === 'crp') {
+    var r = document.getElementById('abx-rng-crp');
+    if (r) ABX.crp = parseFloat(r.value);
+  }
+  if (key === 'gfr') {
+    var r = document.getElementById('abx-rng-gfr');
+    if (r) ABX.gfr = parseFloat(r.value);
+  }
+  if (key === 'temp') {
+    var r = document.getElementById('abx-rng-temp');
+    if (r) ABX.temp = parseFloat(r.value);
+  }
+  if (key === 'improvement') {
+    var s = document.getElementById('abx-sel-improvement');
+    if (s) ABX.improvement = s.value;
+  }
+  if (key === 'culture') {
+    var s = document.getElementById('abx-sel-culture');
+    if (s) ABX.culture = s.value;
+  }
+  abxClosePopover(key);
+  abxRunReasoningEngine();
+}
+
+/* ════════════════════════════════════════════════════════════
+   ABX — HELPERS
+════════════════════════════════════════════════════════════ */
+
+function abxFeverActive()     { return ABX.temp >= 38.0; }
+function abxWbcElevated()     { return ABX.wbc > 11; }
+function abxWbcSeverely()     { return ABX.wbc > 20; }
+function abxCrpHigh()         { return ABX.crp > 100; }
+function abxCrpVeryHigh()     { return ABX.crp > 200; }
+function abxGfrImpaired()     { return ABX.gfr < 60; }
+function abxGfrSevere()       { return ABX.gfr < 30; }
+function abxImproving()       { return ABX.improvement === 'improving'; }
+function abxWorsening()       { return ABX.improvement === 'worsening'; }
+function abxCultureSensitive(){ return ABX.culture === 'sensitive'; }
+function abxCultureResistant(){ return ABX.culture === 'resistant'; }
+function abxCultureNoGrowth() { return ABX.culture === 'no-growth'; }
+function abxCulturePending()  { return ABX.culture === 'pending'; }
+
+/* ════════════════════════════════════════════════════════════
+   ABX — REASONING ENGINE
+════════════════════════════════════════════════════════════ */
+
+function abxRunReasoningEngine() {
+  abxUpdateParamCards();
+  abxUpdateClinicalStatusSummary();
+  abxUpdateClinicalImpression();
+  abxUpdateRecommendation();
+  abxUpdateMonitoring();
+}
+
+/* ── 1. Param cards ───────────────────────────────────────────────────────── */
+function abxUpdateParamCards() {
+  function setVal(id, v)  { var e = document.getElementById(id); if (e) e.textContent = v; }
+  function setClass(id, cls) {
+    var e = document.getElementById(id);
+    if (!e) return;
+    e.className = e.className.replace(/abx-val-\w+/g, '').trim();
+    if (cls) e.classList.add(cls);
+  }
+
+  // WBC
+  setVal('abx-val-wbc', ABX.wbc);
+  var wbcStatus = ABX.wbc > 20 ? 'Severely elevated' : ABX.wbc > 11 ? 'Elevated' : ABX.wbc < 4 ? 'Low — leucopenia' : 'Normal range';
+  var wbcCls    = ABX.wbc > 20 ? 'abx-val-red' : ABX.wbc > 11 ? 'abx-val-amber' : ABX.wbc < 4 ? 'abx-val-amber' : 'abx-val-green';
+  setVal('abx-status-wbc', wbcStatus);
+  setClass('abx-val-wbc', wbcCls);
+
+  // CRP
+  setVal('abx-val-crp', ABX.crp);
+  var crpStatus = ABX.crp > 200 ? 'Severely elevated' : ABX.crp > 100 ? 'Significantly elevated' : ABX.crp > 5 ? 'Elevated · trending down' : 'Normal';
+  var crpCls    = ABX.crp > 100 ? 'abx-val-red' : ABX.crp > 5 ? 'abx-val-amber' : 'abx-val-green';
+  setVal('abx-status-crp', crpStatus);
+  setClass('abx-val-crp', crpCls);
+
+  // GFR
+  setVal('abx-val-gfr', ABX.gfr);
+  var gfrStatus = ABX.gfr < 30 ? 'Severe impairment — dose review' : ABX.gfr < 60 ? 'Mild impairment' : 'Normal — no adjustment';
+  var gfrCls    = ABX.gfr < 30 ? 'abx-val-red' : ABX.gfr < 60 ? 'abx-val-amber' : '';
+  setVal('abx-status-gfr', gfrStatus);
+  setClass('abx-val-gfr', gfrCls);
+
+  // Temp
+  setVal('abx-val-temp', parseFloat(ABX.temp).toFixed(1));
+  var tempStatus = ABX.temp >= 39.5 ? 'High fever' : ABX.temp >= 38.5 ? 'Moderate fever' : ABX.temp >= 38.0 ? 'Febrile' : 'Afebrile';
+  var tempCls    = ABX.temp >= 38.5 ? 'abx-val-red' : ABX.temp >= 38.0 ? 'abx-val-amber' : 'abx-val-green';
+  setVal('abx-status-temp', tempStatus);
+  setClass('abx-val-temp', tempCls);
+
+  // Improvement
+  var impLabels = { improving: 'Improving', stable: 'Stable', worsening: 'Worsening' };
+  var impSubs   = { improving: 'Tolerating oral intake · mobilising', stable: 'No deterioration — limited change', worsening: 'Clinical decline noted' };
+  var impCls    = { improving: 'abx-val-green', stable: 'abx-val-amber', worsening: 'abx-val-red' };
+  setVal('abx-val-improvement', impLabels[ABX.improvement] || ABX.improvement);
+  setVal('abx-status-improvement', impSubs[ABX.improvement] || '');
+  setClass('abx-val-improvement', impCls[ABX.improvement] || '');
+
+  // Culture
+  var cultLabels = { pending: 'Pending', 'no-growth': 'No growth', sensitive: 'Sensitive organism', resistant: 'Resistant organism', contaminant: 'Likely contaminant' };
+  var cultSubs   = { pending: 'Blood cultures day 1 — no growth to date', 'no-growth': '72hr negative — de-escalation supported', sensitive: 'Narrow-spectrum agent possible', resistant: 'Broad-spectrum therapy required', contaminant: 'Clinical correlation needed' };
+  var cultCls    = { pending: 'abx-val-amber', 'no-growth': 'abx-val-green', sensitive: 'abx-val-green', resistant: 'abx-val-red', contaminant: 'abx-val-amber' };
+  setVal('abx-val-culture', cultLabels[ABX.culture] || ABX.culture);
+  setVal('abx-status-culture', cultSubs[ABX.culture] || '');
+  setClass('abx-val-culture', cultCls[ABX.culture] || '');
+}
+
+/* ── 2. Clinical Status Summary ──────────────────────────────────────────── */
+function abxUpdateClinicalStatusSummary() {
+  function setVal(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; }
+  function setCls(id, cls) {
+    var e = document.getElementById(id);
+    if (!e) return;
+    e.className = e.className.replace(/css-val-\w+/g, '').trim();
+    if (cls) e.classList.add(cls);
+  }
+
+  // Inflammatory trend
+  var infVal, infSub, infCls;
+  if (abxCrpVeryHigh() || abxWbcSeverely()) {
+    infVal = 'Severely elevated'; infSub = 'WBC ' + ABX.wbc + ' · CRP ' + ABX.crp; infCls = 'css-val-red';
+  } else if (abxCrpHigh() || abxWbcElevated()) {
+    infVal = 'Elevated'; infSub = 'WBC ' + ABX.wbc + ' · CRP ' + ABX.crp; infCls = 'css-val-amber';
+  } else {
+    infVal = 'Settling'; infSub = 'WBC ' + ABX.wbc + ' · CRP ' + ABX.crp; infCls = 'css-val-green';
+  }
+  setVal('abx-m-inflam', infVal); setVal('abx-m-inflam-sub', infSub); setCls('abx-m-inflam', infCls);
+
+  // Fever
+  var fevVal, fevSub, fevCls;
+  if (ABX.temp >= 38.5) {
+    fevVal = 'Febrile'; fevSub = ABX.temp.toFixed(1) + '°C — active fever'; fevCls = 'css-val-red';
+  } else if (ABX.temp >= 38.0) {
+    fevVal = 'Low-grade'; fevSub = ABX.temp.toFixed(1) + '°C — borderline'; fevCls = 'css-val-amber';
+  } else {
+    fevVal = 'Afebrile'; fevSub = ABX.temp.toFixed(1) + '°C — resolved'; fevCls = 'css-val-green';
+  }
+  setVal('abx-m-fever', fevVal); setVal('abx-m-fever-sub', fevSub); setCls('abx-m-fever', fevCls);
+
+  // Clinical trajectory
+  var trajMap = { improving: ['Improving', 'Tolerating oral · mobilising', 'css-val-green'], stable: ['Stable', 'No deterioration — limited change', 'css-val-amber'], worsening: ['Worsening', 'Clinical decline — reassess urgently', 'css-val-red'] };
+  var traj = trajMap[ABX.improvement] || trajMap.stable;
+  setVal('abx-m-trajectory', traj[0]); setVal('abx-m-traj-sub', traj[1]); setCls('abx-m-trajectory', traj[2]);
+
+  // Renal
+  var renVal, renSub, renCls;
+  if (abxGfrSevere()) {
+    renVal = 'Severe impairment'; renSub = 'eGFR ' + ABX.gfr + ' — major dose review'; renCls = 'css-val-red';
+  } else if (abxGfrImpaired()) {
+    renVal = 'Mild impairment'; renSub = 'eGFR ' + ABX.gfr + ' — dose adj. active'; renCls = 'css-val-amber';
+  } else {
+    renVal = 'Normal'; renSub = 'eGFR ' + ABX.gfr + ' — no adjustment'; renCls = '';
+  }
+  setVal('abx-m-renal', renVal); setVal('abx-m-renal-sub', renSub); setCls('abx-m-renal', renCls);
+
+  // Overall assessment text
+  var parts = [];
+  if (abxWorsening()) {
+    parts.push('Patient is clinically deteriorating on current antimicrobial therapy. This is the primary clinical concern overriding all other indicators.');
+  } else if (abxImproving()) {
+    parts.push('Patient demonstrates meaningful clinical improvement on Day 3 of IV piperacillin-tazobactam.');
+    if (abxWbcElevated() || abxCrpHigh()) parts.push('Inflammatory markers remain elevated but are trending in the right direction.');
+    if (!abxFeverActive()) parts.push('Defervescence achieved.');
+    parts.push('Clinical improvement is the dominant stewardship signal at this stage.');
+  } else {
+    parts.push('Patient is clinically stable with limited improvement. Inflammatory markers have not yet significantly settled.');
+    parts.push('Continue current therapy and reassess at 48 hours.');
+  }
+  var overall = document.getElementById('abx-overall-text');
+  if (overall) overall.textContent = parts.join(' ');
+
+  // Badge
+  var badge = document.getElementById('abx-css-badge');
+  var badgeLbl = document.getElementById('abx-css-badge-label');
+  var badgeDot = document.getElementById('abx-css-badge-dot');
+  if (badge && badgeLbl) {
+    badge.className = 'css-overall-badge';
+    if (abxWorsening()) {
+      badge.classList.add('css-badge-red'); badgeLbl.textContent = 'Clinical deterioration'; if(badgeDot) badgeDot.style.background='var(--red)';
+    } else if (abxImproving()) {
+      badgeLbl.textContent = 'Clinical improvement noted'; if(badgeDot) badgeDot.style.background='var(--green)';
+    } else {
+      badge.classList.add('css-badge-amber'); badgeLbl.textContent = 'Stable — limited response'; if(badgeDot) badgeDot.style.background='var(--amber)';
+    }
+  }
+}
+
+/* ── 3. Clinical Impression ──────────────────────────────────────────────── */
+function abxUpdateClinicalImpression() {
+  var lines = [];
+
+  // Opening — trajectory is always first
+  if (abxWorsening()) {
+    lines.push({ text: 'Patient is clinically deteriorating despite ' + (abxCrpVeryHigh() ? 'very high inflammatory markers (CRP ' + ABX.crp + ' mg/L, WBC ' + ABX.wbc + ')' : 'current antimicrobial therapy') + '. This constitutes a treatment failure signal and must be escalated urgently. Laboratory values, however elevated, are secondary to this clinical deterioration.', tone: 'red' });
+  } else if (abxImproving()) {
+    lines.push({ text: 'Patient is clinically improving — this is the single most important stewardship observation on Day 3 review. Symptomatic improvement with return of oral tolerance and mobility is a validated criterion for IV-to-oral step-down consideration.', tone: 'green' });
+  } else {
+    lines.push({ text: 'Clinical trajectory is stable but without meaningful improvement. This is an intermediate position — neither a clear trigger for escalation nor a safe basis for de-escalation. A further 24–48hr period of observation is appropriate before committing to a pathway change.', tone: 'amber' });
+  }
+
+  // Inflammatory markers — always contextualised against trajectory
+  if (abxWbcSeverely() || abxCrpVeryHigh()) {
+    lines.push({ text: 'Inflammatory markers are severely elevated (WBC ' + ABX.wbc + ', CRP ' + ABX.crp + ' mg/L). In the context of ' + (abxWorsening() ? 'clinical deterioration, this confirms inadequate treatment response.' : 'clinical improvement, markedly elevated markers should not alone prevent de-escalation — CRP has a well-documented lag of 48–72hr behind clinical response.'), tone: abxWorsening() ? 'red' : 'amber' });
+  } else if (abxWbcElevated() || abxCrpHigh()) {
+    lines.push({ text: 'Inflammatory markers remain above normal (WBC ' + ABX.wbc + ', CRP ' + ABX.crp + ' mg/L). This is expected at Day 3 of an acute infective process and should be interpreted alongside clinical trajectory, not in isolation. Biochemical normalisation typically lags clinical improvement by 2–4 days.', tone: 'amber' });
+  } else {
+    lines.push({ text: 'Inflammatory markers are settling towards normal range (WBC ' + ABX.wbc + ', CRP ' + ABX.crp + ' mg/L). This provides additional biochemical support for de-escalation alongside the clinical picture.', tone: 'green' });
+  }
+
+  // Fever
+  if (abxFeverActive()) {
+    lines.push({ text: 'Patient remains febrile (' + ABX.temp.toFixed(1) + '°C). Persistent fever in the context of ' + (abxWorsening() ? 'deterioration is a firm contraindication to de-escalation.' : 'overall clinical improvement may represent post-infective inflammation rather than active infection — clinical assessment is required to differentiate.'), tone: 'amber' });
+  } else {
+    lines.push({ text: 'Defervescence has been achieved (' + ABX.temp.toFixed(1) + '°C). Resolution of fever in combination with clinical improvement is a recognised IV-to-oral step-down criterion. This is a positive indicator.', tone: 'green' });
+  }
+
+  // Culture data
+  if (abxCultureResistant()) {
+    lines.push({ text: 'Culture has identified a resistant organism. Broad-spectrum IV cover must be maintained and therapy should be reviewed in conjunction with microbiology. De-escalation is not appropriate until susceptibility data is fully reviewed.', tone: 'red' });
+  } else if (abxCultureSensitive()) {
+    lines.push({ text: 'Culture has identified a sensitive organism — a narrow-spectrum oral agent is likely to provide adequate cover. This is the strongest available microbiological support for de-escalation.', tone: 'green' });
+  } else if (abxCultureNoGrowth()) {
+    lines.push({ text: '72-hour culture is negative. No growth at 72hr in a clinically improving patient supports step-down from broad-spectrum IV therapy. The absence of a confirmed organism does not mandate continued broad-spectrum cover once clinical criteria are met.', tone: 'green' });
+  } else {
+    lines.push({ text: 'Culture data is still pending. Final de-escalation decision should be deferred until the result is available — however, clinical improvement criteria can be assessed independently and the pathway prepared in advance.', tone: 'amber' });
+  }
+
+  // Renal
+  if (abxGfrSevere()) {
+    lines.push({ text: 'Severe renal impairment (eGFR ' + ABX.gfr + ') requires urgent dose review of all renally-cleared agents. Piperacillin-tazobactam requires significant dose reduction or interval extension at this level. Nephrotoxic agents must be avoided entirely.', tone: 'red' });
+  } else if (abxGfrImpaired()) {
+    lines.push({ text: 'Mild renal impairment (eGFR ' + ABX.gfr + ') is consistent with dose-adjusted pip-tazo at current frequency. eGFR should be rechecked at 72hr — acute illness may cause further transient deterioration.', tone: 'amber' });
+  }
+
+  // Conclusion
+  var conclusion = '';
+  if (abxWorsening()) {
+    conclusion = 'Treatment failure must be assumed until proven otherwise. Urgent escalation of antimicrobial spectrum, urgent culture review, and infectious diseases input are all indicated. Do not de-escalate.';
+  } else if (abxImproving() && (abxCultureSensitive() || abxCultureNoGrowth())) {
+    conclusion = 'IV-to-oral de-escalation is clinically and microbiologically supported. Step-down should proceed once prescriber reviews and consents — maintaining current IV therapy beyond this point is not stewardship-appropriate.';
+  } else if (abxImproving() && abxCulturePending()) {
+    conclusion = 'Clinical criteria for IV-to-oral step-down are met. De-escalation should proceed or be formally planned pending culture confirmation — a pending result alone is not sufficient reason to delay in a clinically improving patient.';
+  } else if (abxImproving() && abxCultureResistant()) {
+    conclusion = 'Despite clinical improvement, the resistant organism mandates continued broad-spectrum IV therapy. Stewardship should focus on duration optimisation and ensuring the narrowest effective agent is selected based on susceptibility data.';
+  } else {
+    conclusion = 'Reassess in 48 hours. Continue current therapy and use the interim period to obtain culture data, recheck inflammatory markers, and formally document clinical trajectory criteria.';
+  }
+
+  var parasEl = document.getElementById('abx-ci-paragraphs');
+  if (parasEl) {
+    parasEl.innerHTML = lines.map(function(l) {
+      return '<div class="ci-line ci-line-' + l.tone + '">' + l.text + '</div>';
+    }).join('');
+  }
+  var concEl = document.getElementById('abx-ci-conclusion');
+  if (concEl) concEl.innerHTML = '<span class="ci-conclusion-label">Clinical direction</span>' + conclusion;
+}
+
+/* ── 4. Recommendation ───────────────────────────────────────────────────── */
+function abxUpdateRecommendation() {
+  function setEl(id, v) { var e = document.getElementById(id); if (e) e.innerHTML = v; }
+  function setText(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; }
+
+  var action, state, rationale, conf, confLabel, confDesc, chip1, chip2, chip3, chip4;
+  var deescTarget, prereq;
+
+  if (abxWorsening()) {
+    action = 'Escalate<br>Therapy'; state = 'Urgent — treatment failure';
+    conf = 88; confLabel = 'High confidence'; confDesc = 'Clinical deterioration is a firm escalation trigger';
+    rationale = 'Patient is clinically deteriorating on current antimicrobial therapy. This constitutes a treatment failure signal. Escalation of antimicrobial spectrum is indicated, along with urgent repeat cultures, infectious diseases review, and reassessment of the working diagnosis. Do not de-escalate.';
+    chip1 = '<span class="ds-primary-ev-chip strong">Treatment failure criteria met</span>';
+    chip2 = '<span class="ds-primary-ev-chip caution">Urgent ID review indicated</span>';
+    chip3 = '<span class="ds-primary-ev-chip caution">Repeat cultures before escalating</span>';
+    chip4 = abxGfrSevere() ? '<span class="ds-primary-ev-chip caution">Severe renal impairment — agent selection critical</span>' : '<span class="ds-primary-ev-chip">Maintain renal dose monitoring</span>';
+    deescTarget = 'Infectious diseases input<br><span class="ds-pcol-sub">Before any agent change</span>';
+    prereq = 'Repeat blood cultures<br><span class="ds-pcol-sub">Obtain before escalating</span>';
+    // Update wn states
+    var s1 = document.getElementById('abx-wn-deesc-state'); if(s1){ s1.textContent='Not appropriate'; s1.className='wn-col-state avoid'; }
+    var s2 = document.getElementById('abx-wn-esc-state');  if(s2){ s2.textContent='Required'; s2.className='wn-col-state'; }
+    var r1 = document.getElementById('abx-wn-deesc'); if(r1) r1.textContent = 'Clinical deterioration is an absolute contraindication to de-escalation regardless of culture data.';
+    var r2 = document.getElementById('abx-wn-esc');   if(r2) r2.textContent = 'Treatment failure is the only established escalation trigger. It is present here.';
+    var r3 = document.getElementById('abx-wn-continue'); if(r3) r3.textContent = 'Continuing current therapy without change is inappropriate given documented deterioration.';
+    var ci = document.getElementById('abx-wn-culture-item'); if(ci) ci.textContent = 'Repeat cultures before changing therapy — existing results insufficient if taken on admission only.';
+  } else if (ABX.improvement === 'stable' && !abxCultureSensitive() && !abxCultureNoGrowth()) {
+    action = 'Reassess<br>in 48 Hours'; state = 'Observe — insufficient signal';
+    conf = 62; confLabel = 'Moderate confidence'; confDesc = 'Stable trajectory without clear improvement or deterioration';
+    rationale = 'Patient is stable but has not demonstrated meaningful clinical improvement. Inflammatory markers remain elevated and culture data is not yet available to guide de-escalation. The appropriate stewardship action is to continue current therapy and formally reassess at 48 hours with updated culture results and clinical status. Neither escalation nor de-escalation is supported by the current data.';
+    chip1 = '<span class="ds-primary-ev-chip">Continue current therapy</span>';
+    chip2 = '<span class="ds-primary-ev-chip caution">Await culture result</span>';
+    chip3 = '<span class="ds-primary-ev-chip caution">Reassess at 48hr with updated labs</span>';
+    chip4 = abxGfrImpaired() ? '<span class="ds-primary-ev-chip caution">Renal dose monitoring</span>' : '<span class="ds-primary-ev-chip">No dose adjustment required</span>';
+    deescTarget = 'Defer pending culture<br><span class="ds-pcol-sub">Reassess at 48hr</span>';
+    prereq = 'Updated clinical assessment<br><span class="ds-pcol-sub">Plus culture result</span>';
+    var s1 = document.getElementById('abx-wn-deesc-state'); if(s1){ s1.textContent='Not yet'; s1.className='wn-col-state cond'; }
+    var s2 = document.getElementById('abx-wn-esc-state');  if(s2){ s2.textContent='Not indicated'; s2.className='wn-col-state avoid'; }
+    var r1 = document.getElementById('abx-wn-deesc'); if(r1) r1.textContent = 'De-escalation requires demonstrated clinical improvement — not yet present.';
+    var r2 = document.getElementById('abx-wn-esc');   if(r2) r2.textContent = 'No deterioration trigger — escalation would be premature and not stewardship-appropriate.';
+    var r3 = document.getElementById('abx-wn-continue'); if(r3) r3.textContent = 'Current therapy is appropriate. Await 48hr data before changing course.';
+    var ci = document.getElementById('abx-wn-culture-item'); if(ci) ci.textContent = 'Culture result will be the key determinant of next decision — document plan to review on receipt.';
+  } else {
+    // Default: de-escalation supported
+    var strong = abxCultureSensitive() || abxCultureNoGrowth();
+    action = 'Consider<br>De-escalation'; state = strong ? 'Strongly supported' : 'Clinically supported';
+    conf = strong ? 86 : 72; 
+    confLabel = strong ? 'High confidence' : 'Moderate-high confidence';
+    confDesc = strong ? 'Clinical improvement + microbiological support' : 'Clinical trajectory supports step-down · pending culture confirmation';
+    rationale = 'Patient is clinically improving with ' + (!abxFeverActive() ? 'defervescence, ' : '') + 'tolerating oral intake, and mobilising. ' + (abxCrpHigh() ? 'Inflammatory markers remain elevated but are on a downward trend — biochemical lag behind clinical response is expected and should not delay step-down in an improving patient. ' : 'Inflammatory markers are settling. ') + (abxCultureNoGrowth() ? 'Seventy-two hour blood cultures show no growth, removing the microbiological argument for continued broad-spectrum IV cover. ' : abxCultureSensitive() ? 'Culture has identified a sensitive organism amenable to narrow-spectrum oral therapy. ' : 'Oral step-down to amoxicillin-clavulanate should be considered once culture data is available. ') + (abxGfrImpaired() ? 'Dose adjustment for renal impairment is maintained throughout.' : '');
+    chip1 = '<span class="ds-primary-ev-chip strong">IDSA Stewardship Principles</span>';
+    chip2 = '<span class="ds-primary-ev-chip strong">Clinical improvement outweighs markers</span>';
+    chip3 = abxCulturePending() ? '<span class="ds-primary-ev-chip caution">Culture data awaited</span>' : (abxCultureSensitive() ? '<span class="ds-primary-ev-chip strong">Sensitive organism confirmed</span>' : '<span class="ds-primary-ev-chip strong">No growth at 72hr</span>');
+    chip4 = abxGfrImpaired() ? '<span class="ds-primary-ev-chip caution">Renal dose adjustment maintained</span>' : '<span class="ds-primary-ev-chip">Standard oral dosing</span>';
+    deescTarget = 'Oral amoxicillin-clavulanate<br><span class="ds-pcol-sub">If no resistant organism</span>';
+    prereq = abxCulturePending() ? '72-hr culture result<br><span class="ds-pcol-sub">No growth or sensitive organism</span>' : '<span style="color:var(--green)">Culture criteria met</span><br><span class="ds-pcol-sub">Proceed when prescriber reviews</span>';
+    var s1 = document.getElementById('abx-wn-deesc-state'); if(s1){ s1.textContent='Preferred'; s1.className='wn-col-state'; }
+    var s2 = document.getElementById('abx-wn-esc-state');  if(s2){ s2.textContent='Not indicated'; s2.className='wn-col-state avoid'; }
+    var r1 = document.getElementById('abx-wn-deesc'); if(r1) r1.textContent = 'Clinical improvement is the primary trigger for IV-to-oral step-down.';
+    var r2 = document.getElementById('abx-wn-esc');   if(r2) r2.textContent = 'No clinical or microbiological trigger for escalation at this review.';
+    var r3 = document.getElementById('abx-wn-continue'); if(r3) r3.textContent = 'Continued IV therapy beyond clinical stability criteria carries line infection risk without additional clinical benefit.';
+    var ci = document.getElementById('abx-wn-culture-item'); if(ci) ci.textContent = abxCulturePending() ? 'Await culture result before finalising — no growth likely supports narrow-spectrum oral.' : (abxCultureSensitive() ? 'Culture supports narrow-spectrum oral agent — de-escalation fully appropriate.' : 'No growth at 72hr removes the microbiological argument for continued broad-spectrum IV.');
+  }
+
+  // Write to DOM
+  setEl('abx-rec-action', action);
+  setText('abx-rec-state', state);
+  setText('abx-rec-rationale', rationale);
+  var chipsRow = document.querySelector('#abx-section-recommendation .ds-primary-ev-chips');
+  if (chipsRow) chipsRow.innerHTML = chip1 + chip2 + chip3 + chip4;
+  setText('abx-conf-pct', conf + '%');
+  setText('abx-conf-label', confLabel);
+  setText('abx-conf-desc', confDesc);
+  var bar = document.getElementById('abx-conf-bar'); if (bar) bar.style.width = conf + '%';
+  setEl('abx-deesc-target', deescTarget);
+  setEl('abx-prerequisite', prereq);
+}
+
+/* ── 5. Monitoring ───────────────────────────────────────────────────────── */
+function abxUpdateMonitoring() {
+  // Renal dosing row
+  var rdEl = document.getElementById('abx-rd-piptz');
+  var rdNote = document.getElementById('abx-rd-piptz-note');
+  if (rdEl) {
+    if (abxGfrSevere()) {
+      rdEl.textContent = '2.25 g TDS (eGFR <30)';
+      rdEl.className = 'renal-dosing-val renal-dosing-val-amber';
+      if (rdNote) rdNote.textContent = 'Significant dose reduction required. Consider extended infusion strategy. Review with pharmacy.';
+    } else if (abxGfrImpaired()) {
+      rdEl.textContent = '4.5 g TDS (eGFR 30–59)';
+      rdEl.className = 'renal-dosing-val renal-dosing-val-amber';
+      if (rdNote) rdNote.textContent = 'Dose interval extended per renal guidance. Standard dose 4.5 g QDS at eGFR ≥60.';
+    } else {
+      rdEl.textContent = '4.5 g QDS (eGFR ≥60)';
+      rdEl.className = 'renal-dosing-val';
+      if (rdNote) rdNote.textContent = 'Standard dosing. No renal adjustment required at current eGFR.';
+    }
+  }
+
+  // Flag 1 — culture
+  var flag1 = document.getElementById('abx-flag-1');
+  if (flag1) {
+    if (abxCultureResistant()) flag1.innerHTML = '<span class="mn-contra-x">⚠</span> Resistant organism confirmed — broad-spectrum IV must be maintained. Consult microbiology urgently.';
+    else if (abxCultureNoGrowth()) flag1.innerHTML = '<span class="mn-contra-x">ℹ</span> Culture negative at 72hr — supports de-escalation if clinical criteria met.';
+    else if (abxCultureSensitive()) flag1.innerHTML = '<span class="mn-contra-x">ℹ</span> Sensitive organism — narrow-spectrum oral step-down is microbiologically supported.';
+    else flag1.innerHTML = '<span class="mn-contra-x">⚠</span> Culture-negative at 72hr — reassess empirical spectrum. Consider narrowing if clinical picture supports.';
+  }
+
+  // Flag renal
+  var flagR = document.getElementById('abx-flag-renal');
+  if (flagR) {
+    if (abxGfrSevere()) flagR.innerHTML = '<span class="mn-contra-x">⚠</span> Severe renal impairment (eGFR ' + ABX.gfr + ') — urgent dose review required. Avoid all nephrotoxic agents.';
+    else if (abxGfrImpaired()) flagR.innerHTML = '<span class="mn-contra-x">⚠</span> eGFR ' + ABX.gfr + ' — monitor for acute kidney injury during course. Stop all nephrotoxic agents if eGFR falls >20%.';
+    else flagR.innerHTML = '<span class="mn-contra-x">ℹ</span> Renal function normal (eGFR ' + ABX.gfr + '). Continue standard monitoring throughout antimicrobial course.';
+  }
 }
 
 
@@ -2581,7 +3060,13 @@ function enterWorkflow() {
 ════════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Core reasoning engine boot
+  // Show the selector on load instead of the OA entry page directly
+  var ep = document.getElementById('entry-page');
+  var sp = document.getElementById('selector-page');
+  if (ep) ep.style.display = 'none';
+  if (sp) sp.style.display = 'block';
+
+  // Core OA reasoning engine boot (runs in background — needed when user enters OA workflow)
   updateParamTiles();
   updateComplexityBar();
   updateClinicalStatusSummary();
@@ -2602,6 +3087,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handoff meta
   updateHandoffMeta();
 
-  // Patch applyParam to keep all panels in sync after each parameter change
-  // (applyParam already calls runReasoningEngine, updateHandoffMeta, updatePolypharmacyPanel)
+  // ABX engine pre-warm
+  abxRunReasoningEngine();
 });

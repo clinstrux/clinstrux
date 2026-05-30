@@ -604,6 +604,11 @@
   <div class="ep-topbar">
     <img src="https://i.ibb.co/b5b8qNk8/clinstrux-full-light.png" alt="Clinstrux" class="ep-topbar-logo">
     <div class="ep-topbar-right">
+      <a href="#" class="ep-topbar-back" onclick="showSelector(); return false;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        All Workflows
+      </a>
+      <span class="ep-topbar-sep"></span>
       <span class="ep-topbar-label">Case Intake</span>
       <span class="ep-topbar-sep"></span>
       <span class="ep-topbar-id">CS-2026-00841</span>
@@ -843,9 +848,9 @@
     </div>
 
       <div class="dp-sidebar-top">
-      <a href="#" class="dp-back">
+      <a href="#" class="dp-back" onclick="showSelector(); return false;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        All Scenarios
+        All Workflows
       </a>
       <div class="dp-scenario-label">Current Scenario</div>
       <div class="dp-scenario-title">Chronic OA pain — High GI risk</div>
@@ -4197,6 +4202,600 @@
   </div><!-- /dp-main -->
 </div><!-- /dp-wrap -->
 </div><!-- /workflow-page -->
+
+<!-- ════════════════ WORKFLOW SELECTOR PAGE ════════════════ -->
+<div id="selector-page" style="display:none;">
+  <div class="ep-overlay">
+    <div class="ep-topbar">
+      <img src="https://i.ibb.co/b5b8qNk8/clinstrux-full-light.png" alt="Clinstrux" class="ep-topbar-logo">
+      <div class="ep-topbar-right">
+        <span class="ep-topbar-label">Workflow Selection</span>
+      </div>
+    </div>
+    <div class="sel-body">
+      <div class="sel-header">
+        <div class="sel-eyebrow">Clinical Decision Infrastructure</div>
+        <h1 class="sel-title">Select a workflow</h1>
+        <p class="sel-subtitle">Each workflow demonstrates how Clinstrux supports a distinct clinical decision domain. Parameters are live-editable and all sections update in real time.</p>
+      </div>
+      <div class="sel-cards">
+
+        <!-- OA Workflow Card -->
+        <div class="sel-card" onclick="enterWorkflow()">
+          <div class="sel-card-tag">Medication Review</div>
+          <div class="sel-card-title">Chronic Osteoarthritis<br>Analgesic Safety Review</div>
+          <div class="sel-card-desc">High-complexity analgesic pathway under compound GI, renal, and cardiovascular constraints. Demonstrates pharmacist-led medication review with real-time parameter adaptation.</div>
+          <div class="sel-card-pills">
+            <span class="sel-pill sel-pill-red">NSAID pathway closed</span>
+            <span class="sel-pill sel-pill-amber">CKD Stage 3a</span>
+            <span class="sel-pill sel-pill-amber">Polypharmacy risk</span>
+            <span class="sel-pill sel-pill-blue">Acetaminophen TID</span>
+          </div>
+          <div class="sel-card-meta">
+            <span>68 y/o Female · CS-2026-00841</span>
+            <span class="sel-card-sections">8 sections</span>
+          </div>
+          <div class="sel-card-cta">
+            Open workflow
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- ABX Workflow Card -->
+        <div class="sel-card sel-card-new" onclick="enterAbxWorkflow()">
+          <div class="sel-card-tag sel-tag-green">Antimicrobial Stewardship</div>
+          <div class="sel-card-title">Antibiotic Stewardship<br>Therapy Review</div>
+          <div class="sel-card-desc">Inpatient antimicrobial review integrating inflammatory markers, renal function, clinical trajectory, and culture data to support de-escalation and continuation decisions.</div>
+          <div class="sel-card-pills">
+            <span class="sel-pill sel-pill-amber">WBC · CRP · Temp</span>
+            <span class="sel-pill sel-pill-blue">De-escalation logic</span>
+            <span class="sel-pill sel-pill-amber">Renal dose check</span>
+            <span class="sel-pill sel-pill-green">Clinical trajectory</span>
+          </div>
+          <div class="sel-card-meta">
+            <span>72 y/o Male · CS-2026-00842</span>
+            <span class="sel-card-sections">Demo concept</span>
+          </div>
+          <div class="sel-card-cta">
+            Open workflow
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="ep-footer">
+      <span>© 2026 Clinstrux · Evteev Advisory · Clinical Decision Infrastructure</span>
+      <span>Not a substitute for clinical judgment. Clinstrux supports decisions but does not replace clinician expertise.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ANTIBIOTIC STEWARDSHIP WORKFLOW ════════════════ -->
+<div id="abx-page" style="display:none;">
+<div class="dp-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="dp-sidebar">
+    <div class="dp-logo">
+      <img src="https://i.ibb.co/b5b8qNk8/clinstrux-full-light.png" alt="Clinstrux" class="dp-logo-img">
+    </div>
+    <div class="dp-sidebar-top">
+      <a href="#" class="dp-back" onclick="returnToSelector(); return false;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        All Workflows
+      </a>
+      <div class="dp-scenario-label">Current Workflow</div>
+      <div class="dp-scenario-title">Antibiotic Stewardship Review</div>
+      <div class="dp-scenario-meta">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        72 y/o · Male · May 2026
+      </div>
+      <div class="dp-scenario-status">Active session</div>
+    </div>
+
+    <div class="dp-risk-strip" id="abx-risk-strip">
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-amber"></span>
+        <span class="dp-risk-text">Day 3 of IV piperacillin-tazobactam</span>
+      </div>
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-amber"></span>
+        <span class="dp-risk-text">Renal dose adjustment active</span>
+      </div>
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot" id="abx-risk-dot-3" style="background:var(--amber);width:6px;height:6px;border-radius:50%;"></span>
+        <span class="dp-risk-text" id="abx-risk-text-3">Culture data pending</span>
+      </div>
+    </div>
+
+    <div class="dp-nav">
+      <div class="dp-nav-phase"><div class="dp-nav-phase-label">I — Patient Context</div></div>
+      <button class="dp-nav-item done" onclick="abxShowSection('abx-section-inputs', this)">
+        <span class="dp-nav-num">1</span>
+        <span class="dp-nav-item-inner"><span class="dp-nav-item-title">Patient &amp; Lab Parameters</span></span>
+        <svg class="dp-nav-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <div class="dp-nav-phase"><div class="dp-nav-phase-label">II — Clinical Assessment</div></div>
+      <button class="dp-nav-item active" onclick="abxShowSection('abx-section-assessment', this)">
+        <span class="dp-nav-num">2</span>
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Stewardship Assessment</span>
+          <span class="dp-nav-item-tag tag-green" id="abx-nav-rec-tag">Review ready</span>
+        </span>
+      </button>
+      <div class="dp-nav-phase"><div class="dp-nav-phase-label">III — Decision &amp; Monitoring</div></div>
+      <button class="dp-nav-item" onclick="abxShowSection('abx-section-recommendation', this)">
+        <span class="dp-nav-num">3</span>
+        <span class="dp-nav-item-inner"><span class="dp-nav-item-title">Recommendation &amp; Rationale</span></span>
+      </button>
+      <button class="dp-nav-item" onclick="abxShowSection('abx-section-monitoring', this)">
+        <span class="dp-nav-num">4</span>
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Monitoring Parameters</span>
+          <span class="dp-nav-item-tag tag-amber">Renal flag</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="dp-sidebar-footer">
+      <div class="dp-user-profile">
+        <div class="dp-user-avatar">ME</div>
+        <div>
+          <div class="dp-user-name">Mikhail Evteev</div>
+          <div class="dp-user-org">Evteev Advisory · Founder</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /sidebar -->
+
+  <!-- MAIN -->
+  <div class="dp-main">
+    <div class="dp-topbar">
+      <div class="dp-topbar-meta">
+        <div class="dp-topbar-case">Case ID <span class="dp-topbar-case-id">CS-2026-00842</span></div>
+        <div class="dp-topbar-sep"></div>
+        <div class="dp-topbar-status">Stewardship review active</div>
+        <div class="dp-topbar-sep"></div>
+        <div class="dp-topbar-session">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          M. Evteev
+        </div>
+      </div>
+      <div class="dp-topbar-right">
+        <div class="dp-topbar-timestamp">Reviewed: May 17, 2026 · 11:30</div>
+        <div class="dp-evidence-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Stewardship
+        </div>
+      </div>
+    </div>
+
+    <div class="dp-content">
+
+      <!-- ── SECTION 1: PATIENT & LAB INPUTS ─────────────────────────── -->
+      <div id="abx-section-inputs" class="dp-section active">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 1</div>
+            <div class="dp-section-title">Patient &amp; Lab Parameters</div>
+            <div class="dp-section-subtitle">Current antimicrobial regimen, inflammatory markers, and clinical status. Adjust any value to update the stewardship assessment.</div>
+          </div>
+        </div>
+
+        <!-- Patient banner -->
+        <div class="abx-patient-banner">
+          <div class="abx-patient-left">
+            <div class="abx-patient-name">72-year-old male · Community-acquired pneumonia</div>
+            <div class="abx-patient-sub">Day 3 inpatient · IV piperacillin-tazobactam 4.5 g TDS · eGFR-adjusted dosing active</div>
+          </div>
+          <div class="abx-patient-tags">
+            <span class="abx-tag abx-tag-amber">High-risk host</span>
+            <span class="abx-tag abx-tag-blue">Day 3 review</span>
+          </div>
+        </div>
+
+        <!-- Parameter grid -->
+        <div class="abx-param-grid">
+          <div class="abx-param-card" id="abx-p-wbc" onclick="abxOpenPopover('wbc', event)">
+            <div class="abx-param-label">WBC (×10⁹/L)</div>
+            <div class="abx-param-value" id="abx-val-wbc">14.2</div>
+            <div class="abx-param-status" id="abx-status-wbc">Elevated</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <div class="abx-param-card" id="abx-p-crp" onclick="abxOpenPopover('crp', event)">
+            <div class="abx-param-label">CRP (mg/L)</div>
+            <div class="abx-param-value" id="abx-val-crp">88</div>
+            <div class="abx-param-status" id="abx-status-crp">Elevated · trending down</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <div class="abx-param-card" id="abx-p-gfr" onclick="abxOpenPopover('gfr', event)">
+            <div class="abx-param-label">eGFR (mL/min)</div>
+            <div class="abx-param-value" id="abx-val-gfr">52</div>
+            <div class="abx-param-status" id="abx-status-gfr">Mild impairment</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <div class="abx-param-card" id="abx-p-temp" onclick="abxOpenPopover('temp', event)">
+            <div class="abx-param-label">Temperature (°C)</div>
+            <div class="abx-param-value" id="abx-val-temp">37.4</div>
+            <div class="abx-param-status" id="abx-status-temp">Afebrile</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <div class="abx-param-card abx-param-wide" id="abx-p-improvement" onclick="abxOpenPopover('improvement', event)">
+            <div class="abx-param-label">Clinical Improvement</div>
+            <div class="abx-param-value" id="abx-val-improvement">Improving</div>
+            <div class="abx-param-status" id="abx-status-improvement">Tolerating oral intake · mobilising</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <div class="abx-param-card abx-param-wide" id="abx-p-culture" onclick="abxOpenPopover('culture', event)">
+            <div class="abx-param-label">Culture / Sensitivity Data</div>
+            <div class="abx-param-value" id="abx-val-culture">Pending</div>
+            <div class="abx-param-status" id="abx-status-culture">Blood cultures day 1 — no growth to date</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+        </div>
+
+        <!-- Popovers -->
+        <div id="abx-pop-wbc" class="ip-popover">
+          <div class="ip-pop-title">White Blood Cell Count</div>
+          <div class="ip-pop-desc">Normal range 4–11 ×10⁹/L. Elevated WBC suggests active infection or inflammatory response.</div>
+          <div class="ip-pop-field">
+            <label>WBC (×10⁹/L)</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="abx-rng-wbc" min="2" max="30" step="0.5" value="14.2" oninput="document.getElementById('abx-rng-wbc-val').textContent=this.value">
+              <span class="ip-range-val" id="abx-rng-wbc-val">14.2</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="abxClosePopover('wbc')">Cancel</button>
+            <button class="ip-pop-apply" onclick="abxApplyParam('wbc')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="abx-pop-crp" class="ip-popover">
+          <div class="ip-pop-title">C-Reactive Protein</div>
+          <div class="ip-pop-desc">Normal &lt;5 mg/L. CRP is a key marker of systemic inflammation — trend is more informative than a single value.</div>
+          <div class="ip-pop-field">
+            <label>CRP (mg/L)</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="abx-rng-crp" min="1" max="300" step="1" value="88" oninput="document.getElementById('abx-rng-crp-val').textContent=this.value">
+              <span class="ip-range-val" id="abx-rng-crp-val">88</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="abxClosePopover('crp')">Cancel</button>
+            <button class="ip-pop-apply" onclick="abxApplyParam('crp')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="abx-pop-gfr" class="ip-popover">
+          <div class="ip-pop-title">eGFR / Renal Function</div>
+          <div class="ip-pop-desc">Affects antimicrobial dosing intervals and choice. Dose adjustment thresholds vary by agent.</div>
+          <div class="ip-pop-field">
+            <label>eGFR (mL/min/1.73m²)</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="abx-rng-gfr" min="10" max="90" step="5" value="52" oninput="document.getElementById('abx-rng-gfr-val').textContent=this.value">
+              <span class="ip-range-val" id="abx-rng-gfr-val">52</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="abxClosePopover('gfr')">Cancel</button>
+            <button class="ip-pop-apply" onclick="abxApplyParam('gfr')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="abx-pop-temp" class="ip-popover">
+          <div class="ip-pop-title">Temperature</div>
+          <div class="ip-pop-desc">Fever ≥38.0°C suggests active systemic infection. Defervescence is a positive clinical sign.</div>
+          <div class="ip-pop-field">
+            <label>Temperature (°C)</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="abx-rng-temp" min="36.0" max="41.0" step="0.1" value="37.4" oninput="document.getElementById('abx-rng-temp-val').textContent=parseFloat(this.value).toFixed(1)">
+              <span class="ip-range-val" id="abx-rng-temp-val">37.4</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="abxClosePopover('temp')">Cancel</button>
+            <button class="ip-pop-apply" onclick="abxApplyParam('temp')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="abx-pop-improvement" class="ip-popover">
+          <div class="ip-pop-title">Clinical Improvement</div>
+          <div class="ip-pop-desc">Overall clinical trajectory since antimicrobial initiation — the most important single stewardship input.</div>
+          <div class="ip-pop-field">
+            <label>Clinical trajectory</label>
+            <select class="ip-pop-select" id="abx-sel-improvement">
+              <option value="improving">Improving — symptom resolution, tolerating oral intake, mobilising</option>
+              <option value="stable">Stable — no deterioration but limited improvement</option>
+              <option value="worsening">Worsening — new or progressive organ dysfunction</option>
+            </select>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="abxClosePopover('improvement')">Cancel</button>
+            <button class="ip-pop-apply" onclick="abxApplyParam('improvement')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="abx-pop-culture" class="ip-popover">
+          <div class="ip-pop-title">Culture &amp; Sensitivity Data</div>
+          <div class="ip-pop-desc">Availability of culture results is the primary driver of de-escalation eligibility.</div>
+          <div class="ip-pop-field">
+            <label>Culture status</label>
+            <select class="ip-pop-select" id="abx-sel-culture">
+              <option value="pending">Pending — awaiting result</option>
+              <option value="no-growth">No growth — 48–72hr negative</option>
+              <option value="sensitive">Sensitive organism — narrow-spectrum agent possible</option>
+              <option value="resistant">Resistant organism — broad-spectrum required</option>
+              <option value="contaminant">Likely contaminant — clinical correlation needed</option>
+            </select>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="abxClosePopover('culture')">Cancel</button>
+            <button class="ip-pop-apply" onclick="abxApplyParam('culture')">Apply &amp; Update</button>
+          </div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Parameters are pre-populated for demonstration. All values update the stewardship assessment in real time.
+        </div>
+      </div>
+
+      <!-- ── SECTION 2: STEWARDSHIP ASSESSMENT ──────────────────────── -->
+      <div id="abx-section-assessment" class="dp-section">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 2</div>
+            <div class="dp-section-title">Stewardship Assessment</div>
+            <div class="dp-section-subtitle">Clinical reasoning layer — interpreting lab trends, trajectory, and culture data together.</div>
+          </div>
+        </div>
+
+        <!-- Clinical Status Summary equivalent for ABX -->
+        <div class="css-block" id="abx-css-block">
+          <div class="css-block-head">
+            <div class="css-block-head-left">
+              <div class="css-eyebrow">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Clinical Status Summary
+              </div>
+              <div class="css-block-title" id="abx-css-title">Antimicrobial Review — Day 3</div>
+            </div>
+            <div class="css-block-head-right">
+              <div class="css-overall-badge" id="abx-css-badge">
+                <span class="css-overall-dot" id="abx-css-badge-dot"></span>
+                <span id="abx-css-badge-label">Clinical improvement noted</span>
+              </div>
+            </div>
+          </div>
+          <div class="css-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="css-metric">
+              <div class="css-metric-label">Inflammatory Trend</div>
+              <div class="css-metric-value" id="abx-m-inflam">Improving</div>
+              <div class="css-metric-sub" id="abx-m-inflam-sub">WBC 14.2 · CRP 88</div>
+            </div>
+            <div class="css-metric">
+              <div class="css-metric-label">Fever Status</div>
+              <div class="css-metric-value" id="abx-m-fever">Afebrile</div>
+              <div class="css-metric-sub" id="abx-m-fever-sub">37.4°C — resolved</div>
+            </div>
+            <div class="css-metric">
+              <div class="css-metric-label">Clinical Trajectory</div>
+              <div class="css-metric-value" id="abx-m-trajectory">Improving</div>
+              <div class="css-metric-sub" id="abx-m-traj-sub">Tolerating oral · mobilising</div>
+            </div>
+            <div class="css-metric" style="border-right:none;">
+              <div class="css-metric-label">Renal Status</div>
+              <div class="css-metric-value" id="abx-m-renal">Mild impairment</div>
+              <div class="css-metric-sub" id="abx-m-renal-sub">eGFR 52 — dose adj. active</div>
+            </div>
+          </div>
+          <div class="css-assessment-row">
+            <div class="css-assessment-label">Overall Assessment</div>
+            <div class="css-assessment-text" id="abx-overall-text">Patient demonstrates meaningful clinical improvement on Day 3 of IV piperacillin-tazobactam. Inflammatory markers remain elevated but are trending in the right direction. Defervescence achieved. Clinical improvement is the dominant stewardship signal at this stage.</div>
+          </div>
+        </div>
+
+        <!-- Clinical Impression for ABX -->
+        <div class="ci-block" id="abx-ci-block">
+          <div class="ci-head">
+            <span class="ci-eyebrow">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Clinical Impression
+            </span>
+            <span class="ci-timepoint">Day 3 Review</span>
+          </div>
+          <div class="ci-body">
+            <div class="ci-paragraphs" id="abx-ci-paragraphs"></div>
+            <div class="ci-conclusion" id="abx-ci-conclusion"></div>
+          </div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Assessment is generated from current parameters. Clinical judgment must be applied before any antimicrobial decision.
+        </div>
+      </div>
+
+      <!-- ── SECTION 3: RECOMMENDATION ──────────────────────────────── -->
+      <div id="abx-section-recommendation" class="dp-section">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 3</div>
+            <div class="dp-section-title">Stewardship Recommendation</div>
+            <div class="dp-section-subtitle">Primary recommendation with rationale and supporting considerations.</div>
+          </div>
+        </div>
+
+        <!-- Primary rec block -->
+        <div class="ds-primary">
+          <div class="ds-primary-eyebrow" id="abx-rec-eyebrow">Stewardship recommendation · Day 3 review</div>
+          <div class="ds-primary-rec">
+            <div class="ds-primary-drug" id="abx-rec-action">Consider<br>De-escalation</div>
+            <div class="ds-primary-state" id="abx-rec-state">Clinically supported</div>
+          </div>
+          <div class="ds-primary-rationale" id="abx-rec-rationale">Patient is clinically improving with defervescence, tolerating oral intake, and mobilising. Inflammatory markers remain elevated but are on a downward trend. In the context of clinical improvement, sustained elevated CRP alone is not a contraindication to de-escalation. Oral step-down to amoxicillin-clavulanate should be considered if culture data supports a sensitive organism or no growth at 72 hours.</div>
+
+          <div class="ds-primary-ev-chips">
+            <span class="ds-primary-ev-chip strong" id="abx-chip-1">IDSA Stewardship Principles</span>
+            <span class="ds-primary-ev-chip strong" id="abx-chip-2">Clinical improvement outweighs markers</span>
+            <span class="ds-primary-ev-chip caution" id="abx-chip-3">Culture data awaited</span>
+            <span class="ds-primary-ev-chip" id="abx-chip-4">Renal dose adjustment maintained</span>
+          </div>
+
+          <div class="ds-conf-strip">
+            <div class="ds-conf-main">
+              <div class="ds-conf-pct" id="abx-conf-pct">76%</div>
+              <div class="ds-conf-detail">
+                <div class="ds-conf-label" id="abx-conf-label">Moderate-high confidence</div>
+                <div class="ds-conf-desc" id="abx-conf-desc">Clinical trajectory supports de-escalation · pending culture confirmation</div>
+                <div class="ds-conf-bar"><div class="ds-conf-bar-fill" id="abx-conf-bar" style="width:76%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ds-primary-cols">
+            <div>
+              <div class="ds-pcol-label">De-escalation target</div>
+              <div class="ds-pcol-val" id="abx-deesc-target">Oral amoxicillin-clavulanate<br><span class="ds-pcol-sub">If no resistant organism</span></div>
+            </div>
+            <div>
+              <div class="ds-pcol-label">Prerequisite</div>
+              <div class="ds-pcol-val" id="abx-prerequisite">72-hr culture result<br><span class="ds-pcol-sub">No growth or sensitive organism</span></div>
+            </div>
+            <div>
+              <div class="ds-pcol-label">Duration target</div>
+              <div class="ds-pcol-val">5 days total (CAP)<br><span class="ds-pcol-sub">Per IDSA/ATS 2019 guidance</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why not alternatives -->
+        <div class="dp-subsection-label">Stewardship decision logic</div>
+        <div class="wn-block">
+          <div class="wn-head">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            Reasoning — why each option was considered or declined
+          </div>
+          <div class="wn-grid">
+            <div class="wn-col">
+              <div class="wn-col-title">Continue IV therapy <span class="wn-col-state cond">Conditional</span></div>
+              <div class="wn-reason" id="abx-wn-continue">Appropriate if clinical deterioration or culture reveals resistant organism.</div>
+              <div class="wn-item">Continued IV exposure carries line-related infection risk — minimise duration</div>
+              <div class="wn-item">IV-to-oral step-down is supported once clinical stability criteria met</div>
+              <div class="wn-item">Reserve for non-responders or confirmed resistant organisms</div>
+            </div>
+            <div class="wn-col">
+              <div class="wn-col-title">De-escalate to oral <span class="wn-col-state" id="abx-wn-deesc-state">Preferred</span></div>
+              <div class="wn-reason" id="abx-wn-deesc">Clinical improvement is the primary trigger for IV-to-oral step-down.</div>
+              <div class="wn-item">Defervescence achieved — afebrile 37.4°C</div>
+              <div class="wn-item">Tolerating oral intake and mobilising — oral bioavailability acceptable</div>
+              <div class="wn-item" id="abx-wn-culture-item">Await culture result before finalising — no growth likely supports narrow-spectrum oral</div>
+            </div>
+            <div class="wn-col wn-col-divided">
+              <div class="wn-col-title">Escalate therapy <span class="wn-col-state avoid" id="abx-wn-esc-state">Not indicated</span></div>
+              <div class="wn-reason" id="abx-wn-esc">No clinical or microbiological trigger for escalation at this review.</div>
+              <div class="wn-item">Patient is improving — escalation without deterioration is not stewardship-appropriate</div>
+              <div class="wn-item">No resistant organism confirmed in culture</div>
+              <div class="wn-item">Reserve for documented treatment failure or resistant pathogen</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Stewardship recommendations require clinical validation. This is a decision-support tool, not a prescribing system.
+        </div>
+      </div>
+
+      <!-- ── SECTION 4: MONITORING ───────────────────────────────────── -->
+      <div id="abx-section-monitoring" class="dp-section">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 4</div>
+            <div class="dp-section-title">Monitoring Parameters</div>
+            <div class="dp-section-subtitle">Ongoing safety and efficacy monitoring requirements for the current antimicrobial regimen.</div>
+          </div>
+        </div>
+
+        <div class="mn-top">
+          <div class="mn-stat-card">
+            <div class="mn-stat-label">Current regimen day</div>
+            <div class="mn-stat-val mn-stat-val-lg">Day 3</div>
+            <div class="mn-stat-sub">IV pip-tazo 4.5 g TDS</div>
+          </div>
+          <div class="mn-stat-card mn-stat-card-uncertain">
+            <div class="mn-stat-label mn-stat-uncertain">Culture result</div>
+            <div class="mn-stat-val mn-stat-val-pending">Pending</div>
+            <div class="mn-stat-sub mn-stat-uncertain">De-escalation contingent on result</div>
+          </div>
+          <div class="mn-stat-card">
+            <div class="mn-stat-label">Renal monitoring</div>
+            <div class="mn-stat-val" style="font-size:14px;margin-top:4px;color:var(--amber)">Active</div>
+            <div class="mn-stat-sub">eGFR 52 — dose adjusted</div>
+          </div>
+        </div>
+
+        <div class="dp-subsection-label">Monitoring schedule</div>
+        <div class="mon-schedule-grid">
+          <div class="mon-schedule-head">
+            <div>Checkpoint</div><div>Labs / tests</div><div>Clinical assessment</div><div>Action trigger</div>
+          </div>
+          <div class="mon-schedule-row">
+            <div class="mon-cell-checkpoint mon-cell-amber">72hr ★</div>
+            <div class="mon-cell">Culture result, eGFR recheck, WBC, CRP</div>
+            <div class="mon-cell">Clinical trajectory, fever status, oral tolerance</div>
+            <div class="mon-cell mon-cell-red">Culture + improvement → step down. Resistant organism → escalate. Deterioration → urgent review.</div>
+          </div>
+          <div class="mon-schedule-row">
+            <div class="mon-cell-checkpoint">Daily</div>
+            <div class="mon-cell">Temperature, WBC if clinically indicated</div>
+            <div class="mon-cell">Fever, organ function, oral tolerance, mobility</div>
+            <div class="mon-cell mon-cell-muted">New fever or deterioration → do not step down. Escalate and review culture urgently.</div>
+          </div>
+          <div class="mon-schedule-row mon-row-last">
+            <div class="mon-cell-checkpoint">Day 5 (target)</div>
+            <div class="mon-cell">End-of-treatment CRP, WBC if required</div>
+            <div class="mon-cell">Reassess need for further antimicrobial therapy</div>
+            <div class="mon-cell mon-cell-muted">Total 5-day course per IDSA/ATS CAP guidance. Stop if goals met.</div>
+          </div>
+        </div>
+
+        <div class="dp-subsection-label">Renal dosing — current eGFR</div>
+        <div class="renal-dosing-block">
+          <div class="renal-dosing-cols">
+            <div class="renal-dosing-col">
+              <div class="renal-dosing-label">Piperacillin-tazobactam</div>
+              <div class="renal-dosing-val renal-dosing-val-amber" id="abx-rd-piptz">4.5 g TDS (eGFR 30–59)</div>
+              <div class="renal-dosing-note" id="abx-rd-piptz-note">Dose interval extended per renal guidance. Standard dose 4.5 g QDS at eGFR ≥60.</div>
+            </div>
+            <div class="renal-dosing-col">
+              <div class="renal-dosing-label">If oral step-down: Co-amoxiclav</div>
+              <div class="renal-dosing-val" id="abx-rd-oral">625 mg TDS (eGFR ≥30)</div>
+              <div class="renal-dosing-note">Standard dosing applicable at current eGFR. No adjustment required for co-amoxiclav at eGFR 52.</div>
+            </div>
+            <div class="renal-dosing-col">
+              <div class="renal-dosing-label">Monitoring requirement</div>
+              <div class="renal-dosing-val renal-dosing-val-amber">eGFR recheck at 72hr</div>
+              <div class="renal-dosing-note">Acute illness may cause transient renal deterioration. Recheck before extending course beyond 5 days.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mn-contra">
+          <div class="mn-contra-label">Flags &amp; safety considerations</div>
+          <div class="mn-contra-item" id="abx-flag-1"><span class="mn-contra-x">⚠</span> Culture-negative at 72hr — reassess empirical spectrum. Consider narrowing if clinical picture supports.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">⚠</span> Prolonged IV access increases line infection risk — transition to oral as soon as clinical criteria met.</div>
+          <div class="mn-contra-item" id="abx-flag-renal"><span class="mn-contra-x">⚠</span> eGFR 52 — monitor for acute kidney injury during course. Stop all nephrotoxic agents if eGFR falls &gt;20%.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">ℹ</span> Document indication, intended duration, and review date in clinical notes at each contact — stewardship standard.</div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Monitoring schedule is illustrative. Adapt to local antimicrobial stewardship policy and patient-specific factors.
+        </div>
+      </div>
+
+    </div><!-- /dp-content -->
+  </div><!-- /dp-main -->
+</div><!-- /dp-wrap -->
+</div><!-- /abx-page -->
 
 <!-- FOOTER -->
 <div class="app-footer">

@@ -1674,3 +1674,92 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 
 select,input,textarea{color-scheme:dark;}
 input[type="range"]{accent-color:var(--accent);}
+
+/* ════════════════════════════════════════════════════
+   WORKFLOW SELECTOR PAGE
+════════════════════════════════════════════════════ */
+.sel-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 40px 32px;gap:32px;max-width:1100px;margin:0 auto;width:100%;}
+.sel-header{text-align:center;max-width:580px;}
+.sel-eyebrow{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:10px;}
+.sel-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy);margin:0 0 10px;}
+.sel-subtitle{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
+.sel-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;width:100%;max-width:860px;}
+.sel-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px 24px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;display:flex;flex-direction:column;gap:10px;}
+.sel-card:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(0,0,0,0.12);}
+.sel-card-new{border-left:3px solid var(--green);}
+.sel-card-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);}
+.sel-tag-green{color:var(--green)!important;}
+.sel-card-title{font-family:'DM Serif Display',serif;font-size:19px;color:var(--navy);line-height:1.25;}
+.sel-card-desc{font-size:11.5px;color:var(--muted);line-height:1.6;}
+.sel-card-pills{display:flex;flex-wrap:wrap;gap:5px;}
+.sel-pill{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:3px;}
+.sel-pill-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,64,64,0.18);}
+.sel-pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(196,138,48,0.18);}
+.sel-pill-blue{background:rgba(204,117,70,0.09);color:var(--accent);border:1px solid rgba(204,117,70,0.20);}
+.sel-pill-green{background:rgba(58,170,120,0.08);color:var(--green);border:1px solid rgba(58,170,120,0.15);}
+.sel-card-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding-top:4px;border-top:1px solid var(--border-light);}
+.sel-card-sections{font-weight:600;}
+.sel-card-cta{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--accent);}
+.ep-topbar-back{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.5);text-decoration:none;letter-spacing:0.3px;transition:color 0.15s;}
+.ep-topbar-back:hover{color:rgba(255,255,255,0.85);}
+
+/* ════════════════════════════════════════════════════
+   ABX WORKFLOW — PATIENT BANNER & PARAMS
+════════════════════════════════════════════════════ */
+.abx-patient-banner{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px;flex-wrap:wrap;}
+.abx-patient-name{font-size:13px;font-weight:600;color:var(--navy);}
+.abx-patient-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.abx-patient-tags{display:flex;gap:6px;flex-shrink:0;}
+.abx-tag{font-size:9.5px;font-weight:600;padding:3px 9px;border-radius:3px;}
+.abx-tag-amber{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(196,138,48,0.22);}
+.abx-tag-blue{background:rgba(204,117,70,0.09);color:var(--accent);border:1px solid rgba(204,117,70,0.22);}
+.abx-tag-green{background:rgba(58,170,120,0.08);color:var(--green);border:1px solid rgba(58,170,120,0.22);}
+.abx-tag-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,64,64,0.22);}
+.abx-param-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+.abx-param-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:11px 13px 10px;cursor:pointer;transition:border-color 0.15s;position:relative;}
+.abx-param-card:hover{border-color:var(--accent);}
+.abx-param-wide{grid-column:span 2;}
+.abx-param-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:5px;}
+.abx-param-value{font-size:18px;font-weight:700;color:var(--navy);font-family:'DM Serif Display',serif;}
+.abx-param-status{font-size:10px;color:var(--muted);margin-top:3px;}
+.abx-val-amber{color:var(--amber)!important;}
+.abx-val-red{color:var(--red)!important;}
+.abx-val-green{color:var(--green)!important;}
+
+/* ════════════════════════════════════════════════════
+   ABX MONITORING & DOSING
+════════════════════════════════════════════════════ */
+.mn-top{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.mn-stat-val-lg{font-size:28px;}
+.mn-stat-val-pending{font-size:14px;margin-top:4px;color:var(--amber);font-weight:600;}
+.mn-stat-uncertain{color:var(--amber)!important;}
+.mn-stat-card-uncertain{border-left:2px solid var(--amber);}
+.mon-schedule-grid{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.mon-schedule-head{display:grid;grid-template-columns:110px 1fr 1fr 1fr;background:var(--bg);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);padding:7px 12px;gap:10px;}
+.mon-schedule-row{display:grid;grid-template-columns:110px 1fr 1fr 1fr;border-top:1px solid var(--border-light);gap:10px;padding:9px 12px;align-items:start;}
+.mon-row-last{background:rgba(58,170,120,0.04);}
+.mon-cell{font-size:11px;color:var(--text);line-height:1.5;}
+.mon-cell-checkpoint{font-size:11px;font-weight:700;color:var(--navy);}
+.mon-cell-amber{color:var(--amber);}
+.mon-cell-red{color:var(--red);}
+.mon-cell-muted{color:var(--muted);}
+.renal-dosing-block{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;margin-bottom:14px;}
+.renal-dosing-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.renal-dosing-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:6px;}
+.renal-dosing-val{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.renal-dosing-val-amber{color:var(--amber);}
+.renal-dosing-note{font-size:10.5px;color:var(--muted);line-height:1.5;}
+.mn-contra{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;flex-direction:column;gap:7px;}
+.mn-contra-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:2px;}
+.mn-contra-item{font-size:11px;color:var(--text);display:flex;gap:8px;align-items:flex-start;line-height:1.5;}
+.mn-contra-x{color:var(--amber);flex-shrink:0;font-size:11px;}
+
+/* ════════════════════════════════════════════════════
+   ABX POPOVER SELECT
+════════════════════════════════════════════════════ */
+.ip-pop-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:11.5px;color:var(--text);font-family:'DM Sans',sans-serif;}
+.ip-pop-select:focus{outline:none;border-color:var(--accent);}
+
+/* responsive */
+@media(max-width:860px){.sel-cards{grid-template-columns:1fr;}}
+@media(max-width:700px){.abx-param-grid{grid-template-columns:repeat(2,1fr);}.abx-param-wide{grid-column:span 2;}.mn-top{grid-template-columns:1fr 1fr;}.renal-dosing-cols{grid-template-columns:1fr;}.mon-schedule-head,.mon-schedule-row{grid-template-columns:80px 1fr 1fr;}.mon-schedule-head>div:nth-child(3),.mon-schedule-row>.mon-cell:nth-child(3){display:none;}}
