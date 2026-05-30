@@ -720,6 +720,7 @@ function runReasoningEngine() {
   updateParamTiles();
   updateComplexityBar();
   updateClinicalStatusSummary();
+  updateClinicalImpression();
 
   var rec    = buildPrimaryRec();
   var nsaidR = buildNsaidReasoning();
@@ -2440,6 +2441,124 @@ function updateClinicalStatusSummary() {
 
 
 /* ════════════════════════════════════════════════════════════
+   SECTION 21B — CLINICAL IMPRESSION
+════════════════════════════════════════════════════════════ */
+
+function updateClinicalImpression() {
+  var el = document.getElementById('ci-block');
+  if (!el) return;
+
+  var eR  = egfrRisk();
+  var gR  = giRisk();
+  var nsaidClosed = nsaidContraindicated();
+  var opioidClosed = opioidAvoidable();
+  var apapFailed = acetaminophenFailed();
+  var multimodal = multimodalFailure();
+
+  // ── Timepoint label ──────────────────────────────────────────────────────
+  var tpLabels = ['Day 1', 'Week 2', 'Week 4', 'Week 8', '3 Months'];
+  var tpLabel = tpLabels[LP_CURRENT_TP] || 'Day 1';
+  var tpEl = document.getElementById('ci-timepoint');
+  if (tpEl) tpEl.textContent = tpLabel;
+
+  // ── Build impression lines ───────────────────────────────────────────────
+  var lines = [];
+
+  // 1. Symptomatic status — the opening clinical observation
+  if (P.pain >= 8) {
+    lines.push({ text: 'Patient presents with severe, functionally disabling pain (NRS ' + P.pain + '/10). Activity is significantly curtailed and the current analgesic approach is inadequate.', tone: 'red' });
+  } else if (P.pain >= 6) {
+    lines.push({ text: 'Patient remains symptomatic with moderate-to-severe pain (NRS ' + P.pain + '/10) and progressive functional limitation. Bilateral joint involvement is contributing to reduced mobility and social independence.', tone: 'amber' });
+  } else if (P.pain >= 4) {
+    lines.push({ text: 'Patient reports moderate pain (NRS ' + P.pain + '/10). Functional capacity is partially preserved but activity limitation is evident.', tone: 'amber' });
+  } else {
+    lines.push({ text: 'Pain is currently well-controlled (NRS ' + P.pain + '/10). Functional status appears maintained at this timepoint.', tone: 'green' });
+  }
+
+  // 2. Risk constraint framing — the binding clinical context
+  if (gR === 'very-high' && (eR === 'moderate' || eR === 'severe')) {
+    lines.push({ text: 'Risk profile is substantially constrained. Active GI haemorrhage history combined with significant renal impairment (eGFR ' + P.egfr + ') narrows the analgesic pathway to the least nephrotoxic and gastrotoxic agents only.', tone: 'red' });
+  } else if (gR === 'very-high') {
+    lines.push({ text: 'GI risk is the dominant clinical constraint. Prior bleeding history renders NSAIDs of all classes inappropriate regardless of pain severity. This is not a provisional restriction — it is a firm contraindication.', tone: 'red' });
+  } else if (gR === 'high' && (eR === 'mild' || eR === 'moderate' || eR === 'severe')) {
+    lines.push({ text: 'Compound GI and renal risk limits analgesic selection. Prior peptic ulcer and a borderline eGFR (' + P.egfr + ' mL/min) together close the NSAID pathway and restrict escalation options at both the GI and nephrotoxicity axes.', tone: 'amber' });
+  } else if (gR === 'high') {
+    lines.push({ text: 'Prior peptic ulcer represents a sustained GI risk. NSAIDs carry meaningful ulcer reactivation and bleeding risk in this context — particularly with age-related mucosal vulnerability.', tone: 'amber' });
+  } else if (eR === 'moderate' || eR === 'severe') {
+    lines.push({ text: 'Renal function is significantly impaired (eGFR ' + P.egfr + ') and is the primary constraint on analgesic escalation. Prostaglandin-dependent renal autoregulation is at risk; NSAIDs are contraindicated at this level of function.', tone: 'red' });
+  } else if (eR === 'mild') {
+    lines.push({ text: 'Mild renal impairment (eGFR ' + P.egfr + ', CKD G3a) introduces a dose ceiling for acetaminophen and warrants monitoring of any analgesic with nephrotoxic potential. The trajectory of renal function is currently unconfirmed.', tone: 'amber' });
+  }
+
+  // 3. BP / CV — only if clinically relevant
+  if (P.bp >= 170) {
+    lines.push({ text: 'Blood pressure is uncontrolled (SBP ' + P.bp + ' mmHg). NSAID use in this context carries direct risk of further BP elevation and antihypertensive antagonism — this is a firm contraindication to any NSAID trial.', tone: 'red' });
+  } else if (P.bp >= 150) {
+    lines.push({ text: 'Blood pressure is mildly elevated (SBP ' + P.bp + ' mmHg). NSAIDs would likely impair amlodipine efficacy; previous diclofenac trial produced a documented +18 mmHg rise, which reinforces avoidance.', tone: 'amber' });
+  }
+
+  // 4. Prior treatment failures — what this means for current decision
+  if (multimodal) {
+    lines.push({ text: 'Multiple analgesic classes have failed. The treatment pathway is substantially exhausted — further escalation requires specialist input before any new agent class is introduced.', tone: 'red' });
+  } else if (apapFailed) {
+    lines.push({ text: 'Acetaminophen has been trialled and failed. The primary conservative option is no longer available, and escalation to a second-line agent — within the bounds of the current risk profile — is now appropriate.', tone: 'amber' });
+  } else if (P.failed === '2nsaid') {
+    lines.push({ text: 'Two NSAID trials have been discontinued due to documented intolerance. This is not a relative contraindication — it constitutes direct clinical evidence that the NSAID pathway is not viable for this patient. Acetaminophen TID has not yet been trialled on a fixed schedule.', tone: 'amber' });
+  } else if (P.failed === '1nsaid') {
+    lines.push({ text: 'One NSAID has been discontinued due to intolerance. Caution is appropriate before attempting a second NSAID trial; alternative first-line options should be exhausted first.', tone: 'amber' });
+  }
+
+  // 5. Adherence — clinical implication, not a flag
+  if (P.adh === 'poor') {
+    lines.push({ text: 'Adherence is documented as poor. Any apparent treatment failure at this stage must be interpreted cautiously — subtherapeutic drug exposure cannot be excluded as the primary explanation for ongoing pain.', tone: 'amber' });
+  } else if (P.adh === 'partial') {
+    lines.push({ text: 'Adherence to the analgesic regimen is inconsistent. The patient has been using medication on a PRN basis rather than a fixed schedule. A first assessment of true fixed-schedule adherence has not yet been obtained.', tone: 'amber' });
+  }
+
+  // 6. Sedation / opioid gate
+  if (opioidClosed && (P.failed === 'multi' || P.pain >= 8)) {
+    lines.push({ text: 'Opioid analgesics are not appropriate in this context. The patient\'s fall risk profile, sedation sensitivity, and expressed preference collectively close this pathway, regardless of pain severity.', tone: 'muted' });
+  }
+
+  // 7. Stability note — only at timepoints > 0 or if stable
+  if (LP_CURRENT_TP > 0 && P.pain <= 5 && eR !== 'severe') {
+    lines.push({ text: 'Clinical presentation remains stable despite persistent symptoms. No acute deterioration has occurred since the previous review.', tone: 'green' });
+  } else if (LP_CURRENT_TP === 0 && !multimodal && !apapFailed) {
+    lines.push({ text: 'No major escalation triggers are present at this stage. Conservative management is clinically appropriate and should be established before further pathway decisions are made.', tone: 'muted' });
+  }
+
+  // ── Conclusion sentence — the bridge to the recommendation ───────────────
+  var conclusion = '';
+  if (multimodal) {
+    conclusion = 'Specialist-led review is required before any further analgesic class is initiated. Current symptomatic management should be optimised within available options while referral is arranged.';
+  } else if (apapFailed) {
+    conclusion = 'First-line acetaminophen has failed on adequate trial. Escalation to the next available option within the current risk profile is now clinically indicated.';
+  } else if (gR === 'very-high' || (gR === 'high' && (eR === 'moderate' || eR === 'severe'))) {
+    conclusion = 'Given compound contraindications, the recommendation reflects the safest achievable option — not an ideal analgesic choice. Clinical expectations should be calibrated accordingly, and functional outcome monitoring is essential.';
+  } else if (nsaidClosed && !apapFailed) {
+    conclusion = 'Current risk profile supports conservative management with acetaminophen TID as a fixed-schedule first-line trial. The adequacy of this approach should be formally assessed at Week 2 before any escalation decision is made.';
+  } else if (P.pain <= 4 && LP_CURRENT_TP > 0) {
+    conclusion = 'Clinical trajectory is favourable. Current management should be maintained and monitoring intensity stepped down if stability is confirmed at the next scheduled review.';
+  } else {
+    conclusion = 'Conservative management is appropriate at this stage. Initiation of scheduled acetaminophen, combined with systematic monitoring, represents the correct first step in this clinical pathway.';
+  }
+
+  // ── Render ───────────────────────────────────────────────────────────────
+  var parasEl = document.getElementById('ci-paragraphs');
+  if (parasEl) {
+    parasEl.innerHTML = lines.map(function(l) {
+      return '<div class="ci-line ci-line-' + l.tone + '">' + l.text + '</div>';
+    }).join('');
+  }
+
+  var concEl = document.getElementById('ci-conclusion');
+  if (concEl) {
+    concEl.innerHTML = '<span class="ci-conclusion-label">Clinical direction</span>' + conclusion;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════
    SECTION 21 — ENTRY PAGE GATE
 ════════════════════════════════════════════════════════════ */
 
@@ -2466,6 +2585,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateParamTiles();
   updateComplexityBar();
   updateClinicalStatusSummary();
+  updateClinicalImpression();
   var rec    = buildPrimaryRec();
   var nsaidR = buildNsaidReasoning();
   _isFirstRun = true;
