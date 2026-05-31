@@ -4258,12 +4258,12 @@
         </div>
         <div class="sel-platform-stats">
           <div class="sel-stat">
-            <div class="sel-stat-val">2</div>
+            <div class="sel-stat-val">3</div>
             <div class="sel-stat-label">Workflows</div>
           </div>
           <div class="sel-stat-div"></div>
           <div class="sel-stat">
-            <div class="sel-stat-val">12</div>
+            <div class="sel-stat-val">16</div>
             <div class="sel-stat-label">Clinical sections</div>
           </div>
           <div class="sel-stat-div"></div>
@@ -4277,7 +4277,7 @@
       <!-- Domain label -->
       <div class="sel-domain-row">
         <div class="sel-domain-label">Available workflows</div>
-        <div class="sel-domain-count">2 of 2</div>
+        <div class="sel-domain-count">3 of 3</div>
       </div>
 
       <!-- Workflow cards -->
@@ -4360,6 +4360,47 @@
             <span class="sel-card-sections">4 sections</span>
           </div>
           <div class="sel-card-cta sel-card-cta-green">
+            Open workflow
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- Polypharmacy Workflow Card -->
+        <div class="sel-card sel-card-poly" onclick="enterPolyWorkflow()">
+          <div class="sel-card-inner-top">
+            <div class="sel-card-num sel-card-num-purple">03</div>
+            <div class="sel-card-tag sel-tag-purple">Medication Optimisation · Polypharmacy Review</div>
+          </div>
+          <div class="sel-card-title">Polypharmacy &amp;<br>Medication Burden Review</div>
+          <div class="sel-card-desc">Structured medication review for an older adult carrying eleven concurrent medications. Evaluates anticholinergic burden, falls risk, duplicate therapy, and deprescribing opportunities using a clinical reasoning framework.</div>
+
+          <div class="sel-card-assess-label">What you'll assess</div>
+          <div class="sel-card-assess-list">
+            <div class="sel-assess-item sel-assess-item-poly">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Anticholinergic and CNS depressant burden scoring
+            </div>
+            <div class="sel-assess-item sel-assess-item-poly">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Drug interactions, duplicate therapy, and regimen complexity
+            </div>
+            <div class="sel-assess-item sel-assess-item-poly">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Deprescribing targets and medication optimisation plan
+            </div>
+          </div>
+
+          <div class="sel-card-pills">
+            <span class="sel-pill sel-pill-purple">11 medications</span>
+            <span class="sel-pill sel-pill-red">Falls risk elevated</span>
+            <span class="sel-pill sel-pill-amber">Anticholinergic burden</span>
+            <span class="sel-pill sel-pill-blue">Deprescribing targets</span>
+          </div>
+          <div class="sel-card-meta">
+            <span>81 y/o Female · CS-2026-00843</span>
+            <span class="sel-card-sections">4 sections</span>
+          </div>
+          <div class="sel-card-cta sel-card-cta-purple">
             Open workflow
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
@@ -4933,6 +4974,584 @@
   </div><!-- /dp-main -->
 </div><!-- /dp-wrap -->
 </div><!-- /abx-page -->
+
+<!-- ════════════════ POLYPHARMACY REVIEW WORKFLOW ════════════════ -->
+<div id="poly-page" style="display:none;">
+<div class="dp-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="dp-sidebar">
+    <div class="dp-logo">
+      <img src="https://i.ibb.co/b5b8qNk8/clinstrux-full-light.png" alt="Clinstrux" class="dp-logo-img">
+    </div>
+    <div class="dp-sidebar-top">
+      <a href="#" class="dp-back" onclick="returnToSelector(); return false;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        All Workflows
+      </a>
+      <div class="dp-scenario-label">Current Workflow</div>
+      <div class="dp-scenario-title">Polypharmacy &amp; Medication Burden Review</div>
+      <div class="dp-scenario-meta">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        81 y/o · Female · May 2026
+      </div>
+      <div class="dp-scenario-status">Active session</div>
+    </div>
+
+    <div class="dp-risk-strip">
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-red"></span>
+        <span class="dp-risk-text">11 concurrent medications</span>
+      </div>
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-red"></span>
+        <span class="dp-risk-text">Falls risk: elevated</span>
+      </div>
+      <div class="dp-risk-strip-row">
+        <span class="dp-risk-dot dp-risk-dot-amber"></span>
+        <span class="dp-risk-text">Anticholinergic burden: high</span>
+      </div>
+    </div>
+
+    <div class="dp-nav">
+      <div class="dp-nav-phase"><div class="dp-nav-phase-label">I — Patient Context</div></div>
+      <button class="dp-nav-item done" onclick="polyShowSection('poly-section-inputs', this)">
+        <span class="dp-nav-num">1</span>
+        <span class="dp-nav-item-inner"><span class="dp-nav-item-title">Medication Profile</span></span>
+        <svg class="dp-nav-check" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <div class="dp-nav-phase"><div class="dp-nav-phase-label">II — Clinical Assessment</div></div>
+      <button class="dp-nav-item active" onclick="polyShowSection('poly-section-assessment', this)">
+        <span class="dp-nav-num">2</span>
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Burden Assessment</span>
+          <span class="dp-nav-item-tag tag-red">High risk</span>
+        </span>
+      </button>
+      <div class="dp-nav-phase"><div class="dp-nav-phase-label">III — Decision &amp; Plan</div></div>
+      <button class="dp-nav-item" onclick="polyShowSection('poly-section-recommendation', this)">
+        <span class="dp-nav-num">3</span>
+        <span class="dp-nav-item-inner"><span class="dp-nav-item-title">Optimisation Recommendations</span></span>
+      </button>
+      <button class="dp-nav-item" onclick="polyShowSection('poly-section-monitoring', this)">
+        <span class="dp-nav-num">4</span>
+        <span class="dp-nav-item-inner">
+          <span class="dp-nav-item-title">Monitoring &amp; Follow-Up</span>
+          <span class="dp-nav-item-tag tag-amber">Review plan</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="dp-sidebar-footer">
+      <div class="dp-user-profile">
+        <div class="dp-user-avatar">ME</div>
+        <div>
+          <div class="dp-user-name">Mikhail Evteev</div>
+          <div class="dp-user-org">Evteev Advisory · Founder</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /sidebar -->
+
+  <!-- MAIN -->
+  <div class="dp-main">
+    <div class="dp-topbar">
+      <div class="dp-topbar-meta">
+        <div class="dp-topbar-case">Case ID <span class="dp-topbar-case-id">CS-2026-00843</span></div>
+        <div class="dp-topbar-sep"></div>
+        <div class="dp-topbar-status">Medication review active</div>
+        <div class="dp-topbar-sep"></div>
+        <div class="dp-topbar-session">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          M. Evteev
+        </div>
+      </div>
+      <div class="dp-topbar-right">
+        <div class="dp-topbar-timestamp">Reviewed: May 20, 2026 · 14:15</div>
+        <div class="dp-evidence-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Optimisation
+        </div>
+      </div>
+    </div>
+
+    <div class="dp-content">
+
+      <!-- ── SECTION 1: MEDICATION PROFILE ─────────────────────────── -->
+      <div id="poly-section-inputs" class="dp-section active">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 1</div>
+            <div class="dp-section-title">Medication Profile</div>
+            <div class="dp-section-subtitle">Current medication burden indicators. Adjust any parameter to update the polypharmacy assessment in real time.</div>
+          </div>
+        </div>
+
+        <div class="abx-patient-banner">
+          <div class="abx-patient-left">
+            <div class="abx-patient-name">81-year-old female · Residential care · Multiple comorbidities</div>
+            <div class="abx-patient-sub">Hypertension · Type 2 diabetes · Osteoporosis · Depression · Overactive bladder · Chronic pain</div>
+          </div>
+          <div class="abx-patient-tags">
+            <span class="abx-tag abx-tag-red">Polypharmacy</span>
+            <span class="abx-tag abx-tag-amber">Frail</span>
+          </div>
+        </div>
+
+        <div class="abx-param-grid">
+          <!-- Num Meds -->
+          <div class="abx-param-card" id="poly-p-meds" onclick="polyOpenPopover('meds', event)">
+            <div class="abx-param-label">Total Medications</div>
+            <div class="abx-param-value" id="poly-val-meds">11</div>
+            <div class="abx-param-status" id="poly-status-meds">Hyper-polypharmacy</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <!-- High-risk meds -->
+          <div class="abx-param-card" id="poly-p-highrisk" onclick="polyOpenPopover('highrisk', event)">
+            <div class="abx-param-label">High-Risk Medications</div>
+            <div class="abx-param-value" id="poly-val-highrisk">3</div>
+            <div class="abx-param-status" id="poly-status-highrisk">Warfarin · opioid · hypnotic</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <!-- Interactions -->
+          <div class="abx-param-card" id="poly-p-interactions" onclick="polyOpenPopover('interactions', event)">
+            <div class="abx-param-label">Drug Interactions</div>
+            <div class="abx-param-value" id="poly-val-interactions">4</div>
+            <div class="abx-param-status" id="poly-status-interactions">2 clinically significant</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <!-- Duplicate therapy -->
+          <div class="abx-param-card" id="poly-p-duplicate" onclick="polyOpenPopover('duplicate', event)">
+            <div class="abx-param-label">Duplicate Therapy</div>
+            <div class="abx-param-value" id="poly-val-duplicate">Yes</div>
+            <div class="abx-param-status" id="poly-status-duplicate">Dual antihypertensive overlap</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <!-- Anticholinergic burden -->
+          <div class="abx-param-card abx-param-wide" id="poly-p-ach" onclick="polyOpenPopover('ach', event)">
+            <div class="abx-param-label">Anticholinergic Burden (ACB Score)</div>
+            <div class="abx-param-value" id="poly-val-ach">5</div>
+            <div class="abx-param-status" id="poly-status-ach">High — oxybutynin + amitriptyline + promethazine</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+          <!-- Falls risk -->
+          <div class="abx-param-card abx-param-wide" id="poly-p-falls" onclick="polyOpenPopover('falls', event)">
+            <div class="abx-param-label">Falls Risk (Medication-Related)</div>
+            <div class="abx-param-value" id="poly-val-falls">High</div>
+            <div class="abx-param-status" id="poly-status-falls">Opioid + hypnotic + antihypertensive</div>
+            <button class="ip-edit-btn">Edit ↗</button>
+          </div>
+        </div>
+
+        <!-- Popovers -->
+        <div id="poly-pop-meds" class="ip-popover">
+          <div class="ip-pop-title">Total Medications</div>
+          <div class="ip-pop-desc">Polypharmacy: ≥5 medications. Hyper-polypharmacy: ≥10. Each additional medication increases the probability of an adverse drug event.</div>
+          <div class="ip-pop-field">
+            <label>Number of concurrent medications</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="poly-rng-meds" min="1" max="20" step="1" value="11" oninput="document.getElementById('poly-rng-meds-val').textContent=this.value">
+              <span class="ip-range-val" id="poly-rng-meds-val">11</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="polyClosePopover('meds')">Cancel</button>
+            <button class="ip-pop-apply" onclick="polyApplyParam('meds')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="poly-pop-highrisk" class="ip-popover">
+          <div class="ip-pop-title">High-Risk Medications</div>
+          <div class="ip-pop-desc">Medications with a narrow therapeutic index or significant harm potential: anticoagulants, opioids, hypoglycaemics, antiepileptics, hypnotics.</div>
+          <div class="ip-pop-field">
+            <label>Number of high-risk medications</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="poly-rng-highrisk" min="0" max="8" step="1" value="3" oninput="document.getElementById('poly-rng-highrisk-val').textContent=this.value">
+              <span class="ip-range-val" id="poly-rng-highrisk-val">3</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="polyClosePopover('highrisk')">Cancel</button>
+            <button class="ip-pop-apply" onclick="polyApplyParam('highrisk')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="poly-pop-interactions" class="ip-popover">
+          <div class="ip-pop-title">Drug Interactions</div>
+          <div class="ip-pop-desc">Total number of identified drug-drug interactions. Clinically significant interactions require active management or therapy change.</div>
+          <div class="ip-pop-field">
+            <label>Number of drug interactions identified</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="poly-rng-interactions" min="0" max="12" step="1" value="4" oninput="document.getElementById('poly-rng-interactions-val').textContent=this.value">
+              <span class="ip-range-val" id="poly-rng-interactions-val">4</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="polyClosePopover('interactions')">Cancel</button>
+            <button class="ip-pop-apply" onclick="polyApplyParam('interactions')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="poly-pop-duplicate" class="ip-popover">
+          <div class="ip-pop-title">Duplicate Therapy</div>
+          <div class="ip-pop-desc">Two or more agents from the same therapeutic class prescribed concurrently without clear clinical justification.</div>
+          <div class="ip-pop-field">
+            <label>Duplicate therapy present</label>
+            <select class="ip-pop-select" id="poly-sel-duplicate">
+              <option value="yes">Yes — duplicate class identified</option>
+              <option value="no">No — no duplication detected</option>
+            </select>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="polyClosePopover('duplicate')">Cancel</button>
+            <button class="ip-pop-apply" onclick="polyApplyParam('duplicate')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="poly-pop-ach" class="ip-popover">
+          <div class="ip-pop-title">Anticholinergic Burden (ACB Score)</div>
+          <div class="ip-pop-desc">ACB score ≥3 is associated with increased risk of cognitive impairment, falls, urinary retention, and constipation in older adults.</div>
+          <div class="ip-pop-field">
+            <label>Total ACB score</label>
+            <div class="ip-range-row">
+              <input type="range" class="ip-pop-range" id="poly-rng-ach" min="0" max="12" step="1" value="5" oninput="document.getElementById('poly-rng-ach-val').textContent=this.value">
+              <span class="ip-range-val" id="poly-rng-ach-val">5</span>
+            </div>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="polyClosePopover('ach')">Cancel</button>
+            <button class="ip-pop-apply" onclick="polyApplyParam('ach')">Apply &amp; Update</button>
+          </div>
+        </div>
+        <div id="poly-pop-falls" class="ip-popover">
+          <div class="ip-pop-title">Falls Risk (Medication-Related)</div>
+          <div class="ip-pop-desc">Overall medication-related falls risk based on the number and type of fall-risk-increasing drugs (FRIDs) in the current regimen.</div>
+          <div class="ip-pop-field">
+            <label>Falls risk level</label>
+            <select class="ip-pop-select" id="poly-sel-falls">
+              <option value="low">Low — no significant FRIDs identified</option>
+              <option value="moderate">Moderate — 1–2 FRIDs present</option>
+              <option value="high">High — 3+ FRIDs or high-potency FRID</option>
+            </select>
+          </div>
+          <div class="ip-pop-actions">
+            <button class="ip-pop-cancel" onclick="polyClosePopover('falls')">Cancel</button>
+            <button class="ip-pop-apply" onclick="polyApplyParam('falls')">Apply &amp; Update</button>
+          </div>
+        </div>
+
+        <!-- Current medication list -->
+        <div class="dp-subsection-label">Current medication list</div>
+        <div class="poly-med-table">
+          <div class="poly-med-head">
+            <div>Medication</div><div>Indication</div><div>Risk flag</div><div>Review priority</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Warfarin 3 mg daily</div>
+            <div class="poly-med-ind">AF — stroke prevention</div>
+            <div class="poly-med-flag poly-flag-red">High-risk · INR monitoring</div>
+            <div class="poly-med-pri poly-pri-amber">Routine INR review</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Oxybutynin 5 mg BD</div>
+            <div class="poly-med-ind">Overactive bladder</div>
+            <div class="poly-med-flag poly-flag-red">ACB +3 · Falls · Cognitive risk</div>
+            <div class="poly-med-pri poly-pri-red">Deprescribing candidate</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Amitriptyline 25 mg nocte</div>
+            <div class="poly-med-ind">Neuropathic pain / sleep</div>
+            <div class="poly-med-flag poly-flag-red">ACB +2 · Falls · Sedation</div>
+            <div class="poly-med-pri poly-pri-red">Deprescribing candidate</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Zopiclone 7.5 mg nocte</div>
+            <div class="poly-med-ind">Insomnia</div>
+            <div class="poly-med-flag poly-flag-red">Falls · Dependence risk</div>
+            <div class="poly-med-pri poly-pri-red">Taper and withdraw</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Tramadol 50 mg QDS</div>
+            <div class="poly-med-ind">Chronic pain</div>
+            <div class="poly-med-flag poly-flag-red">Falls · Serotonin risk (+ SSRI)</div>
+            <div class="poly-med-pri poly-pri-red">Review indication urgently</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Sertraline 100 mg daily</div>
+            <div class="poly-med-ind">Depression</div>
+            <div class="poly-med-flag poly-flag-amber">Serotonin risk (+ tramadol)</div>
+            <div class="poly-med-pri poly-pri-amber">Interaction review</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Amlodipine 10 mg daily</div>
+            <div class="poly-med-ind">Hypertension</div>
+            <div class="poly-med-flag poly-flag-amber">Duplicate class (+ ramipril)</div>
+            <div class="poly-med-pri poly-pri-amber">Confirm dual indication</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Ramipril 10 mg daily</div>
+            <div class="poly-med-ind">Hypertension / renal protection</div>
+            <div class="poly-med-flag poly-flag-muted">Standard monitoring</div>
+            <div class="poly-med-pri poly-pri-muted">Continue — review K⁺</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Metformin 1 g BD</div>
+            <div class="poly-med-ind">Type 2 diabetes</div>
+            <div class="poly-med-flag poly-flag-muted">eGFR monitoring required</div>
+            <div class="poly-med-pri poly-pri-muted">Continue — check renal function</div>
+          </div>
+          <div class="poly-med-row">
+            <div class="poly-med-name">Alendronic acid 70 mg weekly</div>
+            <div class="poly-med-ind">Osteoporosis</div>
+            <div class="poly-med-flag poly-flag-muted">Administration technique review</div>
+            <div class="poly-med-pri poly-pri-muted">Confirm adherence</div>
+          </div>
+          <div class="poly-med-row poly-med-row-last">
+            <div class="poly-med-name">Omeprazole 20 mg daily</div>
+            <div class="poly-med-ind">GI protection</div>
+            <div class="poly-med-flag poly-flag-muted">Indication review (long-term)</div>
+            <div class="poly-med-pri poly-pri-muted">Review ongoing need</div>
+          </div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Medication list is pre-populated for demonstration. Adjust burden indicators above to update the assessment in real time.
+        </div>
+      </div>
+
+      <!-- ── SECTION 2: BURDEN ASSESSMENT ──────────────────────────── -->
+      <div id="poly-section-assessment" class="dp-section">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 2</div>
+            <div class="dp-section-title">Burden Assessment</div>
+            <div class="dp-section-subtitle">Clinical reasoning layer — interpreting medication burden, risk indicators, and deprescribing opportunities.</div>
+          </div>
+        </div>
+
+        <!-- Clinical Status Summary -->
+        <div class="css-block" id="poly-css-block">
+          <div class="css-block-head">
+            <div class="css-block-head-left">
+              <div class="css-eyebrow">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Clinical Status Summary
+              </div>
+              <div class="css-block-title">Medication Optimisation Review — May 2026</div>
+            </div>
+            <div class="css-block-head-right">
+              <div class="css-overall-badge css-badge-red" id="poly-css-badge">
+                <span class="css-overall-dot" style="background:var(--red);"></span>
+                <span id="poly-css-badge-label">High burden — review required</span>
+              </div>
+            </div>
+          </div>
+          <div class="css-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="css-metric">
+              <div class="css-metric-label">Medication Burden</div>
+              <div class="css-metric-value" id="poly-m-burden">Hyper-polypharmacy</div>
+              <div class="css-metric-sub" id="poly-m-burden-sub">11 medications · ≥10 threshold</div>
+            </div>
+            <div class="css-metric">
+              <div class="css-metric-label">Anticholinergic Load</div>
+              <div class="css-metric-value" id="poly-m-ach">High (ACB 5)</div>
+              <div class="css-metric-sub" id="poly-m-ach-sub">Threshold ≥3 — cognitive risk</div>
+            </div>
+            <div class="css-metric">
+              <div class="css-metric-label">Falls Risk</div>
+              <div class="css-metric-value" id="poly-m-falls">Elevated</div>
+              <div class="css-metric-sub" id="poly-m-falls-sub">3 FRIDs · opioid + hypnotic + AHT</div>
+            </div>
+            <div class="css-metric" style="border-right:none;">
+              <div class="css-metric-label">Interaction Risk</div>
+              <div class="css-metric-value" id="poly-m-interactions">Moderate–High</div>
+              <div class="css-metric-sub" id="poly-m-interactions-sub">4 interactions · 2 significant</div>
+            </div>
+          </div>
+          <div class="css-assessment-row">
+            <div class="css-assessment-label">Overall Assessment</div>
+            <div class="css-assessment-text" id="poly-overall-text">Patient carries a high medication burden with eleven concurrent agents including multiple high-risk medications and a significantly elevated anticholinergic load. The current regimen presents compound risk across falls, cognition, serotonin toxicity, and anticoagulation. Structured deprescribing review is indicated.</div>
+          </div>
+        </div>
+
+        <!-- Clinical Impression -->
+        <div class="ci-block" id="poly-ci-block">
+          <div class="ci-head">
+            <span class="ci-eyebrow">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Clinical Impression
+            </span>
+            <span class="ci-timepoint">Medication Review · May 2026</span>
+          </div>
+          <div class="ci-body">
+            <div class="ci-paragraphs" id="poly-ci-paragraphs"></div>
+            <div class="ci-conclusion" id="poly-ci-conclusion">
+              <span class="ci-conclusion-label">Clinical direction</span>
+              <span class="ci-conclusion-text" id="poly-ci-conclusion-text"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Assessment updates in real time as parameters change. Clinical judgment must be applied to all deprescribing decisions.
+        </div>
+      </div>
+
+      <!-- ── SECTION 3: RECOMMENDATIONS ────────────────────────────── -->
+      <div id="poly-section-recommendation" class="dp-section">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 3</div>
+            <div class="dp-section-title">Optimisation Recommendations</div>
+            <div class="dp-section-subtitle">Prioritised deprescribing and medication optimisation actions.</div>
+          </div>
+        </div>
+
+        <!-- Primary recommendation -->
+        <div class="ds-primary">
+          <div class="ds-primary-eyebrow" id="poly-rec-eyebrow">Pharmacist recommendation · Medication review May 2026</div>
+          <div class="ds-primary-rec">
+            <div class="ds-primary-drug" id="poly-rec-action">Structured<br>Deprescribing Review</div>
+            <div class="ds-primary-state" id="poly-rec-state">Urgent — multiple targets identified</div>
+          </div>
+          <div class="ds-primary-rationale" id="poly-rec-rationale">The current regimen carries compound risk across multiple axes — elevated anticholinergic burden, significant falls risk, a clinically important serotonin interaction, and duplicate antihypertensive therapy. Three medications have been identified as primary deprescribing candidates (oxybutynin, zopiclone, amitriptyline) alongside one urgent interaction requiring management. A structured, stepwise review is indicated — addressing the highest-risk agents first while monitoring for symptom rebound.</div>
+          <div class="ds-primary-ev-chips" id="poly-chips">
+            <span class="ds-primary-ev-chip strong">STOPP/START v3 criteria</span>
+            <span class="ds-primary-ev-chip strong">AGS Beers Criteria 2023</span>
+            <span class="ds-primary-ev-chip caution">Serotonin interaction — action required</span>
+            <span class="ds-primary-ev-chip caution">ACB ≥3 — cognitive risk</span>
+          </div>
+          <div class="ds-conf-strip">
+            <div class="ds-conf-main">
+              <div class="ds-conf-pct" id="poly-conf-pct">91%</div>
+              <div class="ds-conf-detail">
+                <div class="ds-conf-label" id="poly-conf-label">High confidence</div>
+                <div class="ds-conf-desc" id="poly-conf-desc">Multiple STOPP criteria met · immediate deprescribing targets identified</div>
+                <div class="ds-conf-bar"><div class="ds-conf-bar-fill" id="poly-conf-bar" style="width:91%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deprescribing targets -->
+        <div class="dp-subsection-label">Prioritised deprescribing targets</div>
+        <div class="poly-depresc-grid" id="poly-depresc-grid">
+          <div class="poly-depresc-card poly-depresc-urgent">
+            <div class="poly-depresc-priority">Priority 1 — Urgent</div>
+            <div class="poly-depresc-drug">Tramadol + Sertraline</div>
+            <div class="poly-depresc-reason">Clinically significant serotonin syndrome risk. Concurrent use warrants urgent review — consider switching tramadol to an alternative analgesic class with lower serotonergic potential.</div>
+            <div class="poly-depresc-action">Review analgesic — switch away from tramadol</div>
+          </div>
+          <div class="poly-depresc-card poly-depresc-high">
+            <div class="poly-depresc-priority">Priority 2 — High</div>
+            <div class="poly-depresc-drug">Oxybutynin 5 mg BD</div>
+            <div class="poly-depresc-reason">ACB score +3. Contributes substantially to anticholinergic burden. Associated with cognitive impairment, falls, urinary retention, and constipation in frail older adults. Consider mirabegron as a lower-burden alternative or non-pharmacological bladder training.</div>
+            <div class="poly-depresc-action">Switch to mirabegron or initiate bladder training</div>
+          </div>
+          <div class="poly-depresc-card poly-depresc-high">
+            <div class="poly-depresc-priority">Priority 3 — High</div>
+            <div class="poly-depresc-drug">Zopiclone 7.5 mg nocte</div>
+            <div class="poly-depresc-reason">Z-drug hypnotics are a recognised FRID and Beers/STOPP criterion in older adults. Risk of falls, cognitive impairment, and physical dependence. Initiate gradual taper over 4–6 weeks with sleep hygiene support.</div>
+            <div class="poly-depresc-action">Structured taper — 25% dose reduction every 2 weeks</div>
+          </div>
+          <div class="poly-depresc-card poly-depresc-moderate">
+            <div class="poly-depresc-priority">Priority 4 — Review</div>
+            <div class="poly-depresc-drug">Amitriptyline 25 mg nocte</div>
+            <div class="poly-depresc-reason">ACB score +2. Tricyclic antidepressants are a STOPP criterion in older adults. If prescribed for neuropathic pain, consider switching to gabapentin or duloxetine. If for sleep, address as part of zopiclone withdrawal plan.</div>
+            <div class="poly-depresc-action">Review indication — consider gabapentin or duloxetine switch</div>
+          </div>
+          <div class="poly-depresc-card poly-depresc-moderate">
+            <div class="poly-depresc-priority">Priority 5 — Confirm</div>
+            <div class="poly-depresc-drug">Dual antihypertensive (amlodipine + ramipril)</div>
+            <div class="poly-depresc-reason">Dual antihypertensive therapy may be intentional (BP target not met on monotherapy) or represent duplicate prescribing. Confirm current BP readings and target. If BP is at goal, consider stepping down to monotherapy.</div>
+            <div class="poly-depresc-action">Check recent BP readings — confirm dual therapy indication</div>
+          </div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Deprescribing should be patient-led and stepwise. Do not stop multiple medications simultaneously. Confirm patient goals and preferences before any change.
+        </div>
+      </div>
+
+      <!-- ── SECTION 4: MONITORING ──────────────────────────────────── -->
+      <div id="poly-section-monitoring" class="dp-section">
+        <div class="dp-section-header">
+          <div class="dp-section-title-wrap">
+            <div class="dp-section-label">Step 4</div>
+            <div class="dp-section-title">Monitoring &amp; Follow-Up</div>
+            <div class="dp-section-subtitle">Review schedule, monitoring parameters, and patient safety considerations for the deprescribing plan.</div>
+          </div>
+        </div>
+
+        <div class="mn-top">
+          <div class="mn-stat-card">
+            <div class="mn-stat-label">Deprescribing targets</div>
+            <div class="mn-stat-val mn-stat-val-lg" id="poly-mon-targets">5</div>
+            <div class="mn-stat-sub">Identified for review or withdrawal</div>
+          </div>
+          <div class="mn-stat-card mn-stat-card-uncertain">
+            <div class="mn-stat-label mn-stat-uncertain">Urgent actions</div>
+            <div class="mn-stat-val mn-stat-val-pending">1</div>
+            <div class="mn-stat-sub mn-stat-uncertain">Tramadol + sertraline interaction</div>
+          </div>
+          <div class="mn-stat-card">
+            <div class="mn-stat-label">Review timeline</div>
+            <div class="mn-stat-val" style="font-size:14px;margin-top:4px;color:var(--navy);font-weight:600;">4–8 weeks</div>
+            <div class="mn-stat-sub">Stepwise — one change at a time</div>
+          </div>
+        </div>
+
+        <div class="dp-subsection-label">Follow-up schedule</div>
+        <div class="mon-schedule-grid">
+          <div class="mon-schedule-head">
+            <div>Checkpoint</div><div>Action</div><div>Monitoring parameters</div><div>Decision trigger</div>
+          </div>
+          <div class="mon-schedule-row">
+            <div class="mon-cell-checkpoint mon-cell-amber">Within 48hr ★</div>
+            <div class="mon-cell">GP/prescriber review of tramadol + sertraline interaction</div>
+            <div class="mon-cell">Symptom review — agitation, tremor, hyperthermia</div>
+            <div class="mon-cell mon-cell-red">Switch tramadol to alternative — do not delay if symptomatic</div>
+          </div>
+          <div class="mon-schedule-row">
+            <div class="mon-cell-checkpoint">Week 1–2</div>
+            <div class="mon-cell">Initiate zopiclone taper. Discuss oxybutynin switch with patient.</div>
+            <div class="mon-cell">Sleep quality, falls incidents, bladder symptoms</div>
+            <div class="mon-cell mon-cell-muted">If sleep significantly worsens, slow the taper rate. Document patient preference.</div>
+          </div>
+          <div class="mon-schedule-row">
+            <div class="mon-cell-checkpoint">Week 4</div>
+            <div class="mon-cell">Review oxybutynin switch outcome. Reassess amitriptyline indication.</div>
+            <div class="mon-cell">ACB score recheck, falls risk reassessment, cognition</div>
+            <div class="mon-cell mon-cell-muted">Target ACB score reduction ≥2. Confirm bladder symptom control on new agent.</div>
+          </div>
+          <div class="mon-schedule-row mon-row-last">
+            <div class="mon-cell-checkpoint">Week 8</div>
+            <div class="mon-cell">Full medication reconciliation. Review all changes made.</div>
+            <div class="mon-cell">Full medication count, BP, HbA1c, renal function, falls log</div>
+            <div class="mon-cell mon-cell-muted">Target: ≤8 medications. Document outcomes and further optimisation opportunities.</div>
+          </div>
+        </div>
+
+        <div class="dp-subsection-label">Safety monitoring requirements</div>
+        <div class="mn-contra">
+          <div class="mn-contra-label">Active flags</div>
+          <div class="mn-contra-item"><span class="mn-contra-x" style="color:var(--red);">⚠</span> Tramadol + sertraline: serotonin syndrome risk — monitor for agitation, confusion, tremor, hyperthermia. Escalate immediately if signs present.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">⚠</span> Warfarin: any new or stopped medication may affect INR. Recheck INR within 5–7 days of any regimen change.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">⚠</span> Zopiclone taper: watch for rebound insomnia and withdrawal anxiety. Slow the taper if symptoms are distressing — do not abruptly discontinue.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">⚠</span> Falls risk remains elevated until high-risk medications are successfully reduced. Ensure falls prevention measures are in place during the transition period.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">ℹ</span> Document patient goals and preferences before each medication change. Deprescribing should be a shared decision — patient agreement is essential.</div>
+          <div class="mn-contra-item"><span class="mn-contra-x">ℹ</span> Metformin: confirm eGFR ≥45 at next renal review. Withhold temporarily if contrast media or acute illness.</div>
+        </div>
+
+        <div class="dp-disclaimer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          Monitoring schedule is illustrative. Adapt to patient circumstances, local protocols, and prescriber agreement.
+        </div>
+      </div>
+
+    </div><!-- /dp-content -->
+  </div><!-- /dp-main -->
+</div><!-- /dp-wrap -->
+</div><!-- /poly-page -->
 
 <!-- FOOTER -->
 <div class="app-footer">
