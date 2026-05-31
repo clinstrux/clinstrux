@@ -4237,25 +4237,77 @@
 <!-- ════════════════ WORKFLOW SELECTOR PAGE ════════════════ -->
 <div id="selector-page" style="display:none;">
   <div class="ep-overlay">
+
     <div class="ep-topbar">
       <img src="https://i.ibb.co/b5b8qNk8/clinstrux-full-light.png" alt="Clinstrux" class="ep-topbar-logo">
       <div class="ep-topbar-right">
-        <span class="ep-topbar-label">Workflow Selection</span>
+        <span class="ep-topbar-label">Workflow Library</span>
+        <span class="ep-topbar-sep"></span>
+        <span class="ep-topbar-id">2 workflows available</span>
       </div>
     </div>
+
     <div class="sel-body">
-      <div class="sel-header">
-        <div class="sel-eyebrow">Clinical Decision Infrastructure</div>
-        <h1 class="sel-title">Select a workflow</h1>
-        <p class="sel-subtitle">Each workflow demonstrates how Clinstrux supports a distinct clinical decision domain. Parameters are live-editable and all sections update in real time.</p>
+
+      <!-- Platform header -->
+      <div class="sel-platform-header">
+        <div class="sel-platform-left">
+          <div class="sel-eyebrow">Clinical Decision Infrastructure</div>
+          <h1 class="sel-title">Workflow Library</h1>
+          <p class="sel-subtitle">Clinstrux supports pharmacist and clinician decision-making across multiple clinical domains. Each workflow integrates patient parameters, clinical reasoning, and evidence-based recommendations in a single interactive interface.</p>
+        </div>
+        <div class="sel-platform-stats">
+          <div class="sel-stat">
+            <div class="sel-stat-val">2</div>
+            <div class="sel-stat-label">Workflows</div>
+          </div>
+          <div class="sel-stat-div"></div>
+          <div class="sel-stat">
+            <div class="sel-stat-val">12</div>
+            <div class="sel-stat-label">Clinical sections</div>
+          </div>
+          <div class="sel-stat-div"></div>
+          <div class="sel-stat">
+            <div class="sel-stat-val">Live</div>
+            <div class="sel-stat-label">Parameter editing</div>
+          </div>
+        </div>
       </div>
+
+      <!-- Domain label -->
+      <div class="sel-domain-row">
+        <div class="sel-domain-label">Available workflows</div>
+        <div class="sel-domain-count">2 of 2</div>
+      </div>
+
+      <!-- Workflow cards -->
       <div class="sel-cards">
 
         <!-- OA Workflow Card -->
         <div class="sel-card" onclick="enterWorkflow()">
-          <div class="sel-card-tag">Medication Review</div>
+          <div class="sel-card-inner-top">
+            <div class="sel-card-num">01</div>
+            <div class="sel-card-tag">Pain Management · Medication Review</div>
+          </div>
           <div class="sel-card-title">Chronic Osteoarthritis<br>Analgesic Safety Review</div>
-          <div class="sel-card-desc">High-complexity analgesic pathway under compound GI, renal, and cardiovascular constraints. Demonstrates pharmacist-led medication review with real-time parameter adaptation.</div>
+          <div class="sel-card-desc">Pharmacist-led medication review for a high-complexity OA case with intersecting GI, renal, and cardiovascular constraints. The NSAID pathway is closed on multiple grounds — the workflow reasons through the remaining options and documents the clinical basis for the recommendation.</div>
+
+          <div class="sel-card-assess-label">What you'll assess</div>
+          <div class="sel-card-assess-list">
+            <div class="sel-assess-item">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Analgesic risk stratification under compound contraindications
+            </div>
+            <div class="sel-assess-item">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Renal dosing, GI safety, and polypharmacy burden
+            </div>
+            <div class="sel-assess-item">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Longitudinal trajectory across 5 timepoints
+            </div>
+          </div>
+
           <div class="sel-card-pills">
             <span class="sel-pill sel-pill-red">NSAID pathway closed</span>
             <span class="sel-pill sel-pill-amber">CKD Stage 3a</span>
@@ -4273,32 +4325,83 @@
         </div>
 
         <!-- ABX Workflow Card -->
-        <div class="sel-card sel-card-new" onclick="enterAbxWorkflow()">
-          <div class="sel-card-tag sel-tag-green">Antimicrobial Stewardship</div>
+        <div class="sel-card sel-card-abx" onclick="enterAbxWorkflow()">
+          <div class="sel-card-inner-top">
+            <div class="sel-card-num sel-card-num-green">02</div>
+            <div class="sel-card-tag sel-tag-green">Antimicrobial Stewardship · Inpatient Review</div>
+          </div>
           <div class="sel-card-title">Antibiotic Stewardship<br>Therapy Review</div>
-          <div class="sel-card-desc">Inpatient antimicrobial review integrating inflammatory markers, renal function, clinical trajectory, and culture data to support de-escalation and continuation decisions.</div>
+          <div class="sel-card-desc">Day 3 inpatient antimicrobial review integrating inflammatory markers, clinical trajectory, and culture data. Demonstrates how Clinstrux supports IV-to-oral de-escalation decisions — with clinical improvement weighted appropriately against laboratory values.</div>
+
+          <div class="sel-card-assess-label">What you'll assess</div>
+          <div class="sel-card-assess-list">
+            <div class="sel-assess-item">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              WBC, CRP, temperature, and clinical trajectory integration
+            </div>
+            <div class="sel-assess-item">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              IV-to-oral step-down logic and de-escalation criteria
+            </div>
+            <div class="sel-assess-item">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Culture-guided therapy adjustment and renal dose review
+            </div>
+          </div>
+
           <div class="sel-card-pills">
             <span class="sel-pill sel-pill-amber">WBC · CRP · Temp</span>
-            <span class="sel-pill sel-pill-blue">De-escalation logic</span>
+            <span class="sel-pill sel-pill-green">De-escalation logic</span>
             <span class="sel-pill sel-pill-amber">Renal dose check</span>
-            <span class="sel-pill sel-pill-green">Clinical trajectory</span>
+            <span class="sel-pill sel-pill-blue">Clinical trajectory</span>
           </div>
           <div class="sel-card-meta">
             <span>72 y/o Male · CS-2026-00842</span>
-            <span class="sel-card-sections">Demo concept</span>
+            <span class="sel-card-sections">4 sections</span>
           </div>
-          <div class="sel-card-cta">
+          <div class="sel-card-cta sel-card-cta-green">
             Open workflow
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
         </div>
 
+      </div><!-- /sel-cards -->
+
+      <!-- Platform capability strip -->
+      <div class="sel-capability-strip">
+        <div class="sel-cap-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Live parameter editing
+        </div>
+        <div class="sel-cap-div"></div>
+        <div class="sel-cap-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Clinical Impression layer
+        </div>
+        <div class="sel-cap-div"></div>
+        <div class="sel-cap-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Longitudinal tracking
+        </div>
+        <div class="sel-cap-div"></div>
+        <div class="sel-cap-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Evidence-referenced output
+        </div>
+        <div class="sel-cap-div"></div>
+        <div class="sel-cap-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Handoff documentation
+        </div>
       </div>
-    </div>
+
+    </div><!-- /sel-body -->
+
     <div class="ep-footer">
       <span>© 2026 Clinstrux · Evteev Advisory · Clinical Decision Infrastructure</span>
       <span>Not a substitute for clinical judgment. Clinstrux supports decisions but does not replace clinician expertise.</span>
     </div>
+
   </div>
 </div>
 

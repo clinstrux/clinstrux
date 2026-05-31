@@ -1763,3 +1763,183 @@ input[type="range"]{accent-color:var(--accent);}
 /* responsive */
 @media(max-width:860px){.sel-cards{grid-template-columns:1fr;}}
 @media(max-width:700px){.abx-param-grid{grid-template-columns:repeat(2,1fr);}.abx-param-wide{grid-column:span 2;}.mn-top{grid-template-columns:1fr 1fr;}.renal-dosing-cols{grid-template-columns:1fr;}.mon-schedule-head,.mon-schedule-row{grid-template-columns:80px 1fr 1fr;}.mon-schedule-head>div:nth-child(3),.mon-schedule-row>.mon-cell:nth-child(3){display:none;}}
+
+/* ════════════════════════════════════════════════════
+   WORKFLOW LIBRARY — SELECTOR PAGE ENHANCEMENTS
+════════════════════════════════════════════════════ */
+
+/* Override sel-body to accommodate taller content */
+#selector-page .sel-body {
+  justify-content: flex-start;
+  padding: 36px 40px 40px;
+  gap: 20px;
+}
+
+/* Platform header row */
+.sel-platform-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+  max-width: 860px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sel-platform-left { flex: 1; }
+.sel-platform-left .sel-eyebrow { margin-bottom: 6px; }
+.sel-platform-left .sel-title   { margin-bottom: 8px; }
+.sel-platform-left .sel-subtitle{ max-width: 480px; }
+
+/* Platform stats cluster */
+.sel-platform-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  gap: 12px;
+}
+.sel-stat { text-align: center; }
+.sel-stat-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.sel-stat-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.sel-stat-div {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* Domain / section label row */
+.sel-domain-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 860px;
+}
+.sel-domain-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+.sel-domain-count {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Card inner-top: number + tag row */
+.sel-card-inner-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.sel-card-num {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--border);
+  letter-spacing: 0.5px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.sel-card-num-green { color: rgba(58,170,120,0.35); }
+
+/* ABX card — green left accent instead of generic */
+.sel-card-abx { border-left: 3px solid var(--green); }
+.sel-card-abx:hover { border-color: var(--green); border-left-color: var(--green); }
+
+/* "What you'll assess" section */
+.sel-card-assess-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.sel-card-assess-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+.sel-assess-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.sel-assess-item svg {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.sel-card-abx .sel-assess-item svg { color: var(--green); }
+
+/* Green CTA variant */
+.sel-card-cta-green { color: var(--green); }
+
+/* Capability strip */
+.sel-capability-strip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.sel-cap-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.sel-cap-item svg { color: var(--accent); flex-shrink: 0; }
+.sel-cap-div {
+  width: 1px;
+  height: 12px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .sel-platform-header { flex-direction: column; gap: 16px; }
+  .sel-platform-stats  { align-self: flex-start; }
+  #selector-page .sel-body { padding: 24px 20px 32px; }
+}
+@media (max-width: 600px) {
+  .sel-platform-stats { display: none; }
+  .sel-cap-div        { display: none; }
+  .sel-capability-strip { gap: 8px; }
+}
