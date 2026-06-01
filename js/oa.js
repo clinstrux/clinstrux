@@ -2309,5 +2309,5 @@ function updateClinicalImpression() {
   }
   var concTextEl = document.getElementById('ci-conclusion-text');
   if (concTextEl) concTextEl.textContent = conclusion;
-             }
+}
 
